@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/09/30 15:32:14 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/09/30 15:34:40 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,5 @@ int main(int argc, char  **argv)
 			exit(EXIT_FAILURE);
 		}
 	}
-
-	
 	return(0);
 }
