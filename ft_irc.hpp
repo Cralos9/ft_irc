@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/09/30 14:33:32 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/09/30 18:58:25 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <arpa/inet.h>
 #include <iostream>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
