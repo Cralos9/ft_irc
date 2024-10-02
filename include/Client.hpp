@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_irc.hpp                                         :+:      :+:    :+:   */
+/*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/02 16:54:21 by rumachad         ###   ########.fr       */
+/*   Created: 2024/10/02 14:38:39 by rumachad          #+#    #+#             */
+/*   Updated: 2024/10/02 14:42:15 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_IRC_HPP
-# define FT_IRC_HPP
+#ifndef CLIENT_HPP
+# define CLIENT_HPP
 
-#include <cstring>
-#include <iostream>
-#include <unistd.h>
-#include <cstdio>
-#include <cstdlib>
-#include <sstream>
-#include <vector>
+# include "ft_irc.hpp"
 
-void print_error(std::string error_msg);
+class Client
+{
+public:
+
+	Client(const int fd);
+	~Client();
+
+private:
+
+	Client();
+	const int _fd;
+};
 
 #endif

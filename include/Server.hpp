@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/01 15:07:42 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/02 17:10:01 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <poll.h>
 
 # define PC_IP "10.11.3.7"
+
+typedef std::vector<pollfd>::iterator it_fd;
 
 /* Class to create the server. It calls socket, bind and listen 
 
@@ -35,11 +37,13 @@ public:
 	~Server();
 
 	int create_server();
+	int main_loop();
 	int get_fd() const;
 	
 private:
 
-	int	_fd;
+	int	active_fd;
+	std::vector<pollfd> fds;
 	sockaddr_in _address;
 
 	Server();

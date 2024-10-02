@@ -1,26 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_irc.hpp                                         :+:      :+:    :+:   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/02 16:54:21 by rumachad         ###   ########.fr       */
+/*   Created: 2024/10/02 14:39:48 by rumachad          #+#    #+#             */
+/*   Updated: 2024/10/02 14:43:02 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_IRC_HPP
-# define FT_IRC_HPP
+#include "Client.hpp"
 
-#include <cstring>
-#include <iostream>
-#include <unistd.h>
-#include <cstdio>
-#include <cstdlib>
-#include <sstream>
-#include <vector>
+Client::Client() : _fd(0)
+{
+	std::cout << "Client Constructor" << std::endl;
+}
 
-void print_error(std::string error_msg);
+Client::Client(const int fd) : _fd(fd)
+{
+	std::cout << "Client Fd constructor" << std::endl;
+}
 
-#endif
+Client::~Client()
+{
+	std::cout << "Client Destructor" << std::endl;	
+	close(this->_fd);
+}
+
+/* ----------------------------------------------- */
+
