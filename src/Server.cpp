@@ -6,13 +6,18 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/01 14:41:32 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/02 12:14:11 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
 /* Constructors/Destructors */
+Server::Server()
+{
+	std::cout << "Server Constructor" << std::endl;
+}
+
 Server::Server(int port)
 {
 	std::cout << "Server port Constructor" << std::endl;
@@ -32,23 +37,16 @@ Server::~Server()
 
 int Server::create_server()
 {
+	int on = 0;
 	this->_fd = socket(this->_address.sin_family, SOCK_STREAM, 0);
 	if (this->_fd == -1)
-	{
-		std::perror("Socket creation Error");
-		return (EXIT_FAILURE);
-	}
+		print_error("Socket Error");
+	setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 	if (bind(this->_fd, (struct sockaddr *)&this->_address, 
 				sizeof(this->_address)) != 0)
-	{
-		std::perror("Bind Error");
-		return (EXIT_FAILURE);
-	}
+		print_error("Bind Error");
 	if (listen(this->_fd, 5) == -1)
-	{
-		std::perror("Listen Error");
-		return (EXIT_FAILURE);
-	}
+		print_error("Listen Error");
 	return (EXIT_SUCCESS);
 }
 

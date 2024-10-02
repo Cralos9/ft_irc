@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/01 14:37:30 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/02 12:12:00 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,7 @@
 #include <unistd.h>
 #include <cstdio>
 #include <cstdlib>
+
+void print_error(std::string error_msg);
 
 #endif

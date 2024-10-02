@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/01 14:50:41 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:07:42 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <arpa/inet.h>
 # include <sys/socket.h>
 # include <sys/types.h>
+# include <poll.h>
 
 # define PC_IP "10.11.3.7"
 
