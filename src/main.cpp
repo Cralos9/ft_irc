@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/02 14:32:23 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:47:53 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@ void print_error(std::string error_msg)
 	std::perror(error_msg.c_str());
 	exit(EXIT_FAILURE);
 }
+
+std::string get_message(char *buffer, int i)
+{
+	std::ostringstream oss;
+	oss << "Client " << i << ": " << buffer;
+	return (oss.str());
+}
+
 
 int main(int argc, char  **argv)
 {
@@ -38,6 +46,7 @@ int main(int argc, char  **argv)
 	fds[0].events = POLLIN;
 	int ret = 0;
 	int active_fds = 0;
+	std::cout << "Waiting Connections..." << std::endl;
 	while (1)
 	{
 		ret = poll(fds, fd_nbr, -1);
@@ -82,10 +91,8 @@ int main(int argc, char  **argv)
 				}
 				if (ret == -1)
 					print_error("Recv Error");
-				std::cout << "Client " << i << ": " << buffer ;
-				std::ostringstream oss;
-				oss << "Client " << i << ": " << buffer;
-				std::string teste = oss.str();
+				std::string teste = get_message(buffer, i);
+				std::cout << teste;
 				for(int j = 1; j < active_fds; j++)
 				{
 					if (j != i)
