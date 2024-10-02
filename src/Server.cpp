@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/02 12:14:11 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/02 13:38:55 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,12 @@ Server::~Server()
 
 int Server::create_server()
 {
-	int on = 0;
+	int on = 1;
 	this->_fd = socket(this->_address.sin_family, SOCK_STREAM, 0);
 	if (this->_fd == -1)
 		print_error("Socket Error");
-	setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+	if (setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on)))
+		print_error("setsockopt Error");
 	if (bind(this->_fd, (struct sockaddr *)&this->_address, 
 				sizeof(this->_address)) != 0)
 		print_error("Bind Error");
