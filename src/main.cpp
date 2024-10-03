@@ -6,12 +6,20 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/03 14:15:21 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:18:11 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
 #include "Server.hpp"
+
+
+void Server::find_commands(std::string buffer)
+{
+	int pos = 0;
+	if ((pos = (buffer.find("JOIN ") )!= std::string::npos))
+		this->join_Channel(buffer, pos + 4);
+}
 
 void print_error(std::string error_msg)
 {
