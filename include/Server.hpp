@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/01 15:07:42 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/03 11:49:50 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,11 @@ public:
 	Server(int port);
 	~Server();
 
+	void use_commands(std::string command);
+	void join_Channel(std::string buffer, int pos);
 	int create_server();
 	int get_fd() const;
+	void find_commands(std::string buffer);
 	
 private:
 

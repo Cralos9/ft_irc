@@ -6,12 +6,20 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/02 15:52:19 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/03 11:51:39 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
 #include "Server.hpp"
+
+
+void Server::find_commands(std::string buffer)
+{
+	int pos = 0;
+	if ((pos = (buffer.find("JOIN ") )!= std::string::npos))
+		this->join_Channel(buffer, pos + 4);
+}
 
 void print_error(std::string error_msg)
 {
@@ -91,6 +99,7 @@ int main(int argc, char  **argv)
 				}
 				if (ret == -1)
 					print_error("Recv Error");
+				irc_server.find_commands(buffer);
 				std::string teste = get_message(buffer, i);
 				std::cout << teste;
 				for(int j = 1; j < active_fds; j++)
