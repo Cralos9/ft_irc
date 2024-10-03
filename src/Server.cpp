@@ -33,6 +33,13 @@ Server::~Server()
 
 /* -------------------------------------------- */
 
+void Server::find_commands(std::string buffer)
+{
+	int pos = 0;
+	if ((pos = (buffer.find("JOIN ") )!= std::string::npos))
+		this->join_Channel(buffer, pos + 4);
+}
+
 int Server::create_server()
 {
 	int on = 1;
@@ -53,15 +60,25 @@ int Server::create_server()
 	return (EXIT_SUCCESS);
 }
 
+std::string get_name(std::string string)
+{
+	if (string.find("NICK ") != std::string::npos)
+	{
+		int pos = string.find("NICK ") + 5;
+		return(string.substr(pos, (string ).find_first_of("\n", pos) - pos - 1));
+	}
+	return("ERROR");
+}
+
 int Server::connect_client()
 {
 	pollfd client;
-
 	client.fd = accept(this->fds[0].fd, NULL, NULL);
 	if (client.fd == -1)
 		print_error("Accept Error");
 	client.events = POLLIN;
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
+	this->fds.push_back(client);
 	this->active_fd++;
 	return (0);
 }
@@ -87,7 +104,10 @@ int Server::main_loop()
 			if (it->revents != POLLIN)
 				print_error("Error revents");
 			if (it->fd == this->fds[0].fd)
+			{
 				this->connect_client();
+				it = this->fds.begin();
+			}
 			else
 			{
 				char buffer[1024] = {0};
@@ -103,6 +123,14 @@ int Server::main_loop()
 				}
 				if (ret == -1)
 					print_error("Recv Error");
+				this->find_commands(buffer);
+				std::string name = get_name(buffer);
+				if (name != "ERROR")
+				{
+					User user(name);
+					this->data[user] = *it;
+					continue;
+				}
 				std::string teste = get_message(buffer, std::distance(this->fds.begin(), it));
 				std::cout << teste;
 				for (it_fd it_send = this->fds.begin() + 1; it_send != this->fds.end(); it_send++)

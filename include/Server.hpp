@@ -6,11 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/10/03 14:04:42 by rumachad         ###   ########.fr       */
-=======
-/*   Updated: 2024/10/03 11:49:50 by cacarval         ###   ########.fr       */
->>>>>>> main
+/*   Updated: 2024/10/03 14:26:04 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +18,10 @@
 # include <sys/socket.h>
 # include <sys/types.h>
 # include <poll.h>
+# include <map>
+# include <User.hpp>
 
-# define PC_IP "10.11.3.7"
+# define PC_IP "10.11.4.6"
 
 typedef std::vector<pollfd>::iterator it_fd;
 
@@ -49,12 +47,14 @@ public:
 	int receive_msg();
 	int get_fd() const;
 	void find_commands(std::string buffer);
+	std::map<User, pollfd> data;
 	
 private:
 
 	int	active_fd;
 	std::vector<pollfd> fds;
 	sockaddr_in _address;
+
 
 	Server();
 };

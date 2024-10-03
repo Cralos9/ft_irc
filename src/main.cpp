@@ -3,23 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/03 14:18:11 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/03 15:52:08 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
 #include "Server.hpp"
+#include "User.hpp"
 
 
-void Server::find_commands(std::string buffer)
-{
-	int pos = 0;
-	if ((pos = (buffer.find("JOIN ") )!= std::string::npos))
-		this->join_Channel(buffer, pos + 4);
-}
+// void get_user(std::string string)
+// {
+	
+// }
 
 void print_error(std::string error_msg)
 {
@@ -41,7 +40,6 @@ int main(int argc, char  **argv)
 		std::cerr << "Usage: ./ircserv <port>" << std::endl;
 		return EXIT_FAILURE;
 	}
-
 	Server irc_server(std::atoi(argv[1]));
 	
 	if (irc_server.create_server() == 1)
