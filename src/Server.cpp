@@ -33,11 +33,11 @@ Server::~Server()
 
 /* -------------------------------------------- */
 
-void Server::find_commands(std::string buffer)
+void Server::find_commands(std::string buffer, int fd)
 {
 	int pos = 0;
 	if ((pos = (buffer.find("JOIN ") )!= std::string::npos))
-		this->join_Channel(buffer, pos + 4);
+		this->join_Channel(buffer, pos + 4, fd);
 }
 
 int Server::create_server()
@@ -123,7 +123,7 @@ int Server::main_loop()
 				}
 				if (ret == -1)
 					print_error("Recv Error");
-				this->find_commands(buffer);
+				this->find_commands(buffer, it->fd);
 				std::string name = get_name(buffer);
 				if (name != "ERROR")
 				{

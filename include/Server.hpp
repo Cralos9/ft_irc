@@ -39,14 +39,14 @@ public:
 	~Server();
 
 	void use_commands(std::string command);
-	void join_Channel(std::string buffer, int pos);
+	void join_Channel(std::string buffer, int pos, int fd);
 	int create_server();
 	int main_loop();
 	int connect_client();
 	int send_msg();
 	int receive_msg();
 	int get_fd() const;
-	void find_commands(std::string buffer);
+	void find_commands(std::string buffer, int fd);
 	std::map<User, pollfd> data;
 	
 private:

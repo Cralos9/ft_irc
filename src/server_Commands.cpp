@@ -12,9 +12,23 @@
 
 #include "Server.hpp"
 
-void Server::join_Channel(std::string buffer, int pos)
+void Server::join_Channel(std::string buffer, int pos, int fd)
 {
 	std::cout << "Joining " << buffer.substr(pos, (buffer.find_first_of("\n") - pos - 1))<< " ..." << std::endl;
+	std::string join_msg = ":cacarval!cacarval@localhost JOIN :#ahh\r\n";
+    send(fd, join_msg.c_str(), join_msg.length(), 0);
+
+   /* // Send the topic message (if no topic is set)
+    std::string topic_msg = ":irc.myserver.com 331 cacarval #general :No topic is set\r\n";
+    send(fd, topic_msg.c_str(), topic_msg.length(), 0);
+
+    // Send the names list (for now, only including the joining user)
+    std::string names_msg = ":irc.myserver.com 353 cacarval = #general :cacarval\r\n";
+    send(fd, names_msg.c_str(), names_msg.length(), 0);
+
+    // Send the end of names list
+    std::string end_names_msg = ":irc.myserver.com 366 cacarval #general :End of /NAMES list.\r\n";
+    send(fd, end_names_msg.c_str(), end_names_msg.length(), 0);*/
 }
 
 
