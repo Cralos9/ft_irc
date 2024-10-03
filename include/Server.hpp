@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/02 17:10:01 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:04:42 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ public:
 
 	int create_server();
 	int main_loop();
+	int connect_client();
+	int send_msg();
+	int receive_msg();
 	int get_fd() const;
 	
 private:

@@ -53,6 +53,19 @@ int Server::create_server()
 	return (EXIT_SUCCESS);
 }
 
+int Server::connect_client()
+{
+	pollfd client;
+
+	client.fd = accept(this->fds[0].fd, NULL, NULL);
+	if (client.fd == -1)
+		print_error("Accept Error");
+	client.events = POLLIN;
+	std::cout << "New client " << this->active_fd << " connected" << std::endl;
+	this->active_fd++;
+	return (0);
+}
+
 int Server::main_loop()
 {
 	int ret;
@@ -74,11 +87,33 @@ int Server::main_loop()
 			if (it->revents != POLLIN)
 				print_error("Error revents");
 			if (it->fd == this->fds[0].fd)
+				this->connect_client();
+			else
 			{
-				
+				char buffer[1024] = {0};
+				ret = recv(it->fd, buffer, sizeof(buffer), 0);
+				if (ret == 0)
+				{
+					std::cout << "Client " << std::distance(this->fds.begin(), it) << " disconnected" << std::endl;
+					close(it->fd);
+					this->active_fd--;
+					this->fds.erase(it);
+/* 					this->fds.resize(this->active_fd); */
+					continue;
+				}
+				if (ret == -1)
+					print_error("Recv Error");
+				std::string teste = get_message(buffer, std::distance(this->fds.begin(), it));
+				std::cout << teste;
+				for (it_fd it_send = this->fds.begin() + 1; it_send != this->fds.end(); it_send++)
+				{
+					if (it != it_send)
+						send(it_send->fd, teste.c_str(), teste.length(), 0);
+				}
 			}
 		}
 	}
+	return (0);
 }
 
 int Server::get_fd() const {return (this->fds.at(0).fd);}
