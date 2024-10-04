@@ -55,7 +55,7 @@ std::string Server::get_message(char *buffer, int fd)
 		if (it->second.fd == fd)
 		{
 			std::ostringstream oss;
-			oss << ":" << it->first._name << "!" << it->first._name << "@localhost " << buffer;
+			oss << ":" << it->first._nick << "!" << it->first._nick << "@localhost " << buffer;
 			return (oss.str());
 		}
 	}

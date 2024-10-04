@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:02:16 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/04 11:59:07 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 12:42:18 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void Server::join_Channel(std::string buffer, int pos, int fd)
         {
             std::cout << "Joining " << channel << " ..." << std::endl;
             std::ostringstream oss; 
-            oss << ":" << it->first._name << "!" << it->first._name << "@localhost JOIN " << channel << "\r\n"; 
+            oss << ":" << it->first._nick << "!" << it->first._nick << "@localhost JOIN " << channel << "\r\n"; 
             std::string join_msg = oss.str();
             std::cout << join_msg;
             send(fd, join_msg.c_str(), join_msg.length(), 0);
