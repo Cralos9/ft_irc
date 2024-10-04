@@ -6,15 +6,15 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/03 13:51:59 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:02:18 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "User.hpp"
 
-User::User(std::string name)
+User::User(std::string nick)
 {
-	this->_name = name;
+	this->_nick = nick;
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/04 12:33:40 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 13:52:01 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ public:
 	int receive_msg();
 	int get_fd() const;
 	std::string get_message(char *buffer, int fd);
-	bool find_commands(std::string buffer, int fd);
+	bool find_commands(std::string buffer, it_fd fd);
 	std::map<User, pollfd> data;
 	
 private:

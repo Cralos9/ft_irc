@@ -33,18 +33,26 @@ Server::~Server()
 
 /* -------------------------------------------- */
 
-bool Server::find_commands(std::string buffer, int fd)
+bool Server::find_commands(std::string buffer, it_fd it)
 {
 	int pos = 0;
 	if ((pos = (buffer.find("JOIN ") )!= std::string::npos))
 	{
-		this->join_Channel(buffer, pos + 4, fd);
+		this->join_Channel(buffer, pos + 4, it->fd);
 		return(1);
 	}
 	else if ((pos = (buffer.find("WHO ") )!= std::string::npos))
 		return(1);
 	else if ((pos = (buffer.find("MODE ") )!= std::string::npos))
 		return(1);
+	else if ((pos = (buffer.find("QUIT ") )!= std::string::npos))
+	{
+		close(it->fd);
+		this->active_fd--;
+		this->fds.erase(it);
+ 		this->fds.resize(this->active_fd); 
+		return(1);
+	}
 	return(0);
 }
 
@@ -134,15 +142,6 @@ int Server::main_loop()
 			{
 				char buffer[1024] = {0};
 				ret = recv(it->fd, buffer, sizeof(buffer), 0);
-				if (ret == 0)
-				{
-					std::cout << "Client " << std::distance(this->fds.begin(), it) << " disconnected" << std::endl;
-					close(it->fd);
-					this->active_fd--;
-					this->fds.erase(it);
-/* 					this->fds.resize(this->active_fd); */
-					continue;
-				}
 				if (ret == -1)
 					print_error("Recv Error");
 				std::string name = get_name(buffer);
@@ -152,10 +151,10 @@ int Server::main_loop()
 					this->data[user] = *it;
 					continue;
 				}
-				if(this->find_commands(buffer, it->fd))
-					continue;
+				if(this->find_commands(buffer, it))
+					break;
 				std::string test = get_message(buffer, it->fd);
-				std::cout <<  test;
+				// std::cout <<  test;
 				if (test != "ERROR")
 				{
 					for (it_fd it_send = this->fds.begin() + 1; it_send != this->fds.end(); it_send++)

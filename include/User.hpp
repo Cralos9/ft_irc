@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/04 12:41:17 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:02:22 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 class User
 {
 	public:
-		User(std::string name);
+		User(std::string nick);
 		~User();
 		bool operator<(const User& other) const 
 		{
