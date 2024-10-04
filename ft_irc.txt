@@ -1,4 +1,4 @@
-progama recebe 2 args. port and password
+programa recebe 2 args. port and password
 	./ircserv <port> <password>
 
 program should not crash in any circumstances

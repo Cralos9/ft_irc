@@ -41,7 +41,7 @@ bool Server::find_commands(std::string buffer, it_fd it)
 		this->join_Channel(buffer, pos + 4, it->fd);
 		return(1);
 	}
-	else if ((pos = (buffer.find("WHO ") )!= std::string::npos))
+	if ((pos = (buffer.find("WHO ") )!= std::string::npos))
 		return(1);
 	else if ((pos = (buffer.find("MODE ") )!= std::string::npos))
 		return(1);
@@ -149,11 +149,11 @@ int Server::main_loop()
 				std::string nick = get_name(buffer);
 				if (nick != "ERROR")
 				{
-					for (std::map<int , User>::iterator it2 = this->data.begin(); it2 != this->data.end(); it2++)
-						if (it2->first == it->fd)
-							it2->second.set_nick(nick);
+					for (std::map<int , User>::iterator it_map = this->data.begin(); it_map != this->data.end(); it_map++)
+						if (it_map->first == it->fd)
+							it_map->second.set_nick(nick);
 				}
-				if(this->find_commands(buffer, it))
+				if(this->find_commands(buffer, it)) // Sending join to own client;
 					break;
 				std::string test = get_message(buffer, it->fd);
 				// std::cout <<  test;
@@ -162,7 +162,7 @@ int Server::main_loop()
 					for (it_fd it_send = this->fds.begin() + 1; it_send != this->fds.end(); it_send++)
 					{
 						if (it != it_send)
-							send(it_send->fd, test.c_str(), test.length(), 0);
+							send(it_send->fd, test.c_str(), test.length(), 0); // Sends to all other clients;
 					}
 				}
 			}
