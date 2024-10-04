@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/03 15:52:08 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 11:28:53 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,6 @@ void print_error(std::string error_msg)
 	exit(EXIT_FAILURE);
 }
 
-std::string get_message(char *buffer, int i)
-{
-	std::ostringstream oss;
-	oss << "Client " << i << ": " << buffer;
-	return (oss.str());
-}
 
 int main(int argc, char  **argv)
 {

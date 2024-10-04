@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/03 13:55:55 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 12:41:17 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ class User
 		~User();
 		bool operator<(const User& other) const 
 		{
-        return _name < other._name;
+        	return _nick < other._nick;
     	}
-		std::string _name;
+		std::string _nick;
 	private:
 };
 

@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:02:16 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/03 12:06:48 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 11:59:07 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,20 @@
 
 void Server::join_Channel(std::string buffer, int pos, int fd)
 {
-	std::cout << "Joining " << buffer.substr(pos, (buffer.find_first_of("\n") - pos - 1))<< " ..." << std::endl;
-	std::string join_msg = ":cacarval!cacarval@localhost JOIN :#ahh\r\n";
-    send(fd, join_msg.c_str(), join_msg.length(), 0);
+    for(std::map<User, pollfd>::iterator it = this->data.begin(); it != this->data.end(); it++)
+    {
+        std::string channel = buffer.substr(pos, (buffer.find_first_of("\n") - pos - 1));
+    
+        if (it->second.fd == fd)
+        {
+            std::cout << "Joining " << channel << " ..." << std::endl;
+            std::ostringstream oss; 
+            oss << ":" << it->first._name << "!" << it->first._name << "@localhost JOIN " << channel << "\r\n"; 
+            std::string join_msg = oss.str();
+            std::cout << join_msg;
+            send(fd, join_msg.c_str(), join_msg.length(), 0);
+        }
+        }
 
    /* // Send the topic message (if no topic is set)
     std::string topic_msg = ":irc.myserver.com 331 cacarval #general :No topic is set\r\n";
