@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/04 14:51:07 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:28:35 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ public:
 	int get_fd() const;
 	std::string get_message(char *buffer, int fd);
 	bool find_commands(std::string buffer, it_fd fd);
-	std::map<User, pollfd> data;
+	std::map<int, User> data;
 	
 private:
 

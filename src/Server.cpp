@@ -58,12 +58,12 @@ bool Server::find_commands(std::string buffer, it_fd it)
 
 std::string Server::get_message(char *buffer, int fd)
 {
-	for(std::map<User, pollfd>::iterator it = this->data.begin(); it != this->data.end(); it++)
+	for(std::map<int, User>::iterator it = this->data.begin(); it != this->data.end(); it++)
     {
-		if (it->second.fd == fd)
+		if (it->first == fd)
 		{
 			std::ostringstream oss;
-			oss << ":" << it->first._nick << "!" << it->first._nick << "@localhost " << buffer;
+			oss << ":" << it->second.get_nick() << "!" << it->second.get_nick() << "@localhost " << buffer;
 			return (oss.str());
 		}
 	}
@@ -111,7 +111,7 @@ pollfd Server::connect_client()
 		print_error("Accept Error");
 	client.events = POLLIN;
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
-	this->data.insert(std::pair<User, pollfd>(User(), client));
+	this->data.insert(std::pair<int, User>(client.fd, User()));
 	this->active_fd++;
 	return (client);
 }
@@ -146,32 +146,23 @@ int Server::main_loop()
 			{
 				char buffer[1024] = {0};
 				ret = recv(it->fd, buffer, sizeof(buffer), 0);
-				if (ret <= 0)
+				std::string nick = get_name(buffer);
+				if (nick != "ERROR")
 				{
-					if (ret == 0)
-					{
-						std::cout << "Client " << std::distance(this->fds.begin(), it) << " disconnected" << std::endl;
-						close(it->fd);
-						this->active_fd--;
-						this->fds.erase(it);
-						continue;
-					}
-					if (ret == -1)
-						print_error("Recv Error");
+					for (std::map<int , User>::iterator it2 = this->data.begin(); it2 != this->data.end(); it2++)
+						if (it2->first == it->fd)
+							it2->second.set_nick(nick);
 				}
-				else
+				if(this->find_commands(buffer, it))
+					break;
+				std::string test = get_message(buffer, it->fd);
+				// std::cout <<  test;
+				if (test != "ERROR")
 				{
-					if(this->find_commands(buffer, it))
-						break;
-					std::string test = get_message(buffer, it->fd);
-					// std::cout <<  test;
-					if (test != "ERROR")
+					for (it_fd it_send = this->fds.begin() + 1; it_send != this->fds.end(); it_send++)
 					{
-						for (it_fd it_send = this->fds.begin() + 1; it_send != this->fds.end(); it_send++)
-						{
-							if (it != it_send)
-								send(it_send->fd, test.c_str(), test.length(), 0);
-						}
+						if (it != it_send)
+							send(it_send->fd, test.c_str(), test.length(), 0);
 					}
 				}
 			}
