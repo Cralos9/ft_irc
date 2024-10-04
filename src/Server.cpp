@@ -100,17 +100,20 @@ std::string get_name(std::string string)
 	return("ERROR");
 }
 
-int Server::connect_client()
+pollfd Server::connect_client()
 {
-	pollfd client;
-	client.fd = accept(this->fds[0].fd, NULL, NULL);
+	pollfd		client;
+	sockaddr_in	client_info;
+	socklen_t	len = sizeof(client_info);
+
+	client.fd = accept(this->fds[0].fd, (struct sockaddr *)&client_info, &len);
 	if (client.fd == -1)
 		print_error("Accept Error");
 	client.events = POLLIN;
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
-	this->fds.push_back(client);
+	this->data.insert(std::pair<User, pollfd>(User(), client));
 	this->active_fd++;
-	return (0);
+	return (client);
 }
 
 int Server::main_loop()
@@ -119,6 +122,7 @@ int Server::main_loop()
 
 	while (1)
 	{
+		std::vector<pollfd> tmp;
 		ret = poll(this->fds.data(), this->active_fd, -1);
 		if (ret == -1)
 			print_error("Poll Error");
@@ -135,36 +139,44 @@ int Server::main_loop()
 				print_error("Error revents");
 			if (it->fd == this->fds[0].fd)
 			{
-				this->connect_client();
+				tmp.push_back(this->connect_client());
 				it = this->fds.begin();
 			}
 			else
 			{
 				char buffer[1024] = {0};
 				ret = recv(it->fd, buffer, sizeof(buffer), 0);
-				if (ret == -1)
-					print_error("Recv Error");
-				std::string name = get_name(buffer);
-				if (name != "ERROR")
+				if (ret <= 0)
 				{
-					User user(name);
-					this->data[user] = *it;
-					continue;
-				}
-				if(this->find_commands(buffer, it))
-					break;
-				std::string test = get_message(buffer, it->fd);
-				// std::cout <<  test;
-				if (test != "ERROR")
-				{
-					for (it_fd it_send = this->fds.begin() + 1; it_send != this->fds.end(); it_send++)
+					if (ret == 0)
 					{
-						if (it != it_send)
-							send(it_send->fd, test.c_str(), test.length(), 0);
+						std::cout << "Client " << std::distance(this->fds.begin(), it) << " disconnected" << std::endl;
+						close(it->fd);
+						this->active_fd--;
+						this->fds.erase(it);
+						continue;
+					}
+					if (ret == -1)
+						print_error("Recv Error");
+				}
+				else
+				{
+					if(this->find_commands(buffer, it))
+						break;
+					std::string test = get_message(buffer, it->fd);
+					// std::cout <<  test;
+					if (test != "ERROR")
+					{
+						for (it_fd it_send = this->fds.begin() + 1; it_send != this->fds.end(); it_send++)
+						{
+							if (it != it_send)
+								send(it_send->fd, test.c_str(), test.length(), 0);
+						}
 					}
 				}
 			}
 		}
+		this->fds.insert(this->fds.end(), tmp.begin(), tmp.end());
 	}
 	return (0);
 }

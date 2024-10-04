@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/04 14:02:22 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:50:59 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 class User
 {
 	public:
+		User();
 		User(std::string nick);
 		~User();
 		bool operator<(const User& other) const 
@@ -26,6 +27,7 @@ class User
     	}
 		std::string _nick;
 	private:
+		std::string buffer;
 };
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/04 13:52:01 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:51:07 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ public:
 	void join_Channel(std::string buffer, int pos, int fd);
 	int create_server();
 	int main_loop();
-	int connect_client();
+	pollfd connect_client();
 	int send_msg();
 	int receive_msg();
 	int get_fd() const;
