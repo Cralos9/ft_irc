@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/03 13:48:10 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/04 17:29:10 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,19 @@
 #include <sstream>
 #include <vector>
 #include <iterator>
+#include <map>
 
 void print_error(std::string error_msg);
 std::string get_message(char *buffer, int i);
+
+template <typename Container>
+typename Container::iterator advance_map(Container map, int index)
+{
+	typename Container::iterator it;
+
+	for (it = map.begin(); it->first != index; it++)
+		;
+	return (it);
+}
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/04 15:28:35 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 17:28:28 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 # include <sys/socket.h>
 # include <sys/types.h>
 # include <poll.h>
-# include <map>
 # include <User.hpp>
 
 # define PC_IP "10.11.4.6"
 
 typedef std::vector<pollfd>::iterator it_fd;
+typedef std::map<int, User>::iterator it_user;
 
 /* Class to create the server. It calls socket, bind and listen 
 
@@ -39,15 +39,15 @@ public:
 	~Server();
 
 	void use_commands(std::string command);
-	void join_Channel(std::string buffer, int pos, int fd);
+	void join_Channel(User *user);
 	int create_server();
 	int main_loop();
+	void create_client(const int &fd, const std::string &hostname);
 	pollfd connect_client();
-	int send_msg();
-	int receive_msg();
-	int get_fd() const;
+	void send_msg(it_user user);
+	void receive_msg(it_user user);
 	std::string get_message(char *buffer, int fd);
-	bool find_commands(std::string buffer, it_fd fd);
+	bool find_commands(User *user);
 	std::map<int, User> data;
 	
 private:
