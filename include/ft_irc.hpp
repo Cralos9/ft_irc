@@ -27,7 +27,7 @@ void print_error(std::string error_msg);
 std::string get_message(char *buffer, int i);
 
 template <typename Container>
-typename Container::iterator advance_map(Container map, int index)
+typename Container::iterator advance_map(Container &map, int index)
 {
 	typename Container::iterator it;
 

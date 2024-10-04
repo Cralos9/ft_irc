@@ -39,7 +39,7 @@ public:
 	~Server();
 
 	void use_commands(std::string command);
-	void join_Channel(User *user);
+	void join_Channel(it_user user);
 	int create_server();
 	int main_loop();
 	void create_client(const int &fd, const std::string &hostname);
@@ -47,7 +47,7 @@ public:
 	void send_msg(it_user user);
 	void receive_msg(it_user user);
 	std::string get_message(char *buffer, int fd);
-	bool find_commands(User *user);
+	bool find_commands(it_user user);
 	std::map<int, User> data;
 	
 private:

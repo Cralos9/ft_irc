@@ -15,12 +15,12 @@
 /* Constructors/Destructors */
 Server::Server()
 {
-	std::cout << "Server Constructor" << std::endl;
+	/*std::cout << "Server Constructor" << std::endl;*/
 }
 
 Server::Server(int port) : active_fd(1)
 {
-	std::cout << "Server port Constructor" << std::endl;
+	/*std::cout << "Server port Constructor" << std::endl;*/
 	std::memset(&this->_address, 0, sizeof(this->_address));
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
@@ -28,7 +28,7 @@ Server::Server(int port) : active_fd(1)
 
 Server::~Server()
 {
-	std::cout << "Server Destructor" << std::endl;	
+	/*std::cout << "Server Destructor" << std::endl;	*/
 }
 
 /* -------------------------------------------- */
@@ -125,20 +125,19 @@ int Server::main_loop()
 				print_error("Error revents");
 			if (it->fd == this->fds[0].fd)
 			{
+				std::cout << "AQUI" << std::endl;
 				tmp.push_back(this->connect_client());
 				it = this->fds.begin();
 			}
 			else
 			{
 				it_user user = advance_map(this->data, it->fd);
-				std::cout << user->first << std::endl;
 				this->receive_msg(user);
 				std::string nick = get_name(user->second.get_buffer());
 				if (nick != "ERROR")
 					user->second.set_nick(nick);
-				if (this->find_commands(&user->second))
+				if (this->find_commands(user))
 					break;
-				std::cout << user->second.get_buffer();
 				this->send_msg(user);
 			}
 		}
@@ -147,20 +146,20 @@ int Server::main_loop()
 	return (0);
 }
 
-bool Server::find_commands(User *user)
+bool Server::find_commands(it_user user)
 {
 	int pos = 0;
-	std::cout << user->get_nick() << std::endl;
-	if ((pos = (user->get_buffer().find("JOIN ") )!= std::string::npos))
+
+	if ((pos = (user->second.get_buffer().find("JOIN ") )!= std::string::npos))
 	{
 		this->join_Channel(user);
 		return(1);
 	}
-	else if ((pos = (user->get_buffer().find("WHO ") )!= std::string::npos))
+	else if ((pos = (user->second.get_buffer().find("WHO ") )!= std::string::npos))
 		return(1);
-	else if ((pos = (user->get_buffer().find("MODE ") )!= std::string::npos))
+	else if ((pos = (user->second.get_buffer().find("MODE ") )!= std::string::npos))
 		return(1);
-	else if ((pos = (user->get_buffer().find("QUIT ") )!= std::string::npos))
+	else if ((pos = (user->second.get_buffer().find("QUIT ") )!= std::string::npos))
 	{
 /* 		close(it->fd);
 		this->active_fd--;

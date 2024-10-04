@@ -12,15 +12,17 @@
 
 #include "Server.hpp"
 
-void Server::join_Channel(User *user)
+void Server::join_Channel(it_user user)
 {
-	std::string channel = user->get_buffer().substr(4, user->get_buffer().find_first_of("\n") - 4 - 1);
+	std::cout << "User " << user->second.get_nick() << std::endl;
+	std::string channel = user->second.get_buffer().substr(4, user->second.get_buffer().find_first_of("\n") - 4 - 1);
 	std::cout << "Joining " << channel << " ..." << std::endl;
-	std::cout << user->get_nick() << std::endl;
+	std::cout << user->second.get_nick() << std::endl;
 	std::ostringstream oss; 
 	oss << "JOIN" << channel << "\r\n";
-	user->prepare_buffer(oss.str());
-	std::cout << user->get_buffer() << std::endl;
+	user->second.prepare_buffer(oss.str());
+	std::cout << user->second.get_buffer() << std::endl;
+	send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
    /* // Send the topic message (if no topic is set)
 	std::string topic_msg = ":irc.myserver.com 331 cacarval #general :No topic is set\r\n";
 	send(fd, topic_msg.c_str(), topic_msg.length(), 0);

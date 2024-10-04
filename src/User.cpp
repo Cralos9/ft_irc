@@ -14,12 +14,12 @@
 
 User::User() : _nick("Default")
 {
-	std::cout << "User default constructor" << std::endl;
+	/*std::cout << "User default constructor" << std::endl;*/
 }
 
 User::User(std::string nick, const std::string &hostname)
 {
-	std::cout << "User Constructor" << std::endl;
+	/*std::cout << "User Constructor" << std::endl;*/
 	this->_nick = nick;
 	this->_hostname = hostname;
 }
@@ -27,7 +27,7 @@ User::User(std::string nick, const std::string &hostname)
 
 User::~User()
 {
-	std::cout << "User Destructor" << std::endl;
+	/*std::cout << "User Destructor" << std::endl;*/
 }
 
 std::string User::get_nick() const
