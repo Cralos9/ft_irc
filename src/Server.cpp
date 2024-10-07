@@ -53,14 +53,29 @@ int Server::create_server()
 	return (EXIT_SUCCESS);
 }
 
-
-
-std::string get_name(const std::string &string)
+void get_info(it_user &user)
 {
-	if (string.find("NICK ") != std::string::npos)
+	std::string nick = get_name(user->second.get_buffer(), 1);
+	std::string username = get_name(user->second.get_buffer(), 2);
+	if (nick != "ERROR" && username != "ERROR")
+	{
+		user->second.set_nick(nick);
+		user->second.set_username(username);
+	}
+}
+
+
+std::string get_name(const std::string &string, int what)
+{
+	if (string.find("NICK ") != std::string::npos && what == 1)
 	{
 		int pos = string.find("NICK ") + 5;
 		return(string.substr(pos, (string ).find_first_of("\n", pos) - pos - 1));
+	}
+	if (string.find("USER ") != std::string::npos && what == 2)
+	{
+		int pos = string.find("USER ") + 5;
+		return(string.substr(pos, (string ).find_first_of("0", pos) - pos - 1));
 	}
 	return("ERROR");
 }
@@ -90,6 +105,7 @@ void Server::receive_msg(it_user user)
 	if (msg_bytes == -1)
 		print_error("recv Error");
 	user->second.set_buffer(buffer);
+	std::cout << user->second.get_buffer();
 }
 
 void Server::send_msg(it_user msg_sender)
@@ -125,7 +141,6 @@ int Server::main_loop()
 				print_error("Error revents");
 			if (it->fd == this->fds[0].fd)
 			{
-				std::cout << "AQUI" << std::endl;
 				tmp.push_back(this->connect_client());
 				it = this->fds.begin();
 			}
@@ -133,9 +148,7 @@ int Server::main_loop()
 			{
 				it_user user = advance_map(this->data, it->fd);
 				this->receive_msg(user);
-				std::string nick = get_name(user->second.get_buffer());
-				if (nick != "ERROR")
-					user->second.set_nick(nick);
+				get_info(user);
 				if (this->find_commands(user))
 					break;
 				this->send_msg(user);

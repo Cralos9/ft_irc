@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/04 17:12:43 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/07 11:28:05 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,17 @@ void User::set_nick(const std::string &nick)
 	this->_nick = nick;
 }
 
+
+std::string User::get_username() const
+{
+	return(this->_username);
+}
+
+void User::set_username(const std::string &username)
+{
+	this->_username = username;
+}
+
 void User::set_hostname(const std::string &hostname)
 {
 	this->_hostname = hostname;
@@ -58,6 +69,6 @@ const std::string &User::get_buffer() const
 void User::prepare_buffer(const std::string &command)
 {
 	std::ostringstream oss;
-	oss << ":" << this->_nick << "!" << this->_nick << "@" << this->_hostname << " " << command;
+	oss << ":" << this->_nick << "!" << this->_username << "@" << this->_hostname << " " << command;
 	this->_buffer = oss.str();
 }

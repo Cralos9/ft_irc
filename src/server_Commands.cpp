@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server_Commands.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:02:16 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/04 17:28:59 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/07 11:03:29 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 void Server::join_Channel(it_user user)
 {
-	std::cout << "User " << user->second.get_nick() << std::endl;
 	std::string channel = user->second.get_buffer().substr(4, user->second.get_buffer().find_first_of("\n") - 4 - 1);
 	std::cout << "Joining " << channel << " ..." << std::endl;
-	std::cout << user->second.get_nick() << std::endl;
 	std::ostringstream oss; 
 	oss << "JOIN" << channel << "\r\n";
 	user->second.prepare_buffer(oss.str());
