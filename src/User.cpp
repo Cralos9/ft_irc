@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 14:28:15 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:45:41 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ const std::string &User::get_buffer() const
 }
 
 
-std::string get_name(const std::string &string, int what)
+std::string User::get_name(const std::string &string, int what)
 {
 	if (string.find("NICK ") != std::string::npos && what == 1)
 	{

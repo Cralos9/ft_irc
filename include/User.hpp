@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 14:27:59 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:46:14 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class User
 		std::string get_nick() const;
 		std::string get_username() const;
 		void prepare_buffer(const std::string &command);
+		std::string get_name(const std::string &string, int what);
 	private:
 		std::string _username;
 		std::string _nick;
