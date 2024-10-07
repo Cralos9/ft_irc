@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 11:59:26 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:37:39 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 #include <map>
 
 void print_error(std::string error_msg);
-std::string get_message(char *buffer, int i);
 
 template <typename Container>
 typename Container::iterator advance_map(Container &map, int index)

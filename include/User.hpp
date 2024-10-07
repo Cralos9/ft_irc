@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 15:46:14 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:03:29 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ class User
 {
 	public:
 		User();
-		User(std::string nick, const std::string &hostname);
+		User(const std::string &hostname);
+
 		~User();
 		void set_nick(const std::string &nick);
 		void set_username(const std::string &username);
@@ -28,8 +29,8 @@ class User
 		void set_buffer(const std::string &buffer);
 		const std::string &get_buffer() const;
 		bool get_info();
-		std::string get_nick() const;
-		std::string get_username() const;
+		const std::string &get_nick() const;
+		const std::string &get_username() const;
 		void prepare_buffer(const std::string &command);
 		std::string get_name(const std::string &string, int what);
 	private:

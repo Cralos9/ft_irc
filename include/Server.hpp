@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/07 12:02:35 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/07 18:53:26 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,8 @@
 # include <sys/socket.h>
 # include <sys/types.h>
 # include <poll.h>
-# include <User.hpp>
-
-# define PC_IP "10.11.4.6"
+# include "User.hpp"
+# include "Commands.hpp"
 
 typedef std::vector<pollfd>::iterator it_fd;
 typedef std::map<int, User>::iterator it_user;
@@ -38,7 +37,6 @@ public:
 	Server(int port);
 	~Server();
 
-	void use_commands(std::string command);
 	void join_Channel(it_user user);
 	int create_server();
 	int main_loop();
@@ -46,18 +44,17 @@ public:
 	pollfd connect_client();
 	void send_msg(it_user user);
 	void receive_msg(it_user user);
-	std::string get_message(char *buffer, int fd);
 	bool find_commands(it_user user, it_fd it);
-	std::map<int, User> data;
+	void close_all_fds();
+	void handle_commands(const std::string &msg);
 	
 private:
 
 	int	active_fd;
 	std::vector<pollfd> fds;
 	sockaddr_in _address;
-
-
-	Server();
+	std::map<int, User> _clients;
+	std::map<std::string, ACommand *> _commands;
 };
 
 #endif
