@@ -53,32 +53,6 @@ int Server::create_server()
 	return (EXIT_SUCCESS);
 }
 
-void get_info(it_user &user)
-{
-	std::string nick = get_name(user->second.get_buffer(), 1);
-	std::string username = get_name(user->second.get_buffer(), 2);
-	if (nick != "ERROR" && username != "ERROR")
-	{
-		user->second.set_nick(nick);
-		user->second.set_username(username);
-	}
-}
-
-
-std::string get_name(const std::string &string, int what)
-{
-	if (string.find("NICK ") != std::string::npos && what == 1)
-	{
-		int pos = string.find("NICK ") + 5;
-		return(string.substr(pos, (string ).find_first_of("\n", pos) - pos - 1));
-	}
-	if (string.find("USER ") != std::string::npos && what == 2)
-	{
-		int pos = string.find("USER ") + 5;
-		return(string.substr(pos, (string ).find_first_of("0", pos) - pos - 1));
-	}
-	return("ERROR");
-}
 
 pollfd Server::connect_client()
 {
@@ -148,8 +122,8 @@ int Server::main_loop()
 			{
 				it_user user = advance_map(this->data, it->fd);
 				this->receive_msg(user);
-				get_info(user);
-				if (this->find_commands(user))
+				user->second.get_info();
+				if (this->find_commands(user, it))
 					break;
 				this->send_msg(user);
 			}
@@ -159,7 +133,7 @@ int Server::main_loop()
 	return (0);
 }
 
-bool Server::find_commands(it_user user)
+bool Server::find_commands(it_user user, it_fd it)
 {
 	int pos = 0;
 
@@ -174,10 +148,10 @@ bool Server::find_commands(it_user user)
 		return(1);
 	else if ((pos = (user->second.get_buffer().find("QUIT ") )!= std::string::npos))
 	{
-/* 		close(it->fd);
+		close(user->first);
 		this->active_fd--;
 		this->fds.erase(it);
- 		this->fds.resize(this->active_fd);  */
+ 		this->fds.resize(this->active_fd); 
 		return(1);
 	}
 	return(0);

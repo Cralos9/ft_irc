@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/04 17:28:28 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:02:35 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ public:
 	void send_msg(it_user user);
 	void receive_msg(it_user user);
 	std::string get_message(char *buffer, int fd);
-	bool find_commands(it_user user);
+	bool find_commands(it_user user, it_fd it);
 	std::map<int, User> data;
 	
 private:

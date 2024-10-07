@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 11:28:05 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:02:12 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,33 @@ void User::set_buffer(const std::string &buffer)
 const std::string &User::get_buffer() const
 {
 	return (this->_buffer);
+}
+
+
+std::string get_name(const std::string &string, int what)
+{
+	if (string.find("NICK ") != std::string::npos && what == 1)
+	{
+		int pos = string.find("NICK ") + 5;
+		return(string.substr(pos, (string ).find_first_of("\n", pos) - pos - 1));
+	}
+	if (string.find("USER ") != std::string::npos && what == 2)
+	{
+		int pos = string.find("USER ") + 5;
+		return(string.substr(pos, (string ).find_first_of("0", pos) - pos - 1));
+	}
+	return("ERROR");
+}
+
+void User::get_info()
+{
+	std::string nick = get_name(this->get_buffer(), 1);
+	std::string username = get_name(this->get_buffer(), 2);
+	if (nick != "ERROR" && username != "ERROR")
+	{
+		this->set_nick(nick);
+		this->set_username(username);
+	}
 }
 
 void User::prepare_buffer(const std::string &command)
