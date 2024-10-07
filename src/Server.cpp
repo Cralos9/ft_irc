@@ -15,12 +15,12 @@
 /* Constructors/Destructors */
 Server::Server()
 {
-	std::cout << "Server Constructor" << std::endl;
+	/*std::cout << "Server Constructor" << std::endl;*/
 }
 
 Server::Server(int port) : active_fd(1)
 {
-	std::cout << "Server port Constructor" << std::endl;
+	/*std::cout << "Server port Constructor" << std::endl;*/
 	std::memset(&this->_address, 0, sizeof(this->_address));
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
@@ -28,47 +28,10 @@ Server::Server(int port) : active_fd(1)
 
 Server::~Server()
 {
-	std::cout << "Server Destructor" << std::endl;	
+	/*std::cout << "Server Destructor" << std::endl;	*/
 }
 
 /* -------------------------------------------- */
-
-bool Server::find_commands(std::string buffer, it_fd it)
-{
-	int pos = 0;
-	if ((pos = (buffer.find("JOIN ") )!= std::string::npos))
-	{
-		this->join_Channel(buffer, pos + 4, it->fd);
-		return(1);
-	}
-	if ((pos = (buffer.find("WHO ") )!= std::string::npos))
-		return(1);
-	else if ((pos = (buffer.find("MODE ") )!= std::string::npos))
-		return(1);
-	else if ((pos = (buffer.find("QUIT ") )!= std::string::npos))
-	{
-		close(it->fd);
-		this->active_fd--;
-		this->fds.erase(it);
- 		this->fds.resize(this->active_fd); 
-		return(1);
-	}
-	return(0);
-}
-
-std::string Server::get_message(char *buffer, int fd)
-{
-	for(std::map<int, User>::iterator it = this->data.begin(); it != this->data.end(); it++)
-    {
-		if (it->first == fd)
-		{
-			std::ostringstream oss;
-			oss << ":" << it->second.get_nick() << "!" << it->second.get_nick() << "@localhost " << buffer;
-			return (oss.str());
-		}
-	}
-	return("ERROR");
-}
 
 int Server::create_server()
 {
@@ -90,15 +53,6 @@ int Server::create_server()
 	return (EXIT_SUCCESS);
 }
 
-std::string get_name(std::string string)
-{
-	if (string.find("NICK ") != std::string::npos)
-	{
-		int pos = string.find("NICK ") + 5;
-		return(string.substr(pos, (string ).find_first_of("\n", pos) - pos - 1));
-	}
-	return("ERROR");
-}
 
 pollfd Server::connect_client()
 {
@@ -110,10 +64,32 @@ pollfd Server::connect_client()
 	if (client.fd == -1)
 		print_error("Accept Error");
 	client.events = POLLIN;
-	std::cout << "New client " << this->active_fd << " connected" << std::endl;
-	this->data.insert(std::pair<int, User>(client.fd, User()));
+	this->data[client.fd] = User("user", inet_ntoa(client_info.sin_addr));
 	this->active_fd++;
+	std::cout << "New client " << this->active_fd << " connected" << std::endl;
 	return (client);
+}
+
+void Server::receive_msg(it_user user)
+{
+	int msg_bytes;
+
+	char buffer[1024] = {0};
+	msg_bytes = recv(user->first, buffer, sizeof(buffer), 0);
+	if (msg_bytes == -1)
+		print_error("recv Error");
+	user->second.set_buffer(buffer);
+	std::cout << user->second.get_buffer();
+}
+
+void Server::send_msg(it_user msg_sender)
+{
+	for (it_user user = this->data.begin(); user != this->data.end(); user++)
+	{
+		if (user != msg_sender)
+			send(user->first, user->second.get_buffer().c_str(),
+				user->second.get_buffer().length(), 0);
+	}
 }
 
 int Server::main_loop()
@@ -144,27 +120,12 @@ int Server::main_loop()
 			}
 			else
 			{
-				char buffer[1024] = {0};
-				ret = recv(it->fd, buffer, sizeof(buffer), 0);
-				std::string nick = get_name(buffer);
-				if (nick != "ERROR")
-				{
-					for (std::map<int , User>::iterator it_map = this->data.begin(); it_map != this->data.end(); it_map++)
-						if (it_map->first == it->fd)
-							it_map->second.set_nick(nick);
-				}
-				if(this->find_commands(buffer, it)) // Sending join to own client;
+				it_user user = advance_map(this->data, it->fd);
+				this->receive_msg(user);
+				user->second.get_info();
+				if (this->find_commands(user, it))
 					break;
-				std::string test = get_message(buffer, it->fd);
-				// std::cout <<  test;
-				if (test != "ERROR")
-				{
-					for (it_fd it_send = this->fds.begin() + 1; it_send != this->fds.end(); it_send++)
-					{
-						if (it != it_send)
-							send(it_send->fd, test.c_str(), test.length(), 0); // Sends to all other clients;
-					}
-				}
+				this->send_msg(user);
 			}
 		}
 		this->fds.insert(this->fds.end(), tmp.begin(), tmp.end());
@@ -172,4 +133,26 @@ int Server::main_loop()
 	return (0);
 }
 
-int Server::get_fd() const {return (this->fds.at(0).fd);}
+bool Server::find_commands(it_user user, it_fd it)
+{
+	int pos = 0;
+
+	if ((pos = (user->second.get_buffer().find("JOIN ") )!= std::string::npos))
+	{
+		this->join_Channel(user);
+		return(1);
+	}
+	else if ((pos = (user->second.get_buffer().find("WHO ") )!= std::string::npos))
+		return(1);
+	else if ((pos = (user->second.get_buffer().find("MODE ") )!= std::string::npos))
+		return(1);
+	else if ((pos = (user->second.get_buffer().find("QUIT ") )!= std::string::npos))
+	{
+		close(user->first);
+		this->active_fd--;
+		this->fds.erase(it);
+ 		this->fds.resize(this->active_fd); 
+		return(1);
+	}
+	return(0);
+}

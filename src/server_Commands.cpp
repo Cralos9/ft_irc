@@ -6,28 +6,21 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:02:16 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/04 15:28:47 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/07 11:03:29 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
-void Server::join_Channel(std::string buffer, int pos, int fd)
+void Server::join_Channel(it_user user)
 {
-	for(std::map<int, User>::iterator it = this->data.begin(); it != this->data.end(); it++)
-	{
-		std::string channel = buffer.substr(pos, (buffer.find_first_of("\n") - pos - 1));
-	
-		if (it->first == fd)
-		{
-			std::cout << "Joining " << channel << " ..." << std::endl;
-			std::ostringstream oss; 
-			oss << ":" << it->second.get_nick() << "!" << it->second.get_nick() << "@localhost JOIN " << channel << "\r\n"; 
-			std::string join_msg = oss.str();
-			send(fd, join_msg.c_str(), join_msg.length(), 0);
-		}
-	}
-
+	std::string channel = user->second.get_buffer().substr(4, user->second.get_buffer().find_first_of("\n") - 4 - 1);
+	std::cout << "Joining " << channel << " ..." << std::endl;
+	std::ostringstream oss; 
+	oss << "JOIN" << channel << "\r\n";
+	user->second.prepare_buffer(oss.str());
+	std::cout << user->second.get_buffer() << std::endl;
+	send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
    /* // Send the topic message (if no topic is set)
 	std::string topic_msg = ":irc.myserver.com 331 cacarval #general :No topic is set\r\n";
 	send(fd, topic_msg.c_str(), topic_msg.length(), 0);

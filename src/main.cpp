@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/04 11:28:53 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/04 16:20:03 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,13 @@
 #include "User.hpp"
 
 
-// void get_user(std::string string)
-// {
-	
-// }
+
 
 void print_error(std::string error_msg)
 {
 	std::perror(error_msg.c_str());
 	exit(EXIT_FAILURE);
 }
-
 
 int main(int argc, char  **argv)
 {
