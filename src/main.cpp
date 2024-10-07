@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/04 16:20:03 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:06:18 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
 #include "Server.hpp"
 #include "User.hpp"
-
-
 
 
 void print_error(std::string error_msg)
@@ -32,8 +30,7 @@ int main(int argc, char  **argv)
 	}
 	Server irc_server(std::atoi(argv[1]));
 	
-	if (irc_server.create_server() == 1)
-		return (EXIT_FAILURE);
+	irc_server.create_server();
 	irc_server.main_loop();
 /*  Function to use the server with the pc ip
 	if (inet_pton(AF_INET, ip_address, &server_address.sin_addr) <= 0)

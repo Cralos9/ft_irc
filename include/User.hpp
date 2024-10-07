@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 12:07:49 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:27:59 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class User
 		void set_hostname(const std::string &hostname);
 		void set_buffer(const std::string &buffer);
 		const std::string &get_buffer() const;
-		void get_info();
+		bool get_info();
 		std::string get_nick() const;
 		std::string get_username() const;
 		void prepare_buffer(const std::string &command);

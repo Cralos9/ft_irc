@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 12:02:12 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:28:15 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,17 @@ std::string get_name(const std::string &string, int what)
 	return("ERROR");
 }
 
-void User::get_info()
+bool User::get_info()
 {
 	std::string nick = get_name(this->get_buffer(), 1);
 	std::string username = get_name(this->get_buffer(), 2);
-	if (nick != "ERROR" && username != "ERROR")
+	if ((nick != "ERROR" && nick.find("USER ") == std::string::npos)&& username != "ERROR")
 	{
 		this->set_nick(nick);
 		this->set_username(username);
+		return (1);
 	}
+	return (0);
 }
 
 void User::prepare_buffer(const std::string &command)

@@ -122,7 +122,8 @@ int Server::main_loop()
 			{
 				it_user user = advance_map(this->data, it->fd);
 				this->receive_msg(user);
-				user->second.get_info();
+				if(user->second.get_info())
+					break;
 				if (this->find_commands(user, it))
 					break;
 				this->send_msg(user);
