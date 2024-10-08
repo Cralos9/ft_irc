@@ -24,6 +24,7 @@ Server::Server(int port) : active_fd(1)
 	std::memset(&this->_address, 0, sizeof(this->_address));
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
+	this->_all_users = "";
 }
 
 Server::~Server()
@@ -82,12 +83,15 @@ void Server::receive_msg(it_user user)
 	std::cout << buffer;
 }
 
-void Server::send_msg(it_user msg_sender)
+void Server::send_msg(it_user msg_sender, int i)
 {
 	for (it_user user = this->data.begin(); user != this->data.end(); user++)
 	{
-		if (user != msg_sender)
+		if (user != msg_sender && i == 0)
 			send(user->first, msg_sender->second.get_buffer().c_str(),
+				msg_sender->second.get_buffer().length(), 0);
+		else if (i == 1)
+send(user->first, msg_sender->second.get_buffer().c_str(),
 				msg_sender->second.get_buffer().length(), 0);
 	}
 }
@@ -127,7 +131,7 @@ int Server::main_loop()
 				if (this->find_commands(user, it))
 					break;
 				user->second.prepare_buffer(user->second.get_buffer());
-				this->send_msg(user);
+				this->send_msg(user, 0);
 			}
 		}
 		this->fds.insert(this->fds.end(), tmp.begin(), tmp.end());
@@ -148,7 +152,6 @@ bool Server::find_commands(it_user user, it_fd it)
 	{
 		std::string nick = user->second.get_name(user->second.get_buffer(), 1);
 		user->second.prepare_buffer(user->second.get_buffer());
-		std::cout << user->second.get_buffer();
 		send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
 		user->second.set_nick(nick);
 		return(1);

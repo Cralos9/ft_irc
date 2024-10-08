@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 15:45:41 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:25:42 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ User::User(std::string nick, const std::string &hostname)
 {
 	/*std::cout << "User Constructor" << std::endl;*/
 	this->_nick = nick;
-	this->_hostname = hostname;
+this->_hostname = hostname;
 }
 
 
@@ -54,6 +54,11 @@ void User::set_username(const std::string &username)
 void User::set_hostname(const std::string &hostname)
 {
 	this->_hostname = hostname;
+}
+
+std::string User::get_hostname()
+{
+	return(this->_hostname);
 }
 
 void User::set_buffer(const std::string &buffer)

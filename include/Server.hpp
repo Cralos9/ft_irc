@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/07 12:02:35 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:20:05 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <sys/types.h>
 # include <poll.h>
 # include <User.hpp>
+# include <vector>
+# include <Channel.hpp>
 
 # define PC_IP "10.11.4.6"
 
@@ -44,14 +46,17 @@ public:
 	int main_loop();
 	void create_client(const int &fd, const std::string &hostname);
 	pollfd connect_client();
-	void send_msg(it_user user);
+	void send_msg(it_user user, int i);
 	void receive_msg(it_user user);
 	std::string get_message(char *buffer, int fd);
 	bool find_commands(it_user user, it_fd it);
+	std::vector<Channel>::iterator check_channel(Channel &ch);
 	std::map<int, User> data;
 	
 private:
 
+	std::vector<Channel> channel_list;
+	std::string _all_users;
 	int	active_fd;
 	std::vector<pollfd> fds;
 	sockaddr_in _address;

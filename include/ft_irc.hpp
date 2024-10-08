@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 11:59:26 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:58:45 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <vector>
 #include <iterator>
 #include <map>
+#include <algorithm>
 
 void print_error(std::string error_msg);
 std::string get_message(char *buffer, int i);
