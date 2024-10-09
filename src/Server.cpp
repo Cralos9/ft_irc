@@ -20,6 +20,8 @@ Server::Server(int port) : active_fd(1)
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
 	this->_commands["JOIN"] = new Join(*this);
+	this->_commands["WHO"] = new Who(*this);
+	this->_commands["MODE"] = new Mode(*this);
 }
 
 Server::~Server()
