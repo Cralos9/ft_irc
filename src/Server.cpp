@@ -23,6 +23,8 @@ Server::Server(int port) : active_fd(1)
 	this->_commands["WHO"] = new Who(*this);
 	this->_commands["MODE"] = new Mode(*this);
 	this->_commands["NICK"] = new Nick(*this);
+	this->_commands["QUIT"] = new Quit(*this);
+	this->_commands["PRIVMSG"] = new PrivMsg(*this);
 }
 
 Server::~Server()
@@ -100,6 +102,11 @@ void Server::send_msg(it_user msg_sender, int i)
 	}
 }
 
+void Server::msg_user(const int receiver_fd, User &msg_sender)
+{
+	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
+}
+
 int Server::main_loop()
 {
 	int ret;
@@ -132,11 +139,8 @@ int Server::main_loop()
 				this->receive_msg(user);
 				if(user->second.get_info())
 					break;
-				this->handle_commands(user);
-				/* if (this->find_commands(user, it))
-					break; */
-				user->second.prepare_buffer(user->second.get_buffer());
-				this->send_msg(user, 0);
+				if (this->handle_commands(user))
+					break;
 			}
 		}
 		this->fds.insert(this->fds.end(), tmp.begin(), tmp.end());
@@ -144,50 +148,47 @@ int Server::main_loop()
 	return (0);
 }
 
-void Server::handle_commands(it_user &user)
+int Server::handle_commands(it_user &user)
 {
 	const std::string msg = user->second.get_buffer();
 	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
-	if (command_name.compare("CAP") == 0 || command_name.compare("PRIVMSG") == 0)
-		return ;
-	const size_t command_name_len = command_name.length();
+	std::cout << command_name << std::endl;
+	if (command_name.compare("CAP") == 0 || command_name.compare(".") == 0
+		|| command_name.compare(" .") == 0)
+		return (0);
+	const size_t command_name_len = command_name.length() + 1;
 
 	ACommand * command = this->_commands.at(command_name);
 
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
 	command->set_user(user);
-	command->run();
+	if (command->run())
+		return (1);
+	return (0);
 }
 
-bool Server::find_commands(it_user user, it_fd it)
+it_user Server::get_user(const std::string &username)
 {
-	int pos = 0;
-
+	it_user it;
 	
-	if ((pos = (user->second.get_buffer().find("JOIN ") )!= std::string::npos))
-	{
-		this->join_Channel(user);
-		return(1);
-	}
-	else if ((pos = (user->second.get_buffer().find("NICK ") )!= std::string::npos))
-	{
-		std::string nick = user->second.get_name(user->second.get_buffer(), 1);
-		user->second.prepare_buffer(user->second.get_buffer());
-		send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
-		user->second.set_nick(nick);
-		return(1);
-	}
-	else if ((pos = (user->second.get_buffer().find("WHO ") )!= std::string::npos))
-		return(1);
-	else if ((pos = (user->second.get_buffer().find("MODE ") )!= std::string::npos))
-		return(1);
-	else if ((pos = (user->second.get_buffer().find("QUIT ") )!= std::string::npos))
-	{
-		close(user->first);
-		this->active_fd--;
-		this->_clients.erase(user);
-		this->fds.erase(it);
-		return(1);
-	}
-	return(0);
+	for (it = this->_clients.begin(); it != this->_clients.end()
+		&& it->second.get_username().compare(username) != 0; it++)
+		;
+	return (it);
+}
+
+void Server::disconnect_user(it_user &user)
+{
+	close(user->first);
+	this->active_fd--;
+	this->_clients.erase(user);
+	this->fds.erase(find_fd(this->fds, user->first));
+}
+
+it_fd find_fd(std::vector<pollfd> &vec, const int fd)
+{
+	it_fd it;
+	for (it = vec.begin(); it->fd != fd; it++)
+		;
+	return (it);
 }

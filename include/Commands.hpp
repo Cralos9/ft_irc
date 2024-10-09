@@ -3,20 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:16:40 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/09 13:50:00 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:39:05 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMANDS_HPP
 # define COMMANDS_HPP
 
-# include "Server.hpp"
 # include "User.hpp"
+# include "Channel.hpp"
+# include "Server.hpp"
 
 class Server;
+
+typedef std::map<int, User>::iterator it_user;
 
 class ACommand
 {
@@ -27,7 +30,7 @@ public:
 
 	void set_args(const std::string &args);
 	void set_user(it_user &user);
-	virtual void run() = 0;
+	virtual int run() = 0;
 
 protected:
 
@@ -43,7 +46,7 @@ public:
 	Join(Server &server);
 	~Join();
 
-	void run();
+	int run();
 };
 
 class Who : public ACommand
@@ -53,7 +56,7 @@ public:
 	Who(Server &server);
 	~Who();
 
-	void run();
+	int run();
 };
 
 class Mode : public ACommand
@@ -63,7 +66,7 @@ public:
 	Mode(Server &server);
 	~Mode();
 
-	void run();
+	int run();
 };
 
 class Nick : public ACommand
@@ -73,7 +76,7 @@ public:
 	Nick(Server &server);
 	~Nick();
 
-	void run();
+	int run();
 };
 
 class Quit : public ACommand
@@ -83,7 +86,17 @@ public:
 	Quit(Server &server);
 	~Quit();
 
-	void run();
+	int run();
+};
+
+class PrivMsg : public ACommand
+{
+public:
+	
+	PrivMsg(Server &server);
+	~PrivMsg();
+
+	int run();
 };
 
 #endif

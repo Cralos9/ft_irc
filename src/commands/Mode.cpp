@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/09 13:20:35 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:16:19 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ Mode::~Mode()
 	std::cout << "Mode destructor" << std::endl;
 }
 
-void Mode::run()
+int Mode::run()
 {
 	std::cout << "Mode Command" << std::endl;
+	return (0);
 }
