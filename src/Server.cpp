@@ -13,18 +13,13 @@
 #include "Server.hpp"
 
 /* Constructors/Destructors */
-Server::Server()
-{
-	/*std::cout << "Server Constructor" << std::endl;*/
-}
-
 Server::Server(int port) : active_fd(1)
 {
 	/*std::cout << "Server port Constructor" << std::endl;*/
 	std::memset(&this->_address, 0, sizeof(this->_address));
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
-	this->_all_users = "";
+	this->_commands["JOIN"] = new Join(*this);
 }
 
 Server::~Server()
@@ -54,6 +49,12 @@ int Server::create_server()
 	return (EXIT_SUCCESS);
 }
 
+void Server::close_all_fds()
+{
+	for (it_fd it = this->fds.begin(); it != this->fds.end(); it++)
+		close(it->fd);
+	this->fds.erase(this->fds.begin(), this->fds.end());
+}
 
 pollfd Server::connect_client()
 {
@@ -65,7 +66,7 @@ pollfd Server::connect_client()
 	if (client.fd == -1)
 		print_error("Accept Error");
 	client.events = POLLIN;
-	this->data[client.fd] = User("user", inet_ntoa(client_info.sin_addr));
+	this->_clients[client.fd] = User(inet_ntoa(client_info.sin_addr));
 	this->active_fd++;
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
 	return (client);
@@ -85,7 +86,7 @@ void Server::receive_msg(it_user user)
 
 void Server::send_msg(it_user msg_sender, int i)
 {
-	for (it_user user = this->data.begin(); user != this->data.end(); user++)
+	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
 	{
 		if (user != msg_sender && i == 0)
 			send(user->first, msg_sender->second.get_buffer().c_str(),
@@ -124,12 +125,13 @@ int Server::main_loop()
 			}
 			else
 			{
-				it_user user = advance_map(this->data, it->fd);
+				it_user user = advance_map(this->_clients, it->fd);
 				this->receive_msg(user);
 				if(user->second.get_info())
 					break;
-				if (this->find_commands(user, it))
-					break;
+				this->handle_commands(user);
+				/* if (this->find_commands(user, it))
+					break; */
 				user->second.prepare_buffer(user->second.get_buffer());
 				this->send_msg(user, 0);
 			}
@@ -139,10 +141,28 @@ int Server::main_loop()
 	return (0);
 }
 
+void Server::handle_commands(it_user &user)
+{
+	const std::string msg = user->second.get_buffer();
+	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
+	if (command_name.compare("CAP") == 0)
+		return ;
+	const size_t command_name_len = command_name.length();
+
+	std::cout << "CMD_NAME: " << command_name << std::endl;
+	ACommand * command = this->_commands.at(command_name);
+
+	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
+	command->set_user(user->second);
+	command->run();
+	send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
+}
+
 bool Server::find_commands(it_user user, it_fd it)
 {
 	int pos = 0;
 
+	
 	if ((pos = (user->second.get_buffer().find("JOIN ") )!= std::string::npos))
 	{
 		this->join_Channel(user);
@@ -164,8 +184,8 @@ bool Server::find_commands(it_user user, it_fd it)
 	{
 		close(user->first);
 		this->active_fd--;
+		this->_clients.erase(user);
 		this->fds.erase(it);
- 		this->fds.resize(this->active_fd); 
 		return(1);
 	}
 	return(0);

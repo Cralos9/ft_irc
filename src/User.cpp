@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/08 13:25:42 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/09 12:10:15 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,44 @@
 
 User::User() : _nick("Default")
 {
-	/*std::cout << "User default constructor" << std::endl;*/
+	std::cout << "User default constructor" << std::endl;
 }
 
-User::User(std::string nick, const std::string &hostname)
+User::User(const std::string &hostname)
 {
-	/*std::cout << "User Constructor" << std::endl;*/
-	this->_nick = nick;
-this->_hostname = hostname;
+	std::cout << "User Constructor" << std::endl;
+	this->_hostname = hostname;
 }
-
 
 User::~User()
 {
-	/*std::cout << "User Destructor" << std::endl;*/
+	std::cout << "User Destructor" << std::endl;
 }
 
-std::string User::get_nick() const
+/* User getters */
+
+const std::string &User::get_nick() const
 {
 	return(this->_nick);
 }
 
+const std::string &User::get_buffer() const
+{
+	return (this->_buffer);
+}
+
+const std::string &User::get_username() const
+{
+	return(this->_username);
+}
+
+/* -------------------------------------------------- */
+
+/* User setters */
+
 void User::set_nick(const std::string &nick)
 {
 	this->_nick = nick;
-}
-
-
-std::string User::get_username() const
-{
-	return(this->_username);
 }
 
 void User::set_username(const std::string &username)
@@ -65,12 +73,6 @@ void User::set_buffer(const std::string &buffer)
 {
 	this->_buffer = buffer;
 }
-
-const std::string &User::get_buffer() const
-{
-	return (this->_buffer);
-}
-
 
 std::string User::get_name(const std::string &string, int what)
 {

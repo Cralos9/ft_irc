@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+         #
+#    By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 10:42:39 by rumachad          #+#    #+#              #
-#    Updated: 2024/10/08 13:37:26 by cacarval         ###   ########.fr        #
+#    Updated: 2024/10/09 12:08:48 by rumachad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -I $(INCLUDE_PATH)
 SRC_PATH = src/
 VPATH = $(SRC_PATH)
 
-SRC = main.cpp Server.cpp server_Commands.cpp User.cpp Channel.cpp
+SRC = main.cpp Server.cpp server_Commands.cpp User.cpp Commands.cpp Join.cpp Channel.cpp
 
 OBJS = $(SRC:.cpp=.o)
 
