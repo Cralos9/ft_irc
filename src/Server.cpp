@@ -22,6 +22,7 @@ Server::Server(int port) : active_fd(1)
 	this->_commands["JOIN"] = new Join(*this);
 	this->_commands["WHO"] = new Who(*this);
 	this->_commands["MODE"] = new Mode(*this);
+	this->_commands["NICK"] = new Nick(*this);
 }
 
 Server::~Server()
@@ -147,15 +148,14 @@ void Server::handle_commands(it_user &user)
 {
 	const std::string msg = user->second.get_buffer();
 	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
-	if (command_name.compare("CAP") == 0)
+	if (command_name.compare("CAP") == 0 || command_name.compare("PRIVMSG") == 0)
 		return ;
 	const size_t command_name_len = command_name.length();
 
-	std::cout << "CMD_NAME: " << command_name << std::endl;
 	ACommand * command = this->_commands.at(command_name);
 
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
-	command->set_user(user->second);
+	command->set_user(user);
 	command->run();
 	send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
 }

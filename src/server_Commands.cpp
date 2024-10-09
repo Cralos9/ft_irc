@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server_Commands.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:02:16 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/09 12:07:38 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/09 13:34:25 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ std::vector<Channel>::iterator Server::check_channel(Channel &ch)
 	std::vector<Channel>::iterator it;
 	for(it = this->channel_list.begin(); it != this->channel_list.end(); it++)
 		if(it->get_name() == ch.get_name())
-			return(it);	
+			return(it);
+	channel_list.push_back(ch);
+	it = channel_list.end() - 1;
 	return(it);
 }
 
