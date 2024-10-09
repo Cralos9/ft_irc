@@ -91,7 +91,7 @@ void Server::send_msg(it_user msg_sender, int i)
 			send(user->first, msg_sender->second.get_buffer().c_str(),
 				msg_sender->second.get_buffer().length(), 0);
 		else if (i == 1)
-send(user->first, msg_sender->second.get_buffer().c_str(),
+			send(user->first, msg_sender->second.get_buffer().c_str(),
 				msg_sender->second.get_buffer().length(), 0);
 	}
 }

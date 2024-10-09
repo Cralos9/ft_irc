@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:02:16 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/08 15:10:19 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/09 11:47:48 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,26 +26,18 @@ void Server::join_Channel(it_user user)
 	std::string channel = user->second.get_buffer().substr(4, user->second.get_buffer().find_first_of("\n") - 4 - 1);
 	std::cout << "Joining " << channel << " ..." << std::endl;
 	std::ostringstream oss;
+	oss << "JOIN " << channel << "\r\n";
+	user->second.prepare_buffer(oss.str());
+	send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
 	Channel ch;
 	ch.set_name(channel);
-	 std::vector<Channel>::iterator it = check_channel(ch);
+	std::vector<Channel>::iterator it = check_channel(ch);
 	if (it == this->channel_list.end()) 
 	{
 		this->channel_list.push_back(ch);
 		it = this->channel_list.end() - 1;
 	}
-	oss << "JOIN " << channel << "\r\n";
-	user->second.prepare_buffer(oss.str());
-	send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
-	if (it->user.empty())
-		it->user.push_back(" @" + user->second.get_nick());
-	else
-		it->user.push_back(user->second.get_nick());
-	for (std::vector<std::string>::iterator it2 = it->user.begin(); it2 != it->user.end(); it2++)
-		this->_all_users = this->_all_users + *it2 + " ";
-	std::string user_list;
-	user_list = ":" + user->second.get_hostname() + " 353 " + user->second.get_nick() + " =" + channel + this->_all_users + "\r\n";
-	user->second.set_buffer(user_list);
+	it->user_list(user);
 	this->send_msg(user, 1);
 }
 

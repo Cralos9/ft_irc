@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/08 15:01:17 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/09 11:48:33 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define CHANNEL_HPP
 
 #include "ft_irc.hpp"
+#include "User.hpp"
+
+typedef std::map<int, User>::iterator it_user;
 
 class Channel
 {
@@ -22,6 +25,7 @@ class Channel
 		~Channel(){};
 		Channel(std::string name)
 		{
+			this->all_users = "";
 			this->_name = name;
 		}
 		void set_name(std::string name);
@@ -30,9 +34,11 @@ class Channel
 		std::string get_admin();
 		void set_user(std::string user);
 		std::string get_user();
-		std::vector<std::string> user;
+		void user_list(it_user user);
 
 private:
+		std::vector<std::string> user;
+		std::string all_users;
 		std::string _name;
 		std::string _admin;
 		std::string _users;
