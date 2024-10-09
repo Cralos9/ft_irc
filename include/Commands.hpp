@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:16:40 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/09 13:42:03 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/09 13:50:00 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,16 @@ public:
 	
 	Nick(Server &server);
 	~Nick();
+
+	void run();
+};
+
+class Quit : public ACommand
+{
+public:
+	
+	Quit(Server &server);
+	~Quit();
 
 	void run();
 };

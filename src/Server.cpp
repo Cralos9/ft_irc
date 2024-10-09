@@ -157,7 +157,6 @@ void Server::handle_commands(it_user &user)
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
 	command->set_user(user);
 	command->run();
-	send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
 }
 
 bool Server::find_commands(it_user user, it_fd it)
