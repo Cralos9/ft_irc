@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/07 18:53:26 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/09 11:10:18 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ public:
 	void receive_msg(it_user user);
 	bool find_commands(it_user user, it_fd it);
 	void close_all_fds();
-	void handle_commands(const std::string &msg);
-	
+	void handle_commands(it_user &user);
+
 private:
 
 	int	active_fd;

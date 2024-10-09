@@ -126,7 +126,7 @@ int Server::main_loop()
 				this->receive_msg(user);
 				if(user->second.get_info())
 					break;
-				this->handle_commands(user->second.get_buffer());
+				this->handle_commands(user);
 				/* if (this->find_commands(user, it))
 					break; */
 				user->second.prepare_buffer(user->second.get_buffer());
@@ -138,14 +138,21 @@ int Server::main_loop()
 	return (0);
 }
 
-void Server::handle_commands(const std::string &msg)
+void Server::handle_commands(it_user &user)
 {
+	const std::string msg = user->second.get_buffer();
 	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
+	if (command_name.compare("CAP") == 0)
+		return ;
+	const size_t command_name_len = command_name.length();
 
+	std::cout << "CMD_NAME: " << command_name << std::endl;
 	ACommand * command = this->_commands.at(command_name);
 
-	command->get_args();
+	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
+	command->set_user(user->second);
 	command->run();
+	send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
 }
 
 bool Server::find_commands(it_user user, it_fd it)
