@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/10 12:21:05 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:34:18 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 # include "User.hpp"
 # include "Channel.hpp"
 # include "Commands.hpp"
+# include <signal.h>
+# include <cerrno>
+# include <errno.h>
 
 typedef std::vector<pollfd>::iterator it_fd;
 typedef std::map<int, User>::iterator it_user;
@@ -49,6 +52,9 @@ public:
 	it_user get_user(const std::string &nick);
 	void disconnect_user(it_user &user);
 	void remove_from_ch(std::string ch_name, std::string &name);
+
+	static void	signal_handler(int signum);
+	static bool should_end;
 
 private:
 

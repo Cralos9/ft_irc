@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/09 14:11:26 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:40:01 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,16 @@ void print_error(std::string error_msg)
 
 int main(int argc, char  **argv)
 {
+	Server::should_end = false;
+	
 	if (argc < 2) 
 	{
 		std::cerr << "Usage: ./ircserv <port>" << std::endl;
 		return EXIT_FAILURE;
 	}
+
+	signal(SIGINT, Server::signal_handler);
+	signal(SIGQUIT, Server::signal_handler);
 
 	Server irc_server(std::atoi(argv[1]));
 	

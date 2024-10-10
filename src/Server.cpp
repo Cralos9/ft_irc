@@ -12,6 +12,8 @@
 
 #include "Server.hpp"
 
+bool Server::should_end = false;
+
 /* Constructors/Destructors */
 Server::Server(int port) : active_fd(1)
 {
@@ -30,6 +32,8 @@ Server::Server(int port) : active_fd(1)
 
 Server::~Server()
 {
+	for (std::map<std::string, ACommand *>::iterator it = this->_commands.begin(); it != this->_commands.end(); ++it)
+		delete it->second;
 	/*std::cout << "Server Destructor" << std::endl;	*/
 }
 
@@ -112,12 +116,17 @@ int Server::main_loop()
 {
 	int ret;
 
-	while (1)
+	while (!should_end)
 	{
 		std::vector<pollfd> tmp;
 		ret = poll(this->fds.data(), this->active_fd, -1);
 		if (ret == -1)
-			print_error("Poll Error");
+		{
+			if (errno == EINTR)
+				continue;
+			std::perror("Poll Error");
+			break;
+		}
 		if (ret == 0)
 		{
 			std::cout << "Pool timeout" << std::endl;
