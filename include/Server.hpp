@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/09 15:43:32 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/10 10:59:36 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ public:
 	std::vector<Channel>::iterator check_channel(Channel &ch);
 	void close_all_fds();
 	int handle_commands(it_user &user);
-	it_user get_user(const std::string &username);
+	it_user get_user(const std::string &nick);
 	void disconnect_user(it_user &user);
 
 private:

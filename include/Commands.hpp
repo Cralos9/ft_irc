@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:16:40 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/09 14:39:05 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:00:48 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,16 @@ public:
 	
 	PrivMsg(Server &server);
 	~PrivMsg();
+
+	int run();
+};
+
+class Cap : public ACommand
+{
+public:
+	
+	Cap(Server &server);
+	~Cap();
 
 	int run();
 };

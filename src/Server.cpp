@@ -137,10 +137,17 @@ int Server::main_loop()
 			{
 				it_user user = advance_map(this->_clients, it->fd);
 				this->receive_msg(user);
-				if(user->second.get_info())
+				if (user->second.get_info())
 					break;
-				if (this->handle_commands(user))
-					break;
+				try
+				{
+					if (this->handle_commands(user))
+						break;
+				}
+				catch (std::exception &e)
+				{
+					std::cerr << "Command Not Found" << std::endl;
+				}
 			}
 		}
 		this->fds.insert(this->fds.end(), tmp.begin(), tmp.end());
@@ -152,12 +159,12 @@ int Server::handle_commands(it_user &user)
 {
 	const std::string msg = user->second.get_buffer();
 	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
-	std::cout << command_name << std::endl;
+	std::cout << "CMD: " << command_name << std::endl;
+	const size_t command_name_len = command_name.length() + 1;
+
 	if (command_name.compare("CAP") == 0 || command_name.compare(".") == 0
 		|| command_name.compare(" .") == 0)
 		return (0);
-	const size_t command_name_len = command_name.length() + 1;
-
 	ACommand * command = this->_commands.at(command_name);
 
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
@@ -167,12 +174,12 @@ int Server::handle_commands(it_user &user)
 	return (0);
 }
 
-it_user Server::get_user(const std::string &username)
+it_user Server::get_user(const std::string &nick)
 {
 	it_user it;
 	
 	for (it = this->_clients.begin(); it != this->_clients.end()
-		&& it->second.get_username().compare(username) != 0; it++)
+		&& it->second.get_nick().compare(nick) != 0; it++)
 		;
 	return (it);
 }

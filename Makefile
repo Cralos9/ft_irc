@@ -6,7 +6,7 @@
 #    By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 10:42:39 by rumachad          #+#    #+#              #
-#    Updated: 2024/10/09 14:42:48 by rumachad         ###   ########.fr        #
+#    Updated: 2024/10/10 12:05:40 by rumachad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRC_PATH = src/
 VPATH = $(SRC_PATH) $(SRC_PATH)/commands
 
 SRC = main.cpp Server.cpp server_Commands.cpp User.cpp Commands.cpp Join.cpp Channel.cpp \
-		Who.cpp Mode.cpp Nick.cpp Quit.cpp PrivMsg.cpp
+		Who.cpp Mode.cpp Nick.cpp Quit.cpp PrivMsg.cpp Cap.cpp
 
 OBJS = $(SRC:.cpp=.o)
 

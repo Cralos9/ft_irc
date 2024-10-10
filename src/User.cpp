@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/09 12:10:15 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:56:38 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ bool User::get_info()
 	std::string username = get_name(this->get_buffer(), 2);
 	if ((nick != "ERROR" && nick.find("USER ") == std::string::npos)&& username != "ERROR")
 	{
-		this->set_nick(nick);
-		this->set_username(username);
+		this->_nick = nick;
+		this->_username = username;
 		return (1);
 	}
 	return (0);
