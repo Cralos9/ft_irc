@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:02:16 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/09 13:34:25 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:37:25 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,16 @@ std::vector<Channel>::iterator Server::check_channel(Channel &ch)
 	channel_list.push_back(ch);
 	it = channel_list.end() - 1;
 	return(it);
+}
+
+void Server::remove_from_ch(std::string ch_name, std::string &name)
+{
+	Channel ch;
+	ch.set_name(" " + ch_name);
+	name = name.substr(0, name.find_first_of("\n"));
+	std::vector<Channel>::iterator it = check_channel(ch);
+	it->delete_user_vec(name);
+	
 }
 
 void Server::join_Channel(it_user user)

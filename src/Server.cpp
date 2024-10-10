@@ -23,6 +23,7 @@ Server::Server(int port) : active_fd(1)
 	this->_commands["WHO"] = new Who(*this);
 	this->_commands["MODE"] = new Mode(*this);
 	this->_commands["NICK"] = new Nick(*this);
+	this->_commands["KICK"] = new Kick(*this);
 }
 
 Server::~Server()
@@ -150,7 +151,7 @@ void Server::handle_commands(it_user &user)
 	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
 	if (command_name.compare("CAP") == 0 || command_name.compare("PRIVMSG") == 0)
 		return ;
-	const size_t command_name_len = command_name.length();
+	const size_t command_name_len = command_name.length() + 1;
 
 	ACommand * command = this->_commands.at(command_name);
 
@@ -159,35 +160,35 @@ void Server::handle_commands(it_user &user)
 	command->run();
 }
 
-bool Server::find_commands(it_user user, it_fd it)
-{
-	int pos = 0;
+// bool Server::find_commands(it_user user, it_fd it)
+// {
+// 	int pos = 0;
 
 	
-	if ((pos = (user->second.get_buffer().find("JOIN ") )!= std::string::npos))
-	{
-		this->join_Channel(user);
-		return(1);
-	}
-	else if ((pos = (user->second.get_buffer().find("NICK ") )!= std::string::npos))
-	{
-		std::string nick = user->second.get_name(user->second.get_buffer(), 1);
-		user->second.prepare_buffer(user->second.get_buffer());
-		send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
-		user->second.set_nick(nick);
-		return(1);
-	}
-	else if ((pos = (user->second.get_buffer().find("WHO ") )!= std::string::npos))
-		return(1);
-	else if ((pos = (user->second.get_buffer().find("MODE ") )!= std::string::npos))
-		return(1);
-	else if ((pos = (user->second.get_buffer().find("QUIT ") )!= std::string::npos))
-	{
-		close(user->first);
-		this->active_fd--;
-		this->_clients.erase(user);
-		this->fds.erase(it);
-		return(1);
-	}
-	return(0);
-}
+// 	if ((pos = (user->second.get_buffer().find("JOIN ") )!= std::string::npos))
+// 	{
+// 		this->join_Channel(user);
+// 		return(1);
+// 	}
+// 	else if ((pos = (user->second.get_buffer().find("NICK ") )!= std::string::npos))
+// 	{
+// 		std::string nick = user->second.get_name(user->second.get_buffer(), 1);
+// 		user->second.prepare_buffer(user->second.get_buffer());
+// 		send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
+// 		user->second.set_nick(nick);
+// 		return(1);
+// 	}
+// 	else if ((pos = (user->second.get_buffer().find("WHO ") )!= std::string::npos))
+// 		return(1);
+// 	else if ((pos = (user->second.get_buffer().find("MODE ") )!= std::string::npos))
+// 		return(1);
+// 	else if ((pos = (user->second.get_buffer().find("QUIT ") )!= std::string::npos))
+// 	{
+// 		close(user->first);
+// 		this->active_fd--;
+// 		this->_clients.erase(user);
+// 		this->fds.erase(it);
+// 		return(1);
+// 	}
+// 	return(0);
+// }

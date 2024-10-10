@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/09 13:33:15 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:36:42 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ public:
 	std::vector<Channel>::iterator check_channel(Channel &ch);
 	void close_all_fds();
 	void handle_commands(it_user &user);
+	void remove_from_ch(std::string ch_name, std::string &name);
 
 private:
 

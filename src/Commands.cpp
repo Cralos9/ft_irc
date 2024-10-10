@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:18:50 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/09 13:37:13 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:04:21 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,13 @@ void ACommand::set_args(const std::string &args)
 	std::istringstream iss(args);
 	std::string token;
 
-	while (std::getline(iss, token, ' '))
-		this->_args.push_back(token);
+	 while (std::getline(iss, token, ' '))
+    {
+        std::size_t pos = token.find('\r');
+        if (pos != std::string::npos)
+			token = token.substr(0, pos);
+        this->_args.push_back(token);
+    }
 }
 
 void ACommand::set_user(it_user &user)

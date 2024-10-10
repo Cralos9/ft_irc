@@ -6,7 +6,7 @@
 #    By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 10:42:39 by rumachad          #+#    #+#              #
-#    Updated: 2024/10/09 13:49:47 by cacarval         ###   ########.fr        #
+#    Updated: 2024/10/09 14:23:02 by cacarval         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRC_PATH = src/
 VPATH = $(SRC_PATH) $(SRC_PATH)/commands
 
 SRC = main.cpp Server.cpp server_Commands.cpp User.cpp Commands.cpp Join.cpp Channel.cpp \
-		Who.cpp Mode.cpp Nick.cpp Quit.cpp
+		Who.cpp Mode.cpp Nick.cpp Quit.cpp Kick.cpp
 
 OBJS = $(SRC:.cpp=.o)
 
