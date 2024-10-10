@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/09 14:36:37 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:22:12 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ bool User::get_info()
 	std::string username = get_name(this->get_buffer(), 2);
 	if ((nick != "ERROR" && nick.find("USER ") == std::string::npos)&& username != "ERROR")
 	{
-		this->set_nick(nick);
-		this->set_username(username);
+		this->_nick = nick;
+		this->_username = username;
 		return (1);
 	}
 	return (0);

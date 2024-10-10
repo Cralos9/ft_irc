@@ -6,13 +6,12 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/07 16:03:42 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:11:26 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
 #include "Server.hpp"
-#include "User.hpp"
 
 void print_error(std::string error_msg)
 {

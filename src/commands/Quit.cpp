@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:40 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/09 13:51:54 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:15:57 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ Quit::~Quit()
 	std::cout << "Quit destructor" << std::endl;
 }
 
-void Quit::run()
+int Quit::run()
 {
-	
+	this->_server.disconnect_user(this->_user);
+	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/10 11:36:42 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:21:05 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,6 @@
 typedef std::vector<pollfd>::iterator it_fd;
 typedef std::map<int, User>::iterator it_user;
 
-/* Class to create the server. It calls socket, bind and listen 
-
-	- create_server(): gets fd from socket, then calls bind 
-		and listen to make the server ready for requests
-	- get_fd(): Returns the fd variable (socket fd)
-*/
 class ACommand;
 
 class Server
@@ -46,11 +40,14 @@ public:
 	void create_client(const int &fd, const std::string &hostname);
 	pollfd connect_client();
 	void send_msg(it_user user, int i);
+	void msg_user(const int receiver_fd, User &msg_sender);
 	void receive_msg(it_user user);
 	bool find_commands(it_user user, it_fd it);
 	std::vector<Channel>::iterator check_channel(Channel &ch);
 	void close_all_fds();
-	void handle_commands(it_user &user);
+	int handle_commands(it_user &user);
+	it_user get_user(const std::string &nick);
+	void disconnect_user(it_user &user);
 	void remove_from_ch(std::string ch_name, std::string &name);
 
 private:
@@ -63,5 +60,7 @@ private:
 	std::map<int, User> _clients;
 	std::map<std::string, ACommand *> _commands;
 };
+
+it_fd	find_fd(std::vector<pollfd> &vec, const int fd);
 
 #endif
