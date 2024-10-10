@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:23:13 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/10 12:13:51 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:08:35 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,21 @@ std::string Channel::get_user()
 	return(this->_users);
 }
 
+
+void Channel::change_user_it(std::string name)
+{
+	std::vector<std::string>::iterator it;
+	for (it = user_vec.begin(); it != user_vec.end(); it++)
+	{
+		std::cout << *it << " " << name << std::endl;
+		if (*it == name)
+		{
+			*it = "@" + *it;
+			std::cout << *it << std::endl;
+		}
+	}
+}
+
 void Channel::delete_user_vec(std::string &name)
 {
 	for(std::vector<std::string>::iterator it = this->user_vec.begin(); it != this->user_vec.end(); it++)
@@ -61,18 +76,15 @@ void Channel::delete_user_vec(std::string &name)
 void Channel::user_list(it_user user)
 {
 	if (this->user_vec.empty())
-		this->user_vec.push_back(" @" + user->second.get_nick());
+		this->user_vec.push_back("@" + user->second.get_nick());
 	else
 		this->user_vec.push_back(user->second.get_nick());
-	for(std::vector<std::string>::iterator it = user_vec.begin(); it != user_vec.end(); it++)
-	{
-
-		std::cout << *it << std::endl;
-	}
 	for (std::vector<std::string>::iterator it2 = this->user_vec.begin(); it2 != this->user_vec.end(); it2++)
 		this->all_users = this->all_users + *it2 + " ";
 	std::string user_list;
-	user_list = ":" + user->second.get_hostname() + " 353 " + user->second.get_nick() + " =" + this->_name + this->all_users + "\r\n";
+	user_list = ":" + user->second.get_hostname() + " 353 " + user->second.get_nick() + " =" + this->_name + " " + this->all_users + "\r\n";
 	user->second.set_buffer(user_list);
 	this->all_users = "";
+	for (std::vector<std::string>::iterator it2 = this->user_vec.begin(); it2 != this->user_vec.end(); it2++)
+		std::cout << *it2 << std::endl;
 }

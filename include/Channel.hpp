@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/10 11:35:56 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:42:18 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Channel
 		std::string get_user();
 		void user_list(it_user user);
 		void delete_user_vec(std::string &name);
+		void change_user_it(std::string name);
 
 private:
 		std::vector<std::string> user_vec;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:15:15 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/10 12:23:23 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:27:32 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,10 @@ Kick::~Kick()
 }
 
 int Kick::run()
-{
-	
+{	
 	_server.remove_from_ch(this->_args[0], this->_args[1]);
 	_user->second.prepare_buffer(_user->second.get_buffer());
 	_server.send_msg(_user, 1);
 	std::cout<<_user->second.get_buffer();
-	return (0);
+	return(0);
 }
