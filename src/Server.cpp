@@ -21,13 +21,20 @@ Server::Server(int port) : active_fd(1)
 	std::memset(&this->_address, 0, sizeof(this->_address));
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
-	this->_commands["JOIN"] = new Join(*this);
-	this->_commands["WHO"] = new Who(*this);
-	this->_commands["MODE"] = new Mode(*this);
-	this->_commands["NICK"] = new Nick(*this);
-	this->_commands["QUIT"] = new Quit(*this);
-	this->_commands["PRIVMSG"] = new PrivMsg(*this);
-	this->_commands["KICK"] = new Kick(*this);
+	this->_commands["JOIN"] = new Join(*this); //JOIN <channel>
+	this->_commands["WHO"] = new Who(*this);   //who
+	this->_commands["MODE"] = new Mode(*this); //MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
+	this->_commands["NICK"] = new Nick(*this); //NICK <new_name>
+	this->_commands["QUIT"] = new Quit(*this); //QUIT :<msg>
+	this->_commands["PRIVMSG"] = new PrivMsg(*this); // PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
+	this->_commands["KICK"] = new Kick(*this); //KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
+	//whois whois <nick>
+	//part PART <channel> :<msg>
+	//topic TOPIC <channel> || TOPIC <channel> <new_topic>
+	//invite INVITE <nick> <channel>
+	//pass? PASS <password>
+	//ping? PING <>
+	//pong? PONG <>
 }
 
 Server::~Server()
@@ -85,7 +92,6 @@ pollfd Server::connect_client()
 void Server::receive_msg(it_user user)
 {
 	int msg_bytes;
-
 	char buffer[1024] = {0};
 	msg_bytes = recv(user->first, buffer, sizeof(buffer), 0);
 	if (msg_bytes == -1)
@@ -151,6 +157,7 @@ int Server::main_loop()
 					break;
 				try
 				{
+					// Parser::parser(user->second.get_buffer());
 					if (this->handle_commands(user))
 						break;
 				}
