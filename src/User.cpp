@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/10 15:26:16 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:29:28 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "User.hpp"
 
-User::User() : _nick("Default")
+User::User() : _fd(0), _nick("Default")
 {
 	std::cout << "User default constructor" << std::endl;
 }
 
-User::User(const std::string &hostname)
+User::User(const int &fd, const std::string &hostname) : _fd(fd)
 {
 	std::cout << "User Constructor" << std::endl;
 	this->_hostname = hostname;
@@ -29,6 +29,11 @@ User::~User()
 }
 
 /* User getters */
+
+const int &User::get_fd() const
+{
+	return (this->_fd);
+}
 
 const std::string &User::get_nick() const
 {

@@ -41,7 +41,8 @@ Server::~Server()
 {
 	for (std::map<std::string, ACommand *>::iterator it = this->_commands.begin(); it != this->_commands.end(); ++it)
 		delete it->second;
-	/*std::cout << "Server Destructor" << std::endl;	*/
+	this->close_all_fds();
+	std::cout << "Server Destructor" << std::endl;	
 }
 
 /* -------------------------------------------- */
@@ -62,15 +63,15 @@ int Server::create_server()
 	if (listen(sock.fd, 5) == -1)
 		print_error("Listen Error");
 	sock.events = POLLIN;
-	this->fds.push_back(sock);
+	this->_fds.push_back(sock);
 	return (EXIT_SUCCESS);
 }
 
 void Server::close_all_fds()
 {
-	for (it_fd it = this->fds.begin(); it != this->fds.end(); it++)
+	for (it_fd it = this->_fds.begin(); it != this->_fds.end(); it++)
 		close(it->fd);
-	this->fds.erase(this->fds.begin(), this->fds.end());
+	this->_fds.erase(this->_fds.begin(), this->_fds.end());
 }
 
 pollfd Server::connect_client()
@@ -79,43 +80,78 @@ pollfd Server::connect_client()
 	sockaddr_in	client_info;
 	socklen_t	len = sizeof(client_info);
 
-	client.fd = accept(this->fds[0].fd, (struct sockaddr *)&client_info, &len);
+	client.fd = accept(this->_fds[0].fd, (struct sockaddr *)&client_info, &len);
 	if (client.fd == -1)
 		print_error("Accept Error");
 	client.events = POLLIN;
-	this->_clients[client.fd] = User(inet_ntoa(client_info.sin_addr));
+	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
 	this->active_fd++;
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
 	return (client);
 }
 
-void Server::receive_msg(it_user user)
+void Server::receive_msg(User &user)
 {
 	int msg_bytes;
 	char buffer[1024] = {0};
-	msg_bytes = recv(user->first, buffer, sizeof(buffer), 0);
+	msg_bytes = recv(user.get_fd(), buffer, sizeof(buffer), 0);
 	if (msg_bytes == -1)
 		print_error("recv Error");
-	user->second.set_buffer(buffer);
+	user.set_buffer(buffer);
 	std::cout << buffer;
 }
 
-void Server::send_msg(it_user msg_sender, int i)
+void Server::send_msg(User &msg_sender, int i)
 {
 	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
 	{
-		if (user != msg_sender && i == 0)
-			send(user->first, msg_sender->second.get_buffer().c_str(),
-				msg_sender->second.get_buffer().length(), 0);
+		if (user->second.get_fd() != msg_sender.get_fd() && i == 0)
+			send(user->first, msg_sender.get_buffer().c_str(),
+				msg_sender.get_buffer().length(), 0);
 		else if (i == 1)
-			send(user->first, msg_sender->second.get_buffer().c_str(),
-				msg_sender->second.get_buffer().length(), 0);
+			send(user->first, msg_sender.get_buffer().c_str(),
+				msg_sender.get_buffer().length(), 0);
 	}
 }
 
-void Server::msg_user(const int receiver_fd, User &msg_sender)
+void Server::msg_user(User &msg_sender)
 {
-	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
+	send(msg_sender.get_fd(), msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
+}
+
+int Server::fds_loop()
+{
+	int tmp = this->active_fd;
+
+/* 	for (it_fd it = this->_fds.begin(); it != this->_fds.end(); it++) {
+		std::cout << "FD: " << it->fd << std::endl;
+	} */
+	for (int i = 0; i < tmp; i++)
+	{
+		if (this->_fds[i].revents == 0)
+			continue;
+		if (this->_fds[i].revents != POLLIN)
+			print_error("Error revents");
+		if (this->_fds[i].fd == this->_fds[0].fd)
+			this->_fds.push_back(this->connect_client());
+		else
+		{
+			User &user = this->_clients.at(this->_fds[i].fd);
+			this->receive_msg(user);
+			if (user.get_info() == 1)
+				break;
+			try
+			{
+				if (this->handle_commands(user))
+					break;
+			}
+			catch (std::exception &e)
+			{
+				std::cerr << "Command Not Found" << std::endl;
+			}
+		}
+	}
+	return (0);
 }
 
 int Server::main_loop()
@@ -124,8 +160,7 @@ int Server::main_loop()
 
 	while (!should_end)
 	{
-		std::vector<pollfd> tmp;
-		ret = poll(this->fds.data(), this->active_fd, -1);
+		ret = poll(this->_fds.data(), this->active_fd, -1);
 		if (ret == -1)
 		{
 			if (errno == EINTR)
@@ -138,75 +173,53 @@ int Server::main_loop()
 			std::cout << "Pool timeout" << std::endl;
 			return (EXIT_FAILURE);
 		}
-		for (it_fd it = this->fds.begin(); it != this->fds.end(); it++)
-		{
-			if (it->revents == 0)
-				continue;
-			if (it->revents != POLLIN)
-				print_error("Error revents");
-			if (it->fd == this->fds[0].fd)
-			{
-				tmp.push_back(this->connect_client());
-				it = this->fds.begin();
-			}
-			else
-			{
-				it_user user = advance_map(this->_clients, it->fd);
-				this->receive_msg(user);
-				if (user->second.get_info())
-					break;
-				try
-				{
-					// Parser::parser(user->second.get_buffer());
-					if (this->handle_commands(user))
-						break;
-				}
-				catch (std::exception &e)
-				{
-					std::cerr << "Command Not Found" << std::endl;
-				}
-			}
-		}
-		this->fds.insert(this->fds.end(), tmp.begin(), tmp.end());
+		this->fds_loop();
 	}
 	return (0);
 }
 
-int Server::handle_commands(it_user &user)
+int Server::handle_commands(User &user)
 {
-	const std::string msg = user->second.get_buffer();
+	const std::string msg = user.get_buffer();
 	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
-	std::cout << "CMD: " << command_name << std::endl;
 	const size_t command_name_len = command_name.length() + 1;
 
-	if (command_name.compare("CAP") == 0 || command_name.compare(".") == 0
-		|| command_name.compare(" .") == 0)
-		return (0);
 	ACommand * command = this->_commands.at(command_name);
 
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
-	command->set_user(user);
+	command->set_user(&user);
 	if (command->run())
 		return (1);
 	return (0);
 }
 
-it_user Server::get_user(const std::string &nick)
+void Server::add_user_channel(User &user, Channel &channel)
+{
+	channel.user_list(user);
+}
+
+void Server::create_channel(User &user, const std::string &ch_name)
+{
+	this->_channel_list[ch_name] = Channel(ch_name);
+	this->add_user_channel(user, this->_channel_list[ch_name]);
+}
+
+User &Server::get_user(const std::string &nick)
 {
 	it_user it;
 	
 	for (it = this->_clients.begin(); it != this->_clients.end()
 		&& it->second.get_nick().compare(nick) != 0; it++)
 		;
-	return (it);
+	return (it->second);
 }
 
-void Server::disconnect_user(it_user &user)
+void Server::disconnect_user(User &user)
 {
-	close(user->first);
+	close(user.get_fd());
 	this->active_fd--;
-	this->_clients.erase(user);
-	this->fds.erase(find_fd(this->fds, user->first));
+	this->_fds.erase(find_fd(this->_fds, user.get_fd()));
+	this->_clients.erase(this->_clients.find(user.get_fd()));
 }
 
 it_fd find_fd(std::vector<pollfd> &vec, const int fd)
@@ -215,4 +228,9 @@ it_fd find_fd(std::vector<pollfd> &vec, const int fd)
 	for (it = vec.begin(); it->fd != fd; it++)
 		;
 	return (it);
+}
+
+void Server::print(const std::string &str)
+{
+	std::cout << GREEN << str << RESET << std::endl;
 }

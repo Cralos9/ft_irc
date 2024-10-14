@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:18:50 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/10 12:22:06 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:30:18 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void ACommand::set_args(const std::string &args)
     }
 }
 
-void ACommand::set_user(it_user &user)
+void ACommand::set_user(User *user) 
 {
 	this->_user = user;
 }
