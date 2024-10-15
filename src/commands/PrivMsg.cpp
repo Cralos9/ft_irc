@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:37:43 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/14 17:35:41 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:09:18 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,23 @@ PrivMsg::~PrivMsg()
 
 int PrivMsg::run()
 {
-	User &receiver = this->_server.get_user(this->_args.front());
-	this->_user->prepare_buffer(this->_user->get_buffer());
-	std::cout << this->_user->get_buffer() << std::endl;
-	this->_server.msg_user(receiver);
+	Channel *ch = NULL;
+	User *receiver = NULL;
+
+	if (this->_args[0].find('#') != std::string::npos)
+	{
+		ch = this->_server.check_channel(this->_args[0]);
+		this->_user->prepare_buffer(this->_user->get_buffer());
+		/* Preciso fazer funcao de mensage só par o channel */
+		this->_server.send_msg_all_users(*this->_user, 0); 
+		this->_server.print("Sending " + this->_user->get_buffer() + " to " + ch->get_name());
+	}
+	else
+	{
+		receiver = this->_server.get_user(this->_args[0]);
+		std::cout << receiver->get_nick() << std::endl;
+		this->_user->prepare_buffer(this->_user->get_buffer());
+		this->_server.send_msg_one_user(receiver->get_fd(), *this->_user);
+	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/14 17:32:04 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/15 16:51:39 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int Mode::run()
 		{
 			ch->change_user_it(this->_args[2]);
 			this->_user->prepare_buffer(_user->get_buffer());
-			this->_server.send_msg(*this->_user, 1);
+			this->_server.send_msg_all_users(*this->_user, 1);
 			std::cout << _user->get_buffer() << std::endl;
 		}
 	}

@@ -98,10 +98,10 @@ void Server::receive_msg(User &user)
 	if (msg_bytes == -1)
 		print_error("recv Error");
 	user.set_buffer(buffer);
-	std::cout << buffer;
+	this->print_recv(buffer);
 }
 
-void Server::send_msg(User &msg_sender, int i)
+void Server::send_msg_all_users(User &msg_sender, int i)
 {
 	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
 	{
@@ -114,9 +114,9 @@ void Server::send_msg(User &msg_sender, int i)
 	}
 }
 
-void Server::msg_user(User &msg_sender)
+void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
-	send(msg_sender.get_fd(), msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
+	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
 }
 
 int Server::fds_loop()
@@ -204,14 +204,14 @@ void Server::create_channel(User &user, const std::string &ch_name)
 	this->add_user_channel(user, this->_channel_list[ch_name]);
 }
 
-User &Server::get_user(const std::string &nick)
+User *Server::get_user(const std::string &nick)
 {
 	it_user it;
 	
 	for (it = this->_clients.begin(); it != this->_clients.end()
 		&& it->second.get_nick().compare(nick) != 0; it++)
 		;
-	return (it->second);
+	return (&it->second);
 }
 
 void Server::disconnect_user(User &user)
@@ -232,5 +232,10 @@ it_fd find_fd(std::vector<pollfd> &vec, const int fd)
 
 void Server::print(const std::string &str)
 {
-	std::cout << GREEN << str << RESET << std::endl;
+	std::cout << GREEN << "Server: " << RESET << str << std::endl;
+}
+
+void Server::print_recv(const std::string &str)
+{
+	std::cout << RED << "Client: " << RESET << str;
 }

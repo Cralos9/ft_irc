@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/14 17:37:51 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:08:08 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ public:
 	int fds_loop();
 
 	pollfd connect_client();
-	void send_msg(User &msg_sender, int i);
-	void msg_user(User &msg_sender);
+	void send_msg_all_users(User &msg_sender, int i);
+	void send_msg_one_user(const int receiver_fd, User &msg_sender);
 	void receive_msg(User &user);
 
 	void create_channel(User &user, const std::string &ch_name);
@@ -55,12 +55,13 @@ public:
 	Channel *check_channel(const std::string &ch_name);
 
 	int handle_commands(User &user);
-	User &get_user(const std::string &nick);
+	User *get_user(const std::string &nick);
 	
 	void disconnect_user(User &user);
 	void close_all_fds();
 
 	void print(const std::string &str);
+	void print_recv(const std::string &str);
 
 	static void	signal_handler(int signum);
 	static bool should_end;

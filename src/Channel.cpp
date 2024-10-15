@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:23:13 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/14 17:25:57 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/14 23:24:43 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,6 @@ void Channel::user_list(User &user)
 	user_list = ":" + user.get_hostname() + " 353 " + user.get_nick() + " =" + this->_name + " " + this->all_users + "\r\n";
 	user.set_buffer(user_list);
 	this->all_users = "";
-	for (std::vector<std::string>::iterator it2 = this->user_vec.begin(); it2 != this->user_vec.end(); it2++)
-		std::cout << *it2 << std::endl;
+	/* for (std::vector<std::string>::iterator it2 = this->user_vec.begin(); it2 != this->user_vec.end(); it2++)
+		std::cout << *it2 << std::endl; */
 }
