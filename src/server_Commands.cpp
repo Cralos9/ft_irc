@@ -3,54 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   server_Commands.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:02:16 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/10 11:37:25 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/14 17:25:41 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
-std::vector<Channel>::iterator Server::check_channel(Channel &ch)
+Channel *Server::check_channel(const std::string &ch_name)
 {
-	std::vector<Channel>::iterator it;
-	for(it = this->channel_list.begin(); it != this->channel_list.end(); it++)
-		if(it->get_name() == ch.get_name())
-			return(it);
-	channel_list.push_back(ch);
-	it = channel_list.end() - 1;
-	return(it);
+	it_ch it = this->_channel_list.find(ch_name);
+	if (it == this->_channel_list.end())
+		return (NULL);
+	return (&it->second);
 }
 
-void Server::remove_from_ch(std::string ch_name, std::string &name)
+void Server::remove_from_ch(Channel &ch, User &user)
 {
-	Channel ch;
-	ch.set_name(" " + ch_name);
-	name = name.substr(0, name.find_first_of("\n"));
-	std::vector<Channel>::iterator it = check_channel(ch);
-	it->delete_user_vec(name);
-	
-}
-
-void Server::join_Channel(it_user user)
-{
-	std::string channel = user->second.get_buffer().substr(4, user->second.get_buffer().find_first_of("\n") - 4 - 1);
-	std::cout << "Joining " << channel << " ..." << std::endl;
-	std::ostringstream oss;
-	oss << "JOIN " << channel << "\r\n";
-	user->second.prepare_buffer(oss.str());
-	send(user->first, user->second.get_buffer().c_str(), user->second.get_buffer().length(), 0);
-	Channel ch;
-	ch.set_name(channel);
-	std::vector<Channel>::iterator it = check_channel(ch);
-	if (it == this->channel_list.end()) 
-	{
-		this->channel_list.push_back(ch);
-		it = this->channel_list.end() - 1;
-	}
-	it->user_list(user);
-	this->send_msg(user, 1);
+	ch.delete_user_vec(user.get_nick());
 }
 
    /* // Send the topic message (if no topic is set)

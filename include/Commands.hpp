@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:16:40 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/10 15:00:52 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:20:21by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,13 @@ public:
 	virtual ~ACommand();
 
 	void set_args(const std::string &args);
-	void set_user(it_user &user);
+	void set_user(User *user);
 	virtual int run() = 0;
-	
 
 protected:
 
 	std::vector<std::string> _args;
-	it_user _user;
+	User *_user;
 	Server &_server;
 };
 

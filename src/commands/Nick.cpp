@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/09 14:16:29 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/14 17:33:48 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ Nick::~Nick()
 
 int Nick::run()
 {
-	std::string nick = _user->second.get_name(_user->second.get_buffer(), 1);
-	_user->second.prepare_buffer(_user->second.get_buffer());
-	send(_user->first, _user->second.get_buffer().c_str(), _user->second.get_buffer().length(), 0);
-	_user->second.set_nick(nick);
+	std::string nick = _user->get_name(_user->get_buffer(), 1);
+	_user->prepare_buffer(_user->get_buffer());
+	send(_user->get_fd(), _user->get_buffer().c_str(), _user->get_buffer().length(), 0);
+	_user->set_nick(nick);
 	return (1);
 }
