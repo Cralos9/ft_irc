@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/16 14:56:15 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/16 18:00:15 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <signal.h>
 # include <cerrno>
 # include <errno.h>
+
 
 typedef std::vector<pollfd>::iterator it_fd;
 typedef std::map<int, User>::iterator it_user;
@@ -45,11 +46,13 @@ public:
 	int fds_loop();
 
 	pollfd connect_client();
-	void send_msg_all_users(User &msg_sender, int i);
+	void send_msg_all_users(User &msg_sender);
 	void send_msg_one_user(const int receiver_fd, User &msg_sender);
+	void send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
 	void receive_msg(User &user);
 
-	void create_channel(User &user, const std::string &ch_name);
+	Channel *create_channel(const std::string &ch_name);
+	Channel *is_user_on_channel(const User &user);
 	void add_user_channel(User &user, Channel &channel);
 	void remove_from_ch(Channel &ch, User &user);
 	Channel *check_channel(const std::string &ch_name);

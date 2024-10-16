@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:23:13 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/16 15:04:28 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:31:06 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void Channel::set_user(std::string user)
 		this->_users = this->_users + " " + user;
 }
 
-std::string Channel::get_user()
+const std::string Channel::get_user() const
 {
 	return(this->_users);
 }
@@ -51,6 +51,11 @@ bool Channel::is_user_on_ch(User &user)
 	if((this->_user_map.find(&user)) != this->_user_map.end())
 		return(1);
 	return(0);
+}
+
+const std::map<User *, int> &Channel::get_users() const
+{
+	return (_user_map);
 }
 
 void Channel::change_user_it(std::string name, char sig)

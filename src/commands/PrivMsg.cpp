@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:37:43 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/15 17:09:18 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:42:41 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,8 @@ int PrivMsg::run()
 	{
 		ch = this->_server.check_channel(this->_args[0]);
 		this->_user->prepare_buffer(this->_user->get_buffer());
-		/* Preciso fazer funcao de mensage só par o channel */
-		this->_server.send_msg_all_users(*this->_user, 0); 
-		this->_server.print("Sending " + this->_user->get_buffer() + " to " + ch->get_name());
+		this->_server.send_msg_to_channel(*ch, *this->_user, CHOTHER); 
+		this->_server.print("Sending " + this->_user->get_buffer());
 	}
 	else
 	{

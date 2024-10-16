@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:40 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/16 15:05:16 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:58:56 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ Quit::~Quit()
 int Quit::run()
 {
 	this->_user->prepare_buffer(this->_user->get_buffer());
-	this->_server.send_msg_all_users(*this->_user, 0);
+	this->_server.send_msg_all_users(*this->_user);
 	this->_server.disconnect_user(*this->_user);
 	return (1);
 }

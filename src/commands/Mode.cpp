@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/16 12:23:23 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:54:32 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int Mode::run()
 		{
 			ch->change_user_it(this->_args[2], buffer[pos]);
 			this->_user->prepare_buffer(_user->get_buffer());
-			this->_server.send_msg_all_users(*this->_user, 1);
+			this->_server.send_msg_to_channel(*ch, *_user, CHSELF);
 			std::cout << _user->get_buffer() << std::endl;
 		}
 	}
