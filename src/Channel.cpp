@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:23:13 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/16 13:26:36 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:04:28 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,12 @@ std::string Channel::get_user()
 	return(this->_users);
 }
 
+bool Channel::is_user_on_ch(User &user)
+{
+	if((this->_user_map.find(&user)) != this->_user_map.end())
+		return(1);
+	return(0);
+}
 
 void Channel::change_user_it(std::string name, char sig)
 {
@@ -58,8 +64,7 @@ void Channel::change_user_it(std::string name, char sig)
 				it->second = OP;
 			if (sig == '-')
 				it->second = NOP;
-		}
-		
+		}	
 	}
 }
 
@@ -83,7 +88,6 @@ void Channel::user_list(User &user)
 		this->_user_map[&user] = NOP;
 	for (std::map<User *, int>::iterator it = this->_user_map.begin(); it != this->_user_map.end(); it++)
 	{
-		std::cout << it->first->get_nick()<< std::endl;
 		if (it->second == OP)
 			this->all_users = this->all_users + "@" + it->first->get_nick() + " ";
 		else
@@ -92,6 +96,7 @@ void Channel::user_list(User &user)
 	std::string user_list;
 	user_list = ":" + user.get_hostname() + " 353 " + user.get_nick() + " = " + this->_name + " " + this->all_users + "\r\n";
 	user.set_buffer(user_list);
+	std::cout << user.get_buffer();
 	this->all_users = "";
 	/* for (std::vector<std::string>::iterator it = this->_user_map.begin(); it != this->_user_map.end(); it++)
 		std::cout << *it << std::endl; */

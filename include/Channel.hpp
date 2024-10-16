@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/16 12:14:19 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/16 14:56:08 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 
 #define OP 1
 #define NOP 0
+// #define LEAVING 1
+// #define STAY 0
+
 
 typedef std::map<int, User>::iterator it_user;
 
@@ -40,7 +43,7 @@ class Channel
 		void user_list(User &user);
 		void delete_user_vec(const std::string &name);
 		void change_user_it(std::string name, char sig);
-
+		bool is_user_on_ch(User &user);
 private:
 		std::map<User*, int> _user_map;
 		std::string all_users;

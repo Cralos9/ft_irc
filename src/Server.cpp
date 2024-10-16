@@ -106,8 +106,10 @@ void Server::receive_msg(User &user)
 // 	std::vector<Channel> ch_vec;
 // 	for (std::map<std::string, Channel>::iterator it = this->_channel_list.begin(); it != this->_channel_list.end(); it++)
 // 	{
-		
+// 		if(it->second.is_user_on_ch(user))
+// 			ch_vec.push_back(it->second);
 // 	}
+// 	return(ch_vec);
 // }
 
 void Server::send_msg_all_users(User &msg_sender, int i)

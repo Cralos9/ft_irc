@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/16 13:47:27 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/16 14:56:15 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ public:
 
 	static void	signal_handler(int signum);
 	static bool should_end;
-	std::vector<Channel> get_all_user_chs(User &user);
+	// std::vector<Channel> get_all_user_chs(User &user);
 
 private:
 
