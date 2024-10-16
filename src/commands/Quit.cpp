@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:40 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/14 17:37:58 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/16 13:56:36 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ Quit::~Quit()
 int Quit::run()
 {
 	this->_server.disconnect_user(*this->_user);
+	// std::vector<Channel> chs = this->_server.get_all_user_chs(*this->_user);
 	return (1);
 }

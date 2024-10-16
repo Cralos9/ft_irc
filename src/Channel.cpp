@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:23:13 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/14 23:24:43 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/16 13:26:36 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,29 @@ std::string Channel::get_user()
 }
 
 
-void Channel::change_user_it(std::string name)
+void Channel::change_user_it(std::string name, char sig)
 {
-	std::vector<std::string>::iterator it;
-	for (it = user_vec.begin(); it != user_vec.end(); it++)
+	std::map<User *, int>::iterator it;
+	for (it = _user_map.begin(); it != _user_map.end(); it++)
 	{
-		std::cout << *it << " " << name << std::endl;
-		if (*it == name)
+		if (it->first->get_nick() == name)
 		{
-			*it = "@" + *it;
-			std::cout << *it << std::endl;
+			if (sig == '+')
+				it->second = OP;
+			if (sig == '-')
+				it->second = NOP;
 		}
+		
 	}
 }
 
 void Channel::delete_user_vec(const std::string &name)
 {
-	for(std::vector<std::string>::iterator it = this->user_vec.begin(); it != this->user_vec.end(); it++)
+	for(std::map<User *, int>::iterator it = this->_user_map.begin(); it != this->_user_map.end(); it++)
 	{
-		if (*it == name)
+		if (it->first->get_nick() == name)
 		{
-			this->user_vec.erase(it);
+			this->_user_map.erase(it);
 			break;
 		}
 	}
@@ -75,16 +77,22 @@ void Channel::delete_user_vec(const std::string &name)
 
 void Channel::user_list(User &user)
 {
-	if (this->user_vec.empty())
-		this->user_vec.push_back("@" + user.get_nick());
+	if (this->_user_map.empty())
+		this->_user_map[&user] = OP;
 	else
-		this->user_vec.push_back(user.get_nick());
-	for (std::vector<std::string>::iterator it2 = this->user_vec.begin(); it2 != this->user_vec.end(); it2++)
-		this->all_users = this->all_users + *it2 + " ";
+		this->_user_map[&user] = NOP;
+	for (std::map<User *, int>::iterator it = this->_user_map.begin(); it != this->_user_map.end(); it++)
+	{
+		std::cout << it->first->get_nick()<< std::endl;
+		if (it->second == OP)
+			this->all_users = this->all_users + "@" + it->first->get_nick() + " ";
+		else
+			this->all_users = this->all_users + it->first->get_nick() + " ";
+	}
 	std::string user_list;
-	user_list = ":" + user.get_hostname() + " 353 " + user.get_nick() + " =" + this->_name + " " + this->all_users + "\r\n";
+	user_list = ":" + user.get_hostname() + " 353 " + user.get_nick() + " = " + this->_name + " " + this->all_users + "\r\n";
 	user.set_buffer(user_list);
 	this->all_users = "";
-	/* for (std::vector<std::string>::iterator it2 = this->user_vec.begin(); it2 != this->user_vec.end(); it2++)
-		std::cout << *it2 << std::endl; */
+	/* for (std::vector<std::string>::iterator it = this->_user_map.begin(); it != this->_user_map.end(); it++)
+		std::cout << *it << std::endl; */
 }

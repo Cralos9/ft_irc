@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/14 17:26:04 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:14:19 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 #include "ft_irc.hpp"
 #include "User.hpp"
+
+#define OP 1
+#define NOP 0
 
 typedef std::map<int, User>::iterator it_user;
 
@@ -36,10 +39,10 @@ class Channel
 		std::string get_user();
 		void user_list(User &user);
 		void delete_user_vec(const std::string &name);
-		void change_user_it(std::string name);
+		void change_user_it(std::string name, char sig);
 
 private:
-		std::vector<std::string> user_vec;
+		std::map<User*, int> _user_map;
 		std::string all_users;
 		std::string _name;
 		std::string _admin;

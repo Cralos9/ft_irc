@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/15 17:09:42 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:41:22 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int Join::run()
 		this->_server.create_channel(*this->_user, this->_args[0]);
 	else
 		this->_server.add_user_channel(*this->_user, *ch);
+	std::cout << this->_user->get_buffer();
 	this->_server.send_msg_all_users(*this->_user, 1);
 	this->_server.print("Joined " + channel);
 	return (0);

@@ -101,6 +101,15 @@ void Server::receive_msg(User &user)
 	this->print_recv(buffer);
 }
 
+// std::vector<Channel> Server::get_all_user_chs(User &user)
+// {
+// 	std::vector<Channel> ch_vec;
+// 	for (std::map<std::string, Channel>::iterator it = this->_channel_list.begin(); it != this->_channel_list.end(); it++)
+// 	{
+		
+// 	}
+// }
+
 void Server::send_msg_all_users(User &msg_sender, int i)
 {
 	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
