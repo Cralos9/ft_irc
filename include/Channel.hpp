@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 13:51:41 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/17 15:00:42 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,13 @@ class Channel
 		void set_admin(std::string admin);
 		std::string get_admin();
 		void set_user(std::string user);
-		const std::string get_user() const;
+		User *get_user(const std::string &username);
+		User *get_op_user(const std::string &username);
 		const std::map<User *, int> &get_users() const;
-		void user_list(User &user);
-		void delete_user_vec(const std::string &name);
-		void change_user_it(std::string name, char sig);
+		void add_user(User &user);
+		void delete_user_vec(User &del_user);
+		void change_user_it(User &user, char sig);
+		bool is_user_OP(User &user);
 		bool is_user_on_ch(User &user);
 		std::string get_topic();
 		void set_topic(std::string topic);

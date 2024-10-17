@@ -103,17 +103,6 @@ void Server::receive_msg(User &user)
 	this->print_recv(buffer);
 }
 
-// std::vector<Channel> Server::get_all_user_chs(User &user)
-// {
-// 	std::vector<Channel> ch_vec;
-// 	for (std::map<std::string, Channel>::iterator it = this->_channel_list.begin(); it != this->_channel_list.end(); it++)
-// 	{
-// 		if(it->second.is_user_on_ch(user))
-// 			ch_vec.push_back(it->second);
-// 	}
-// 	return(ch_vec);
-// }
-
 void Server::send_msg_all_users(User &msg_sender)
 {
 	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
@@ -146,9 +135,6 @@ int Server::fds_loop()
 {
 	int tmp = this->active_fd;
 
-/* 	for (it_fd it = this->_fds.begin(); it != this->_fds.end(); it++) {
-		std::cout << "FD: " << it->fd << std::endl;
-	} */
 	for (int i = 0; i < tmp; i++)
 	{
 		if (this->_fds[i].revents == 0)
@@ -215,14 +201,17 @@ int Server::handle_commands(User &user)
 	ACommand * command = this->_commands.at(command_name);
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
 	command->set_user(&user);
-	if (command->run())
-		return (1);
+	command->run();
 	return (0);
 }
 
-void Server::add_user_channel(User &user, Channel &channel)
+/* Channel Functions */
+Channel *Server::check_channel(const std::string &ch_name)
 {
-	channel.user_list(user);
+	it_ch it = this->_channel_list.find(ch_name);
+	if (it == this->_channel_list.end())
+		return (NULL);
+	return (&it->second);
 }
 
 Channel *Server::create_channel(const std::string &ch_name)
@@ -230,6 +219,7 @@ Channel *Server::create_channel(const std::string &ch_name)
 	this->_channel_list[ch_name] = Channel(ch_name);
 	return (&this->_channel_list[ch_name]);
 }
+/* End Channel Functions */
 
 User *Server::get_user(const std::string &nick)
 {

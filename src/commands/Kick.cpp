@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:15:15 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/16 18:33:06 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/17 13:39:47 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,18 @@ Kick::~Kick()
 
 int Kick::run()
 {	
-	Channel *ch = this->_server.check_channel(this->_args[0]);
+	Channel *ch = NULL;
+	User *kicked = NULL;
 
-	if (ch != NULL)
-	{
-		User *kicked = this->_server.get_user(this->_args[1]);
-		this->_server.remove_from_ch(*ch, *kicked);
-		_user->prepare_buffer(_user->get_buffer());
-		this->_server.send_msg_to_channel(*ch, *this->_user, CHSELF);
-		std::cout<<_user->get_buffer();
-	}
+	ch = _server.check_channel(this->_args[0]);
+	if (ch == NULL)
+		return (0);
+	kicked = ch->get_user(this->_args[1]);
+	if (kicked == NULL)
+		return (0);
+	ch->delete_user_vec(*kicked);
+	_user->prepare_buffer(_user->get_buffer());
+	this->_server.send_msg_to_channel(*ch, *this->_user, CHSELF);
+	_server.print(_user->get_buffer());
 	return(0);
 }

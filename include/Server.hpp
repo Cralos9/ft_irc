@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/16 18:00:15 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/17 12:13:51 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,6 @@ public:
 	void receive_msg(User &user);
 
 	Channel *create_channel(const std::string &ch_name);
-	Channel *is_user_on_channel(const User &user);
-	void add_user_channel(User &user, Channel &channel);
-	void remove_from_ch(Channel &ch, User &user);
 	Channel *check_channel(const std::string &ch_name);
 
 	int handle_commands(User &user);

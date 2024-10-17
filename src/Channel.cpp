@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:23:13 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 13:51:43 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/17 15:02:05 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,14 @@ void Channel::set_user(std::string user)
 		this->_users = this->_users + " " + user;
 }
 
-const std::string Channel::get_user() const
+bool Channel::is_user_OP(User &user)
 {
-	return(this->_users);
+	std::map<User *, int>::iterator it = _user_map.find(&user);
+	if (it == _user_map.end())
+		return (false);
+	if (it->second == NOP)
+		return (false);
+	return (true);
 }
 
 std::string Channel::get_topic()
@@ -63,39 +68,48 @@ bool Channel::is_user_on_ch(User &user)
 	return(0);
 }
 
+User *Channel::get_op_user(const std::string &username)
+{
+	std::map<User *, int>::iterator it;
+	for (it = _user_map.begin(); it != _user_map.end(); it++) {
+		if (it->second == OP && it->first->get_nick().compare(username) == 0)
+			return (it->first);
+	}
+	return (NULL);
+}
+
+User *Channel::get_user(const std::string &username)
+{
+	std::map<User *, int>::iterator it;
+	for (it = _user_map.begin(); it != _user_map.end(); it++) {
+		if (it->first->get_nick().compare(username) == 0)
+			return (it->first);
+	}
+	return (NULL);
+}
+
 const std::map<User *, int> &Channel::get_users() const
 {
 	return (_user_map);
 }
 
-void Channel::change_user_it(std::string name, char sig)
+void Channel::change_user_it(User &user, char sig)
 {
-	std::map<User *, int>::iterator it;
-	for (it = _user_map.begin(); it != _user_map.end(); it++)
-	{
-		if (it->first->get_nick() == name)
-		{
-			if (sig == '+')
-				it->second = OP;
-			if (sig == '-')
-				it->second = NOP;
-		}	
-	}
+	std::map<User *, int>::iterator it = _user_map.find(&user);
+	if (it == _user_map.end())
+		return ;
+	if (sig == '+')
+		it->second = OP;
+	else if (sig == '-')
+		it->second = NOP;
 }
 
-void Channel::delete_user_vec(const std::string &name)
+void Channel::delete_user_vec(User &del_user)
 {
-	for(std::map<User *, int>::iterator it = this->_user_map.begin(); it != this->_user_map.end(); it++)
-	{
-		if (it->first->get_nick() == name)
-		{
-			this->_user_map.erase(it);
-			break;
-		}
-	}
+	_user_map.erase(_user_map.find(&del_user));
 }
 
-void Channel::user_list(User &user)
+void Channel::add_user(User &user)
 {
 	if (this->_user_map.empty())
 		this->_user_map[&user] = OP;
