@@ -98,6 +98,8 @@ void Server::receive_msg(User &user)
 	if (msg_bytes == -1)
 		print_error("recv Error");
 	user.set_buffer(buffer);
+	if (user.get_buffer().empty())
+		return ;
 	this->print_recv(buffer);
 }
 
@@ -205,8 +207,12 @@ int Server::handle_commands(User &user)
 	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
 	const size_t command_name_len = command_name.length() + 1;
 
+	if (command_name.empty())
+	{
+		disconnect_user(user);
+		return (1);
+	}
 	ACommand * command = this->_commands.at(command_name);
-
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
 	command->set_user(&user);
 	if (command->run())
