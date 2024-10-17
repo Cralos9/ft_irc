@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 12:31:43 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/16 14:56:41 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,19 @@ class User
 		std::string get_hostname();
 		std::string get_name(const std::string &string, int what);
 		void prepare_buffer(const std::string &command);
+		const std::string& get_password() const;
+		
+		bool		get_first_time() const;
+		void 		set_first_time(const bool &status);
+		
 	private:
 		int _fd;
 		std::string _username;
 		std::string _nick;
 		std::string _hostname;
 		std::string _buffer;
+		std::string _password;
+		bool 		_firstTime;
 };
 
 

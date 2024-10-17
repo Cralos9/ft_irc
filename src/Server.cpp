@@ -22,7 +22,7 @@ Server::Server(int port) : active_fd(1)
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
 	this->_commands["JOIN"] = new Join(*this); //JOIN <channel>
-	this->_commands["WHO"] = new Who(*this);   //who <name> [ "o" ]
+	this->_commands["WHO"] = new Who(*this);   //who
 	this->_commands["MODE"] = new Mode(*this); //MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
 	this->_commands["NICK"] = new Nick(*this); //NICK <new_name>
 	this->_commands["QUIT"] = new Quit(*this); //QUIT :<msg>
@@ -35,6 +35,8 @@ Server::Server(int port) : active_fd(1)
 	//pass? PASS <password>
 	//ping? PING <>
 	//pong? PONG <>
+
+	_server_creation_time = std::time(0);
 }
 
 Server::~Server()
@@ -42,28 +44,38 @@ Server::~Server()
 	for (std::map<std::string, ACommand *>::iterator it = this->_commands.begin(); it != this->_commands.end(); ++it)
 		delete it->second;
 	this->close_all_fds();
-	std::cout << "Server Destructor" << std::endl;	
+	/* std::cout << "Server Destructor" << std::endl;	*/
 }
 
 /* -------------------------------------------- */
 
-int Server::create_server()
+int Server::create_server(std::string port, std::string password)
 {
 	int on = 1;
 	pollfd sock;
 
+					/* Saves Server Password in Server Class */
+	_password = password;
+
+					/* CREATE A SOCKET */
 	sock.fd = socket(this->_address.sin_family, SOCK_STREAM, 0);
 	if (sock.fd == -1)
 		print_error("Socket Error");
 	if (setsockopt(sock.fd, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on)))
 		print_error("setsockopt Error");
+
+					/* BIND SOCKET TO PORT */
 	if (bind(sock.fd, (struct sockaddr *)&this->_address, 
 				sizeof(this->_address)) != 0)
 		print_error("Bind Error");
+
+					/* LISTEN FOR CONNECTIONS */
 	if (listen(sock.fd, 5) == -1)
 		print_error("Listen Error");
+
 	sock.events = POLLIN;
 	this->_fds.push_back(sock);
+	std::cout << GREEN << "Server is Online and listening on port " << port << RESET << std::endl;
 	return (EXIT_SUCCESS);
 }
 
@@ -74,7 +86,7 @@ void Server::close_all_fds()
 	this->_fds.erase(this->_fds.begin(), this->_fds.end());
 }
 
-pollfd Server::connect_client()
+int Server::connect_client()
 {
 	pollfd		client;
 	sockaddr_in	client_info;
@@ -83,11 +95,37 @@ pollfd Server::connect_client()
 	client.fd = accept(this->_fds[0].fd, (struct sockaddr *)&client_info, &len);
 	if (client.fd == -1)
 		print_error("Accept Error");
+
 	client.events = POLLIN;
+	client.revents = NO_EVENTS;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
-	this->active_fd++;
+
+	/*GOING TO CHECK FOR PASSWORD AND SEND WELCOME MESSAGE TO NEW CLIENT*/
+
+	receive_msg(_clients[client.fd]);
+	_clients[client.fd].get_info();
+
+	//#TODO -> PRECISA ACERTAR A PASSWORD
+	if (_clients[client.fd].get_first_time())
+	{
+		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
+		{
+			std::cout << RED << "Password Error" << RESET << std::endl;
+			close (client.fd);
+			_clients[client.fd].set_first_time(true);
+			return EXIT_FAILURE;
+		}
+		else
+		{
+			std::cout << GREEN << "Password Accepted" << RESET << std::endl;
+			welcome_message(_clients[client.fd]); //Send welcome message to user
+			_clients[client.fd].set_first_time(false);
+		}
+	}
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
-	return (client);
+	this->active_fd++;
+	this->_fds.push_back(client);
+	return EXIT_SUCCESS;
 }
 
 void Server::receive_msg(User &user)
@@ -95,44 +133,23 @@ void Server::receive_msg(User &user)
 	int msg_bytes;
 	char buffer[1024] = {0};
 	msg_bytes = recv(user.get_fd(), buffer, sizeof(buffer), 0);
+	
 	if (msg_bytes == -1)
 		print_error("recv Error");
+	
 	user.set_buffer(buffer);
-	if (user.get_buffer().empty())
-		return ;
 	this->print_recv(buffer);
 }
 
-// std::vector<Channel> Server::get_all_user_chs(User &user)
-// {
-// 	std::vector<Channel> ch_vec;
-// 	for (std::map<std::string, Channel>::iterator it = this->_channel_list.begin(); it != this->_channel_list.end(); it++)
-// 	{
-// 		if(it->second.is_user_on_ch(user))
-// 			ch_vec.push_back(it->second);
-// 	}
-// 	return(ch_vec);
-// }
-
-void Server::send_msg_all_users(User &msg_sender)
+void Server::send_msg_all_users(User &msg_sender, int i)
 {
 	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
 	{
-		send(user->first, msg_sender.get_buffer().c_str(),
-			msg_sender.get_buffer().length(), 0);
-	}
-}
-
-void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag)
-{
-	const std::map<User *, int> &ch_users = ch.get_users();
-
-	for (std::map<User *, int>::const_iterator it = ch_users.begin(); it != ch_users.end(); it++) {
-		if (flag == CHOTHER && msg_sender.get_fd() != it->first->get_fd())
-			send(it->first->get_fd(), msg_sender.get_buffer().c_str(),
+		if (user->second.get_fd() != msg_sender.get_fd() && i == 0)
+			send(user->first, msg_sender.get_buffer().c_str(),
 				msg_sender.get_buffer().length(), 0);
-		else if (flag == CHSELF)
-			send(it->first->get_fd(), msg_sender.get_buffer().c_str(),
+		else if (i == 1)
+			send(user->first, msg_sender.get_buffer().c_str(),
 				msg_sender.get_buffer().length(), 0);
 	}
 }
@@ -140,6 +157,28 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
+}
+
+bool	Server::check_password(User &user)
+{
+	std::cout << RED << "Client Password:" << user.get_password() << std::endl;
+	std::cout << "Server Password:" << _password << RESET << std::endl;
+	if (_password == user.get_password())
+		return true;
+	return false;
+}
+
+void Server::welcome_message(User &user)
+{
+	std::string msg01 = ":" + user.get_nick() + " " + RPL_WELCOME + " " + user.get_nick() + " :Welcome to the " + SERVER_NAME + " Internet Relay Network, " + user.get_hostname() + "!\r\n";
+	std::string msg02 = ":" + user.get_nick() + " " + RPL_YOURHOST + " " + user.get_nick() + " :Your host is " + user.get_hostname() + ", running version v0.1\r\n";
+	std::string msg03 = ":" + user.get_nick() + " " + RPL_CREATED + " " + user.get_nick() + " :This server was created " + std::asctime(std::localtime(&_server_creation_time));
+	std::string msg04 = ":" + user.get_nick() + " " + RPL_MYINFO + " " + user.get_nick() + " " + user.get_hostname() + " v0.1 o iklt\r\n";
+
+	send(user.get_fd(), msg01.c_str(), msg01.length(), 0);
+	send(user.get_fd(), msg02.c_str(), msg02.length(), 0);
+	send(user.get_fd(), msg03.c_str(), msg03.length(), 0);
+	send(user.get_fd(), msg04.c_str(), msg04.length(), 0);
 }
 
 int Server::fds_loop()
@@ -151,12 +190,15 @@ int Server::fds_loop()
 	} */
 	for (int i = 0; i < tmp; i++)
 	{
-		if (this->_fds[i].revents == 0)
+		if (this->_fds[i].revents == NO_EVENTS)
 			continue;
 		if (this->_fds[i].revents != POLLIN)
 			print_error("Error revents");
 		if (this->_fds[i].fd == this->_fds[0].fd)
-			this->_fds.push_back(this->connect_client());
+		{
+			if (this->connect_client())
+				break;	
+		}
 		else
 		{
 			User &user = this->_clients.at(this->_fds[i].fd);
@@ -183,6 +225,7 @@ int Server::main_loop()
 
 	while (!should_end)
 	{
+
 		ret = poll(this->_fds.data(), this->active_fd, -1);
 		if (ret == -1)
 		{
@@ -207,12 +250,8 @@ int Server::handle_commands(User &user)
 	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
 	const size_t command_name_len = command_name.length() + 1;
 
-	if (command_name.empty())
-	{
-		disconnect_user(user);
-		return (1);
-	}
 	ACommand * command = this->_commands.at(command_name);
+
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
 	command->set_user(&user);
 	if (command->run())
@@ -225,10 +264,10 @@ void Server::add_user_channel(User &user, Channel &channel)
 	channel.user_list(user);
 }
 
-Channel *Server::create_channel(const std::string &ch_name)
+void Server::create_channel(User &user, const std::string &ch_name)
 {
 	this->_channel_list[ch_name] = Channel(ch_name);
-	return (&this->_channel_list[ch_name]);
+	this->add_user_channel(user, this->_channel_list[ch_name]);
 }
 
 User *Server::get_user(const std::string &nick)
@@ -243,12 +282,10 @@ User *Server::get_user(const std::string &nick)
 
 void Server::disconnect_user(User &user)
 {
-	const int fd = user.get_fd();
-
-	close(fd);
+	close(user.get_fd());
 	this->active_fd--;
-	this->_clients.erase(this->_clients.find(fd));
-	this->_fds.erase(find_fd(this->_fds, fd));
+	this->_fds.erase(find_fd(this->_fds, user.get_fd()));
+	this->_clients.erase(this->_clients.find(user.get_fd()));
 }
 
 it_fd find_fd(std::vector<pollfd> &vec, const int fd)
@@ -266,5 +303,7 @@ void Server::print(const std::string &str)
 
 void Server::print_recv(const std::string &str)
 {
-	std::cout << RED << "Client: " << RESET << str;
+	(void) str;
+/* 	std::cout << RED << "Client BUFFER:\n" << BLUE << str << RESET;
+ *//* 	std::cout << RED << "Client: " << RESET << str; */
 }

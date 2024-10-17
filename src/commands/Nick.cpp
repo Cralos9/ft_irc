@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/14 17:33:48 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/17 11:40:49 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 Nick::Nick(Server &server) : ACommand(server)
 {
-	std::cout << "Nick Server Constructor" << std::endl;
+/* 	std::cout << "Nick Server Constructor" << std::endl; */
 }
 
 Nick::~Nick()
 {
-	std::cout << "Nick Destructor" << std::endl;
+/* 	std::cout << "Nick Destructor" << std::endl; */
 }
 
 int Nick::run()

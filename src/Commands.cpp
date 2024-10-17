@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:18:50 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/17 11:44:36 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:30:18 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void ACommand::set_args(const std::string &args)
 	std::string token;
 
 	this->_args.erase(this->_args.begin(), this->_args.end());
-	while (std::getline(iss, token, ' '))
+	 while (std::getline(iss, token, ' '))
     {
         std::size_t pos = token.find('\r');
         if (pos != std::string::npos)

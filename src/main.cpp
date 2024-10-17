@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/10 14:44:54 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/17 13:49:25 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ int main(int argc, char  **argv)
 {
 	Server::should_end = false;
 	
-	if (argc < 2) 
+	if (argc < 3) 
 	{
-		std::cerr << "Usage: ./ircserv <port>" << std::endl;
+		std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
 		return EXIT_FAILURE;
 	}
 
@@ -34,7 +34,7 @@ int main(int argc, char  **argv)
 
 	Server irc_server(std::atoi(argv[1]));
 	
-	irc_server.create_server();
+	irc_server.create_server(argv[1], argv[2]);
 	irc_server.main_loop();
 	return(0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/16 16:42:03 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:55:35 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,11 @@
 
 #define GREEN "\033[0;32m"
 #define RED "\033[0;31m"
+#define BLUE "\033[0;34m"
+#define CYAN "\033[0;36m"
+#define MAGENTA "\033[0;35m"
+#define YELLOW "\033[0;33m"
 #define RESET "\033[0m"
-
-# define CHSELF 141
-# define CHOTHER 140
 
 void print_error(std::string error_msg);
 
