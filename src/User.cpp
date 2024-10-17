@@ -6,13 +6,13 @@
 /*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 14:02:15 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:23:07 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "User.hpp"
 
-User::User() : _fd(0), _nick("Default"), _firstTime(true)
+User::User() : _fd(0), _nick("Default"), _auth(true)
 {
 	/* std::cout << "User default constructor" << std::endl; */
 }
@@ -21,7 +21,7 @@ User::User(const int &fd, const std::string &hostname) : _fd(fd)
 {
 	/* std::cout << "User Constructor" << std::endl; */
 	this->_hostname = hostname;
-	_firstTime = true;
+	_auth = true;
 }
 
 User::~User()
@@ -56,9 +56,9 @@ const std::string &User::get_password() const
 	return(this->_password);
 }
 
-bool User::get_first_time() const
+bool User::_get_auth() const
 {
-	return(_firstTime);
+	return(_auth);
 }
 
 /* -------------------------------------------------- */
@@ -90,14 +90,19 @@ void User::set_buffer(const std::string &buffer)
 	this->_buffer = buffer;
 }
 
-void User::set_first_time(const bool &status)
+void User::_set_auth(const bool &status)
 {
 	
-	this->_firstTime = status;
+	this->_auth = status;
 }
 
 std::string User::get_name(const std::string &string, int what)
-{
+{	
+	if (string.find("PASS ") != std::string::npos && what == 0)
+	{
+		int pos = string.find("PASS ") + 5;
+		return(string.substr(pos, (string ).find_first_of("\n", pos) - pos - 1));
+	}
 	if (string.find("NICK ") != std::string::npos && what == 1)
 	{
 		int pos = string.find("NICK ") + 5;
@@ -108,23 +113,18 @@ std::string User::get_name(const std::string &string, int what)
 		int pos = string.find("USER ") + 5;
 		return(string.substr(pos, (string ).find_first_of("0", pos) - pos - 1));
 	}
-	if (string.find("PASS ") != std::string::npos && what == 3)
-	{
-		int pos = string.find("PASS ") + 5;
-		return(string.substr(pos, (string ).find_first_of("0", pos) - pos - 1));
-	}
-	else if (string.find("PASS ") == std::string::npos)
-	{
-		return "123";
-	}
 	return("ERROR");
 }
 
 bool User::get_info()
 {
+	std::string password = get_name(this->get_buffer(), 0);
 	std::string nick = get_name(this->get_buffer(), 1);
 	std::string username = get_name(this->get_buffer(), 2);
-	std::string password = get_name(this->get_buffer(), 3);
+	/* std::cout << RED << "SavedPasssword:\n" << BLUE << password << RESET << std::endl;
+	std::cout << RED << "SavedNick:\n" << BLUE << nick << RESET << std::endl;
+	std::cout << RED << "SavedUsername:\n" << BLUE << username << RESET << std::endl; */
+	
 	if ((nick != "ERROR" && nick.find("USER ") == std::string::npos)&& username != "ERROR")
 	{
 		this->_nick = nick;

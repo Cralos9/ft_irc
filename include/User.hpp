@@ -6,7 +6,7 @@
 /*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/16 14:56:41 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:52:47 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ class User
 		void prepare_buffer(const std::string &command);
 		const std::string& get_password() const;
 		
-		bool		get_first_time() const;
-		void 		set_first_time(const bool &status);
+		bool		_get_auth() const;
+		void 		_set_auth(const bool &status);
 		
 	private:
 		int _fd;
@@ -47,7 +47,7 @@ class User
 		std::string _hostname;
 		std::string _buffer;
 		std::string _password;
-		bool 		_firstTime;
+		bool 		_auth;
 };
 
 

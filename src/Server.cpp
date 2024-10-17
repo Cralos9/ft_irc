@@ -49,7 +49,7 @@ Server::~Server()
 
 /* -------------------------------------------- */
 
-int Server::create_server(std::string port, std::string password)
+int Server::create_server(std::string password)
 {
 	int on = 1;
 	pollfd sock;
@@ -75,7 +75,7 @@ int Server::create_server(std::string port, std::string password)
 
 	sock.events = POLLIN;
 	this->_fds.push_back(sock);
-	std::cout << GREEN << "Server is Online and listening on port " << port << RESET << std::endl;
+	std::cout << GREEN << "Server is Online" << RESET << std::endl;
 	return (EXIT_SUCCESS);
 }
 
@@ -106,20 +106,20 @@ int Server::connect_client()
 	_clients[client.fd].get_info();
 
 	//#TODO -> PRECISA ACERTAR A PASSWORD
-	if (_clients[client.fd].get_first_time())
+	if (_clients[client.fd]._get_auth())
 	{
 		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
 		{
 			std::cout << RED << "Password Error" << RESET << std::endl;
 			close (client.fd);
-			_clients[client.fd].set_first_time(true);
+			//_clients[client.fd]._set_auth(true);
 			return EXIT_FAILURE;
 		}
 		else
 		{
 			std::cout << GREEN << "Password Accepted" << RESET << std::endl;
 			welcome_message(_clients[client.fd]); //Send welcome message to user
-			_clients[client.fd].set_first_time(false);
+			_clients[client.fd]._set_auth(false);
 		}
 	}
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
@@ -171,8 +171,8 @@ void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 
 bool	Server::check_password(User &user)
 {
-	std::cout << RED << "Client Password:" << user.get_password() << std::endl;
-	std::cout << "Server Password:" << _password << RESET << std::endl;
+/* 	std::cout << RED << "Client Password:" << user.get_password() << std::endl;
+	std::cout << "Server Password:" << _password << RESET << std::endl; */
 	if (_password == user.get_password())
 		return true;
 	return false;
@@ -180,6 +180,8 @@ bool	Server::check_password(User &user)
 
 void Server::welcome_message(User &user)
 {
+	#define BLU   "\x1B[34m" //#COLOCAR CORES NO SEND
+	#define RES "\x1B[0m"
 	std::string msg01 = ":" + user.get_nick() + " " + RPL_WELCOME + " " + user.get_nick() + " :Welcome to the " + SERVER_NAME + " Internet Relay Network, " + user.get_hostname() + "!\r\n";
 	std::string msg02 = ":" + user.get_nick() + " " + RPL_YOURHOST + " " + user.get_nick() + " :Your host is " + user.get_hostname() + ", running version v0.1\r\n";
 	std::string msg03 = ":" + user.get_nick() + " " + RPL_CREATED + " " + user.get_nick() + " :This server was created " + std::asctime(std::localtime(&_server_creation_time));
@@ -316,7 +318,6 @@ void Server::print(const std::string &str)
 
 void Server::print_recv(const std::string &str)
 {
-	(void) str;
-/* 	std::cout << RED << "Client BUFFER:\n" << BLUE << str << RESET;
- *//* 	std::cout << RED << "Client: " << RESET << str; */
+ 	(void) str;
+	/* std::cout << RED << "Client BUFFER:\n" << BLUE << str << RESET;*/
 }

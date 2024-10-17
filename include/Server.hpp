@@ -6,7 +6,7 @@
 /*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/17 15:50:05 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:47:59 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ public:
 	~Server();
 
 	void 		join_Channel(it_user user);
-	int			create_server(std::string port, std::string password);
+	int			create_server(std::string password);
 
 	int 		main_loop();
 	int 		fds_loop();

@@ -6,7 +6,7 @@
 /*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:37:43 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/17 15:44:43 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:33:33 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 PrivMsg::PrivMsg(Server &server) : ACommand(server)
 {
-	std::cout << "PrivMsg constructor" << std::endl;
-}
+/* 	std::cout << "PrivMsg constructor" << std::endl;
+ */}
 
 PrivMsg::~PrivMsg()
 {
-	std::cout << "PrivMsg destructor" << std::endl;
-}
+/* 	std::cout << "PrivMsg destructor" << std::endl;
+ */}
 
 int PrivMsg::run()
 {

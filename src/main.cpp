@@ -6,7 +6,7 @@
 /*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:43:48 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 13:49:25 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:48:05 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int main(int argc, char  **argv)
 
 	Server irc_server(std::atoi(argv[1]));
 	
-	irc_server.create_server(argv[1], argv[2]);
+	irc_server.create_server(argv[2]);
 	irc_server.main_loop();
 	return(0);
 }

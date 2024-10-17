@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:18 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 14:56:36 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:33:28 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 Topic::Topic(Server &server) : ACommand(server)
 {
-	std::cout << "Topic Server Constructor" << std::endl;
-}
+/* 	std::cout << "Topic Server Constructor" << std::endl;
+ */}
 
 Topic::~Topic()
 {
-	std::cout << "Topic Destructor" << std::endl;
-}
+/* 	std::cout << "Topic Destructor" << std::endl;
+ */}
 
 int Topic::run()
 {

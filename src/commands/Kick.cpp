@@ -6,7 +6,7 @@
 /*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:15:15 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 15:43:48 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:33:38 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 Kick::Kick(Server &server) : ACommand(server)
 {
-	std::cout << "Kick constructor" << std::endl;
-}
+/* 	std::cout << "Kick constructor" << std::endl;
+ */}
 
 Kick::~Kick()
 {
-	std::cout << "Kick destructor" << std::endl;
-}
+/* 	std::cout << "Kick destructor" << std::endl;
+ */}
 
 int Kick::run()
 {	
