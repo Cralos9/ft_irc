@@ -6,7 +6,7 @@
 /*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/17 13:48:52 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/17 15:50:05 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@
 #define RPL_ISUPPORT	"005"
 #define SERVER_NAME		"TresPingados"
 #define NO_EVENTS		0
+#define CHSELF			140
+#define CHOTHER			141
 
 typedef std::vector<pollfd>::iterator it_fd;
 typedef std::map<int, User>::iterator it_user;
@@ -58,10 +60,10 @@ public:
 	void 		send_msg_one_user(const int receiver_fd, User &msg_sender);
 	void 		receive_msg(User &user);
 
-	void 		create_channel(User &user, const std::string &ch_name);
-	void 		add_user_channel(User &user, Channel &channel);
-	void 		remove_from_ch(Channel &ch, User &user);
+	Channel 	*create_channel(const std::string &ch_name);
 	Channel 	*check_channel(const std::string &ch_name);
+	void		send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
+	void		send_msg_all_users(User &msg_sender);
 
 	int 		handle_commands(User &user);
 	User 		*get_user(const std::string &nick);

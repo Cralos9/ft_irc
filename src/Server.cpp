@@ -28,9 +28,9 @@ Server::Server(int port) : active_fd(1)
 	this->_commands["QUIT"] = new Quit(*this); //QUIT :<msg>
 	this->_commands["PRIVMSG"] = new PrivMsg(*this); // PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
 	this->_commands["KICK"] = new Kick(*this); //KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
+	this->_commands["TOPIC"] = new Topic(*this); //topic TOPIC <channel> || TOPIC <channel> <new_topic>
 	//whois whois <nick>
 	//part PART <channel> :<msg>
-	//topic TOPIC <channel> || TOPIC <channel> <new_topic>
 	//invite INVITE <nick> <channel>
 	//pass? PASS <password>
 	//ping? PING <>
@@ -141,15 +141,25 @@ void Server::receive_msg(User &user)
 	this->print_recv(buffer);
 }
 
-void Server::send_msg_all_users(User &msg_sender, int i)
+void Server::send_msg_all_users(User &msg_sender)
 {
 	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
 	{
-		if (user->second.get_fd() != msg_sender.get_fd() && i == 0)
-			send(user->first, msg_sender.get_buffer().c_str(),
+		send(user->first, msg_sender.get_buffer().c_str(),
+			msg_sender.get_buffer().length(), 0);
+	}
+}
+
+void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag)
+{
+	const std::map<User *, int> &ch_users = ch.get_users();
+
+	for (std::map<User *, int>::const_iterator it = ch_users.begin(); it != ch_users.end(); it++) {
+		if (flag == CHOTHER && msg_sender.get_fd() != it->first->get_fd())
+			send(it->first->get_fd(), msg_sender.get_buffer().c_str(),
 				msg_sender.get_buffer().length(), 0);
-		else if (i == 1)
-			send(user->first, msg_sender.get_buffer().c_str(),
+		else if (flag == CHSELF)
+			send(it->first->get_fd(), msg_sender.get_buffer().c_str(),
 				msg_sender.get_buffer().length(), 0);
 	}
 }
@@ -185,9 +195,6 @@ int Server::fds_loop()
 {
 	int tmp = this->active_fd;
 
-/* 	for (it_fd it = this->_fds.begin(); it != this->_fds.end(); it++) {
-		std::cout << "FD: " << it->fd << std::endl;
-	} */
 	for (int i = 0; i < tmp; i++)
 	{
 		if (this->_fds[i].revents == NO_EVENTS)
@@ -254,21 +261,25 @@ int Server::handle_commands(User &user)
 
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
 	command->set_user(&user);
-	if (command->run())
-		return (1);
+	command->run();
 	return (0);
 }
 
-void Server::add_user_channel(User &user, Channel &channel)
+/* Channel Functions */
+Channel *Server::check_channel(const std::string &ch_name)
 {
-	channel.user_list(user);
+	it_ch it = this->_channel_list.find(ch_name);
+	if (it == this->_channel_list.end())
+		return (NULL);
+	return (&it->second);
 }
 
-void Server::create_channel(User &user, const std::string &ch_name)
+Channel *Server::create_channel(const std::string &ch_name)
 {
 	this->_channel_list[ch_name] = Channel(ch_name);
-	this->add_user_channel(user, this->_channel_list[ch_name]);
+	return (&this->_channel_list[ch_name]);
 }
+/* End Channel Functions */
 
 User *Server::get_user(const std::string &nick)
 {
@@ -282,10 +293,12 @@ User *Server::get_user(const std::string &nick)
 
 void Server::disconnect_user(User &user)
 {
-	close(user.get_fd());
+	const int fd = user.get_fd();
+
+	close(fd);
 	this->active_fd--;
-	this->_fds.erase(find_fd(this->_fds, user.get_fd()));
-	this->_clients.erase(this->_clients.find(user.get_fd()));
+	this->_clients.erase(this->_clients.find(fd));
+	this->_fds.erase(find_fd(this->_fds, fd));
 }
 
 it_fd find_fd(std::vector<pollfd> &vec, const int fd)
