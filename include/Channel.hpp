@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/16 16:30:17 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/17 13:51:41 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ class Channel
 		void delete_user_vec(const std::string &name);
 		void change_user_it(std::string name, char sig);
 		bool is_user_on_ch(User &user);
+		std::string get_topic();
+		void set_topic(std::string topic);
 private:
+		std::string _topic;
 		std::map<User*, int> _user_map;
 		std::string all_users;
 		std::string _name;

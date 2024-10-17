@@ -119,4 +119,15 @@ public:
 	int run();
 };
 
+class Topic : public ACommand
+{
+public:
+	
+	Topic(Server &server);
+	~Topic();
+
+	int run();
+};
+
+
 #endif

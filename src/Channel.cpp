@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:23:13 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/16 16:31:06 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/17 13:51:43 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,16 @@ void Channel::set_user(std::string user)
 const std::string Channel::get_user() const
 {
 	return(this->_users);
+}
+
+std::string Channel::get_topic()
+{
+	return(this->_topic);
+}
+
+void Channel::set_topic(std::string topic)
+{
+	this->_topic = topic;
 }
 
 bool Channel::is_user_on_ch(User &user)

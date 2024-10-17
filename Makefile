@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+         #
+#    By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 10:42:39 by rumachad          #+#    #+#              #
-#    Updated: 2024/10/14 17:48:20 by rumachad         ###   ########.fr        #
+#    Updated: 2024/10/17 13:49:40 by cacarval         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRC_PATH = src/
 VPATH = $(SRC_PATH) $(SRC_PATH)/commands
 
 SRC = main.cpp Server.cpp server_Commands.cpp User.cpp Commands.cpp Join.cpp Channel.cpp \
-		Who.cpp Mode.cpp Nick.cpp Quit.cpp PrivMsg.cpp Kick.cpp signals.cpp
+		Who.cpp Mode.cpp Nick.cpp Quit.cpp PrivMsg.cpp Kick.cpp signals.cpp Topic.cpp
 
 OBJS = $(SRC:.cpp=.o)
 

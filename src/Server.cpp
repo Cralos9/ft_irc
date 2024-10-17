@@ -28,9 +28,9 @@ Server::Server(int port) : active_fd(1)
 	this->_commands["QUIT"] = new Quit(*this); //QUIT :<msg>
 	this->_commands["PRIVMSG"] = new PrivMsg(*this); // PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
 	this->_commands["KICK"] = new Kick(*this); //KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
+	this->_commands["TOPIC"] = new Topic(*this); //topic TOPIC <channel> || TOPIC <channel> <new_topic>
 	//whois whois <nick>
 	//part PART <channel> :<msg>
-	//topic TOPIC <channel> || TOPIC <channel> <new_topic>
 	//invite INVITE <nick> <channel>
 	//pass? PASS <password>
 	//ping? PING <>
