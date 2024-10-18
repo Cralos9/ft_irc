@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/17 16:47:59 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:06:55 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ class Server
 {
 public:
 
-	Server(int port);
+	Server(const int port, const std::string &password);
 	~Server();
 
 	void 		join_Channel(it_user user);
-	int			create_server(std::string password);
+	int			create_server();
 
 	int 		main_loop();
 	int 		fds_loop();
@@ -69,7 +69,6 @@ public:
 	User 		*get_user(const std::string &nick);
 	
 	void		 disconnect_user(User &user);
-	void 		close_all_fds();
 
 	void 		print(const std::string &str);
 	void 		print_recv(const std::string &str);
@@ -90,7 +89,7 @@ private:
 	std::map<std::string, Channel>		_channel_list;
 	std::map<int, User>					_clients;
 	std::map<std::string, ACommand *>	_commands;
-	std::string 						_password;
+	const std::string 					&_password;
 	time_t 								_server_creation_time;
 };
 

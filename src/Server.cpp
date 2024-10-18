@@ -15,7 +15,7 @@
 bool Server::should_end = false;
 
 /* Constructors/Destructors */
-Server::Server(int port) : active_fd(1)
+Server::Server(const int port, const std::string &password) : active_fd(1), _password(password)
 {
 	/*std::cout << "Server port Constructor" << std::endl;*/
 	std::memset(&this->_address, 0, sizeof(this->_address));
@@ -43,19 +43,16 @@ Server::~Server()
 {
 	for (std::map<std::string, ACommand *>::iterator it = this->_commands.begin(); it != this->_commands.end(); ++it)
 		delete it->second;
-	this->close_all_fds();
+	this->_fds.erase(this->_fds.begin(), this->_fds.end());
 	/* std::cout << "Server Destructor" << std::endl;	*/
 }
 
 /* -------------------------------------------- */
 
-int Server::create_server(std::string password)
+int Server::create_server()
 {
 	int on = 1;
 	pollfd sock;
-
-					/* Saves Server Password in Server Class */
-	_password = password;
 
 					/* CREATE A SOCKET */
 	sock.fd = socket(this->_address.sin_family, SOCK_STREAM, 0);
@@ -77,13 +74,6 @@ int Server::create_server(std::string password)
 	this->_fds.push_back(sock);
 	std::cout << GREEN << "Server is Online" << RESET << std::endl;
 	return (EXIT_SUCCESS);
-}
-
-void Server::close_all_fds()
-{
-	for (it_fd it = this->_fds.begin(); it != this->_fds.end(); it++)
-		close(it->fd);
-	this->_fds.erase(this->_fds.begin(), this->_fds.end());
 }
 
 int Server::connect_client()
@@ -111,7 +101,7 @@ int Server::connect_client()
 		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
 		{
 			std::cout << RED << "Password Error" << RESET << std::endl;
-			close (client.fd);
+			_clients.erase(_clients.find(client.fd));
 			//_clients[client.fd]._set_auth(true);
 			return EXIT_FAILURE;
 		}
@@ -212,8 +202,6 @@ int Server::fds_loop()
 		{
 			User &user = this->_clients.at(this->_fds[i].fd);
 			this->receive_msg(user);
-			if (user.get_info() == 1)
-				break;
 			try
 			{
 				if (this->handle_commands(user))
@@ -297,7 +285,6 @@ void Server::disconnect_user(User &user)
 {
 	const int fd = user.get_fd();
 
-	close(fd);
 	this->active_fd--;
 	this->_clients.erase(this->_clients.find(fd));
 	this->_fds.erase(find_fd(this->_fds, fd));

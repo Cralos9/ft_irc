@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 16:52:47 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:00:15 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,18 @@ class User
 		void set_username(const std::string &username);
 		void set_hostname(const std::string &hostname);
 		void set_buffer(const std::string &buffer);
+
 		const int &get_fd() const;
-		const std::string &get_buffer() const;
-		bool get_info();
 		const std::string &get_nick() const;
+		const std::string &get_buffer() const;
 		const std::string &get_username() const;
-		std::string get_hostname();
-		std::string get_name(const std::string &string, int what);
-		void prepare_buffer(const std::string &command);
+		const std::string &get_hostname() const;
 		const std::string& get_password() const;
+
+		bool get_info();
+		const std::string get_name(const std::string &buffer, const std::string &attribute,
+									const char delimiter);
+		void prepare_buffer(const std::string &command);
 		
 		bool		_get_auth() const;
 		void 		_set_auth(const bool &status);
