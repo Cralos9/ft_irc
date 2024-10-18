@@ -15,7 +15,7 @@
 bool Server::should_end = false;
 
 /* Constructors/Destructors */
-Server::Server(int port) : active_fd(1)
+Server::Server(const int port, const std::string &password) : active_fd(1), _password(password)
 {
 	/*std::cout << "Server port Constructor" << std::endl;*/
 	std::memset(&this->_address, 0, sizeof(this->_address));
@@ -49,13 +49,10 @@ Server::~Server()
 
 /* -------------------------------------------- */
 
-int Server::create_server(std::string password)
+int Server::create_server()
 {
 	int on = 1;
 	pollfd sock;
-
-					/* Saves Server Password in Server Class */
-	_password = password;
 
 					/* CREATE A SOCKET */
 	sock.fd = socket(this->_address.sin_family, SOCK_STREAM, 0);
@@ -101,7 +98,8 @@ int Server::connect_client()
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
-
+	this->active_fd++;
+	this->_fds.push_back(client);
 	/*GOING TO CHECK FOR PASSWORD AND SEND WELCOME MESSAGE TO NEW CLIENT*/
 
 	receive_msg(_clients[client.fd]);
@@ -112,7 +110,8 @@ int Server::connect_client()
 		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
 		{
 			std::cout << RED << "Password Error" << RESET << std::endl;
-			close (client.fd);
+			disconnect_user(_clients[client.fd]);
+			//_clients[client.fd]._set_auth(true);
 			return EXIT_FAILURE;
 		}
 		else
@@ -123,8 +122,6 @@ int Server::connect_client()
 		}
 	}
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
-	this->active_fd++;
-	this->_fds.push_back(client);
 	return EXIT_SUCCESS;
 }
 
@@ -166,6 +163,7 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 
 void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
+	std::cout << msg_sender.get_buffer() << std::endl;
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
 }
 
@@ -214,8 +212,6 @@ int Server::fds_loop()
 		{
 			User &user = this->_clients.at(this->_fds[i].fd);
 			this->receive_msg(user);
-			if (user.get_info() == 1)
-				break;
 			try
 			{
 				if (this->handle_commands(user))
@@ -289,10 +285,12 @@ User *Server::get_user(const std::string &nick)
 {
 	it_user it;
 	
-	for (it = this->_clients.begin(); it != this->_clients.end()
-		&& it->second.get_nick().compare(nick) != 0; it++)
-		;
-	return (&it->second);
+	for (it = this->_clients.begin(); it != this->_clients.end(); it++)
+	{
+		if (it->second.get_nick().compare(nick) == 0)
+			return (&it->second);
+	}
+	return (NULL);
 }
 
 void Server::disconnect_user(User &user)
@@ -320,6 +318,5 @@ void Server::print(const std::string &str)
 
 void Server::print_recv(const std::string &str)
 {
- 	(void) str;
-	/* std::cout << RED << "Client BUFFER:\n" << BLUE << str << RESET;*/
+	std::cout << RED << "Client BUFFER:\n" << BLUE << str << RESET;
 }

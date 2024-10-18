@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/17 16:47:59 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/18 12:18:37 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,24 +46,23 @@ class Server
 {
 public:
 
-	Server(int port);
+	Server(const int port, const std::string &password);
 	~Server();
 
 	void 		join_Channel(it_user user);
-	int			create_server(std::string password);
+	int			create_server();
 
 	int 		main_loop();
 	int 		fds_loop();
 
 	int 		connect_client();
-	void 		send_msg_all_users(User &msg_sender, int i);
+	void		send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
+	void		send_msg_all_users(User &msg_sender);
 	void 		send_msg_one_user(const int receiver_fd, User &msg_sender);
 	void 		receive_msg(User &user);
 
 	Channel 	*create_channel(const std::string &ch_name);
 	Channel 	*check_channel(const std::string &ch_name);
-	void		send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
-	void		send_msg_all_users(User &msg_sender);
 
 	int 		handle_commands(User &user);
 	User 		*get_user(const std::string &nick);
@@ -83,14 +82,13 @@ public:
 	
 private:
 
-	std::string 						_all_users;
 	int									active_fd;
-	std::vector<pollfd> 				_fds;
 	sockaddr_in							_address;
+	const std::string 					&_password;
+	std::vector<pollfd> 				_fds;
 	std::map<std::string, Channel>		_channel_list;
 	std::map<int, User>					_clients;
 	std::map<std::string, ACommand *>	_commands;
-	std::string 						_password;
 	time_t 								_server_creation_time;
 };
 

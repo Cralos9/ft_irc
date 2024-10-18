@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 11:40:49 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/18 12:24:13 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ Nick::~Nick()
 
 int Nick::run()
 {
-	std::string nick = _user->get_name(_user->get_buffer(), 1);
+	const std::string nick = _user->get_name(_user->get_buffer(), "NICK ", '\n');
 	_user->prepare_buffer(_user->get_buffer());
-	send(_user->get_fd(), _user->get_buffer().c_str(), _user->get_buffer().length(), 0);
+	_server.send_msg_one_user(_user->get_fd(), *_user);
 	_user->set_nick(nick);
 	return (1);
 }
