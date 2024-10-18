@@ -72,7 +72,9 @@ int Server::create_server()
 
 	sock.events = POLLIN;
 	this->_fds.push_back(sock);
-	std::cout << GREEN << "Server is Online" << RESET << std::endl;
+	std::cout << GREEN << "	////////////////////" << RESET << std::endl;
+	std::cout << GREEN << "	Server is Now Online" << RESET << std::endl;
+	std::cout << GREEN << "	////////////////////" << RESET << std::endl;
 	return (EXIT_SUCCESS);
 }
 
@@ -103,7 +105,6 @@ int Server::connect_client()
 	receive_msg(_clients[client.fd]);
 	_clients[client.fd].get_info();
 
-	//#TODO -> PRECISA ACERTAR A PASSWORD
 	if (_clients[client.fd]._get_auth())
 	{
 		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
@@ -175,20 +176,22 @@ bool	Server::check_password(User &user)
 	return false;
 }
 
-void Server::welcome_message(User &user)
+void Server::welcome_message(User &user) //#TODO Enviar msg com cores para o client //#TODO testar leaks para password errada
 {
-	#define BLU   "\x1B[34m" //#COLOCAR CORES NO SEND
-	#define RES "\x1B[0m"
-	std::string msg01 = ":" + user.get_nick() + " " + RPL_WELCOME + " " + user.get_nick() + " :Welcome to the " + SERVER_NAME + " Internet Relay Network, " + user.get_hostname() + "!\r\n";
-	std::string msg02 = ":" + user.get_nick() + " " + RPL_YOURHOST + " " + user.get_nick() + " :Your host is " + user.get_hostname() + ", running version v0.1\r\n";
-	std::string msg03 = ":" + user.get_nick() + " " + RPL_CREATED + " " + user.get_nick() + " :This server was created " + std::asctime(std::localtime(&_server_creation_time));
-	std::string msg04 = ":" + user.get_nick() + " " + RPL_MYINFO + " " + user.get_nick() + " " + user.get_hostname() + " v0.1 o iklt\r\n";
+    #define GRN   "\x03,2"
+    #define RES   "\x03,0"
 
-	send(user.get_fd(), msg01.c_str(), msg01.length(), 0);
-	send(user.get_fd(), msg02.c_str(), msg02.length(), 0);
-	send(user.get_fd(), msg03.c_str(), msg03.length(), 0);
-	send(user.get_fd(), msg04.c_str(), msg04.length(), 0);
+    std::string msg01 = ":" + user.get_username() + " " + RPL_WELCOME + " " + user.get_username() + " :" + "Welcome to the " + SERVER_NAME + " IRC Network, " + user.get_hostname() + "!" + "\r\n";
+    std::string msg02 = ":" + user.get_username() + " " + RPL_YOURHOST + " " + user.get_username() + " :" + "Your host is " + user.get_hostname() + ", running version v1.0" + "\r\n";
+    std::string msg03 = ":" + user.get_username() + " " + RPL_CREATED + " " + user.get_username() + " :" + "This server was created " + std::asctime(std::localtime(&_server_creation_time));
+    std::string msg04 = ":" + user.get_username() + " " + RPL_MYINFO + " " + user.get_username() + " " + user.get_hostname() + " v1.0 o iklt\r\n";
+
+    send(user.get_fd(), msg01.c_str(), msg01.length(), 0);
+    send(user.get_fd(), msg02.c_str(), msg02.length(), 0);
+    send(user.get_fd(), msg03.c_str(), msg03.length(), 0);
+    send(user.get_fd(), msg04.c_str(), msg04.length(), 0);
 }
+
 
 int Server::fds_loop()
 {

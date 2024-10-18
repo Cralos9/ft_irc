@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
 /*   Updated: 2024/10/18 13:54:04 by rumachad         ###   ########.fr       */
@@ -24,7 +24,7 @@ User::User(const int &fd, const std::string &hostname) : _fd(fd), _hostname(host
 
 User::~User()
 {
-	std::cout << "User Destructor" << std::endl;
+/* 	std::cout << "User Destructor" << std::endl;*/
 }
 
 /* User getters */
