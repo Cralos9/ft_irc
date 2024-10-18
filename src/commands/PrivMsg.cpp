@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:37:43 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/17 16:33:33 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:48:10 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 PrivMsg::PrivMsg(Server &server) : ACommand(server)
 {
-/* 	std::cout << "PrivMsg constructor" << std::endl;
- */}
+/* 	std::cout << "PrivMsg constructor" << std::endl;*/
+}
 
 PrivMsg::~PrivMsg()
 {
-/* 	std::cout << "PrivMsg destructor" << std::endl;
- */}
+/* 	std::cout << "PrivMsg destructor" << std::endl;*/
+}
 
 int PrivMsg::run()
 {
@@ -30,6 +30,8 @@ int PrivMsg::run()
 	if (this->_args[0].find('#') != std::string::npos)
 	{
 		ch = this->_server.check_channel(this->_args[0]);
+		if (ch == NULL)
+			return (1);
 		this->_user->prepare_buffer(this->_user->get_buffer());
 		this->_server.send_msg_to_channel(*ch, *this->_user, CHOTHER); 
 		this->_server.print("Sending " + this->_user->get_buffer());
@@ -37,6 +39,13 @@ int PrivMsg::run()
 	else
 	{
 		receiver = this->_server.get_user(this->_args[0]);
+		if (receiver == NULL)
+		{
+			_server.print("No User Found");
+			_user->set_buffer(":" + _user->get_hostname() + " 401 " + _user->get_nick() + " " + _args[0] + " :No such nick\r\n");
+			_server.send_msg_one_user(_user->get_fd(), *_user);
+			return (0);
+		}
 		this->_user->prepare_buffer(this->_user->get_buffer());
 		this->_server.send_msg_one_user(receiver->get_fd(), *this->_user);
 	}

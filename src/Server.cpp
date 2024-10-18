@@ -96,7 +96,8 @@ int Server::connect_client()
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
-
+	this->active_fd++;
+	this->_fds.push_back(client);
 	/*GOING TO CHECK FOR PASSWORD AND SEND WELCOME MESSAGE TO NEW CLIENT*/
 
 	receive_msg(_clients[client.fd]);
@@ -108,7 +109,7 @@ int Server::connect_client()
 		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
 		{
 			std::cout << RED << "Password Error" << RESET << std::endl;
-			close (client.fd);
+			disconnect_user(_clients[client.fd]);
 			//_clients[client.fd]._set_auth(true);
 			return EXIT_FAILURE;
 		}
@@ -120,8 +121,6 @@ int Server::connect_client()
 		}
 	}
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
-	this->active_fd++;
-	this->_fds.push_back(client);
 	return EXIT_SUCCESS;
 }
 
@@ -163,6 +162,7 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 
 void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
+	std::cout << msg_sender.get_buffer() << std::endl;
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
 }
 
@@ -282,10 +282,12 @@ User *Server::get_user(const std::string &nick)
 {
 	it_user it;
 	
-	for (it = this->_clients.begin(); it != this->_clients.end()
-		&& it->second.get_nick().compare(nick) != 0; it++)
-		;
-	return (&it->second);
+	for (it = this->_clients.begin(); it != this->_clients.end(); it++)
+	{
+		if (it->second.get_nick().compare(nick) == 0)
+			return (&it->second);
+	}
+	return (NULL);
 }
 
 void Server::disconnect_user(User &user)
@@ -313,6 +315,5 @@ void Server::print(const std::string &str)
 
 void Server::print_recv(const std::string &str)
 {
- 	(void) str;
-	/* std::cout << RED << "Client BUFFER:\n" << BLUE << str << RESET;*/
+	std::cout << RED << "Client BUFFER:\n" << BLUE << str << RESET;
 }

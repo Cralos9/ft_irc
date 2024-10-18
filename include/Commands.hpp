@@ -99,16 +99,6 @@ public:
 	int run();
 };
 
-class Cap : public ACommand
-{
-public:
-	
-	Cap(Server &server);
-	~Cap();
-
-	int run();
-};
-
 class Kick : public ACommand
 {
 public:

@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/18 11:11:15 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:54:04 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,6 @@ void User::set_hostname(const std::string &hostname)
 	this->_hostname = hostname;
 }
 
-
-
 void User::set_buffer(const std::string &buffer)
 {
 	this->_buffer = buffer;
@@ -113,9 +111,6 @@ bool User::get_info()
 	const std::string password = get_name(_buffer, "PASS ", '\n');
 	const std::string nick = get_name(_buffer, "NICK ", '\n');
 	const std::string username = get_name(_buffer, "USER ", '0');
-	/* std::cout << RED << "SavedPasssword:\n" << BLUE << password << RESET << std::endl;
-	std::cout << RED << "SavedNick:\n" << BLUE << nick << RESET << std::endl;
-	std::cout << RED << "SavedUsername:\n" << BLUE << username << RESET << std::endl; */
 	
 	if ((nick != "ERROR" && nick.find("USER ") == std::string::npos)&& username != "ERROR")
 	{
