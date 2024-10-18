@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/18 11:06:55 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:11:29 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ public:
 	User 		*get_user(const std::string &nick);
 	
 	void		 disconnect_user(User &user);
+	void 		close_all_fds();
 
 	void 		print(const std::string &str);
 	void 		print_recv(const std::string &str);
