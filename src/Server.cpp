@@ -21,20 +21,21 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	std::memset(&this->_address, 0, sizeof(this->_address));
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
-	this->_commands["JOIN"] = new Join(*this); //JOIN <channel>
-	this->_commands["WHO"] = new Who(*this);   //who
-	this->_commands["MODE"] = new Mode(*this); //MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
-	this->_commands["NICK"] = new Nick(*this); //NICK <new_name>
-	this->_commands["QUIT"] = new Quit(*this); //QUIT :<msg>
-	this->_commands["PRIVMSG"] = new PrivMsg(*this); // PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
-	this->_commands["KICK"] = new Kick(*this); //KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
-	this->_commands["TOPIC"] = new Topic(*this); //topic TOPIC <channel> || TOPIC <channel> <new_topic>
-	//whois whois <nick>
-	//part PART <channel> :<msg>
-	//invite INVITE <nick> <channel>
-	//pass? PASS <password>
-	//ping? PING <>
-	//pong? PONG <>
+	this->_commands["JOIN"] = new Join(*this);			//JOIN <channel>
+	this->_commands["WHO"] = new Who(*this);			//who
+	this->_commands["MODE"] = new Mode(*this);			//MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
+	this->_commands["NICK"] = new Nick(*this);			//NICK <new_name>
+	this->_commands["QUIT"] = new Quit(*this);			//QUIT :<msg>
+	this->_commands["PRIVMSG"] = new PrivMsg(*this);	// PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
+	this->_commands["KICK"] = new Kick(*this);			//KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
+	this->_commands["TOPIC"] = new Topic(*this);		//topic TOPIC <channel> || TOPIC <channel> <new_topic>
+	this->_commands["INVITE"] = new Invite(*this);		//invite INVITE <nick> <channel>
+
+						//whois whois <nick>
+						//part PART <channel> :<msg>
+						//pass? PASS <password>
+						//ping? PING <>
+						//pong? PONG <>
 
 	_server_creation_time = std::time(0);
 }
@@ -318,5 +319,5 @@ void Server::print(const std::string &str)
 
 void Server::print_recv(const std::string &str)
 {
-	std::cout << RED << "Client BUFFER:\n" << BLUE << str << RESET;
+	std::cout << "Client BUFFER:\n" << str;
 }

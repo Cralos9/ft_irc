@@ -119,5 +119,15 @@ public:
 	int run();
 };
 
+class Invite : public ACommand
+{
+public:
+	
+	Invite(Server &server);
+	~Invite();
+
+	int run();
+};
+
 
 #endif
