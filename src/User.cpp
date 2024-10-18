@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/18 14:19:57 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/18 17:24:49 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ User::User(const int &fd, const std::string &hostname) : _fd(fd), _hostname(host
 
 User::~User()
 {
-/* 	std::cout << "User Destructor" << std::endl;*/
+	std::cout << "User Destructor" << std::endl;
 }
 
 /* User getters */
@@ -112,7 +112,7 @@ bool User::get_info()
 	const std::string nick = get_name(_buffer, "NICK ", '\n');
 	const std::string username = get_name(_buffer, "USER ", '0');
 	
-	if ((nick != "ERROR" && nick.find("USER ") == std::string::npos)&& username != "ERROR")
+	if (nick != "ERROR" && username != "ERROR" && password != "ERROR")
 	{
 		this->_nick = nick;
 		this->_username = username;
@@ -127,4 +127,12 @@ void User::prepare_buffer(const std::string &command)
 	std::ostringstream oss;
 	oss << ":" << this->_nick << "!" << this->_username << "@" << this->_hostname << " " << command;
 	this->_buffer = oss.str();
+}
+
+std::ostream &operator<<(std::ostream &out, const User &user)
+{
+	out << YELLOW << "Nick: " << user.get_nick() << std::endl
+		<< "User: " << user.get_username() << std::endl
+		<< "PASS: " << user.get_password() << RESET << std::endl;
+	return (out);
 }
