@@ -111,7 +111,6 @@ int Server::connect_client()
 		{
 			std::cout << RED << "Password Error" << RESET << std::endl;
 			disconnect_user(_clients[client.fd]);
-			//_clients[client.fd]._set_auth(true);
 			return EXIT_FAILURE;
 		}
 		else
@@ -178,9 +177,6 @@ bool	Server::check_password(User &user)
 
 void Server::welcome_message(User &user) //#TODO Enviar msg com cores para o client //#TODO testar leaks para password errada
 {
-    #define GRN   "\x03,2"
-    #define RES   "\x03,0"
-
     std::string msg01 = ":" + user.get_username() + " " + RPL_WELCOME + " " + user.get_username() + " :" + "Welcome to the " + SERVER_NAME + " IRC Network, " + user.get_hostname() + "!" + "\r\n";
     std::string msg02 = ":" + user.get_username() + " " + RPL_YOURHOST + " " + user.get_username() + " :" + "Your host is " + user.get_hostname() + ", running version v1.0" + "\r\n";
     std::string msg03 = ":" + user.get_username() + " " + RPL_CREATED + " " + user.get_username() + " :" + "This server was created " + std::asctime(std::localtime(&_server_creation_time));
