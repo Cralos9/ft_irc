@@ -3,14 +3,23 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+         #
+#    By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 10:42:39 by rumachad          #+#    #+#              #
-#    Updated: 2024/10/18 10:17:17 by rumachad         ###   ########.fr        #
+#    Updated: 2024/10/18 13:28:13 by jmarinho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+
+# ---------------------------------- COLORS ------------------------------------
+
+RED = \033[0;31m
+GREEN = \033[0;32m
+PURPLE = \033[1;35m
+RESET = \033[0m
 NAME = ircserv
+
+# --------------------------------- VARIABLES ----------------------------------
 
 INCLUDE_PATH = include
 
@@ -27,19 +36,25 @@ OBJ_PATH = obj/
 OBJ_FILES = $(SRC:.cpp=.o)
 OBJS = $(addprefix $(OBJ_PATH), $(OBJ_FILES))
 
+# ----------------------------------- RULES ------------------------------------
+
 $(NAME):	$(OBJS)
-	$(CXX) -o $(NAME) $(OBJS)
+	@$(CXX) -o $(NAME) $(OBJS)
+	@echo "$(GREEN)	<TresPingados> IRC_SERVER READY TO LAUNCH $(RESET)"
 
 $(OBJ_PATH)%.o: %.cpp
 	@mkdir -p $(OBJ_PATH)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 all: $(NAME)
 
 clean:
-	rm -f $(OBJS)
+	@rm -f $(OBJS)
+	@echo "$(RED)	Object files were removed.$(RESET)"
 
 fclean:	clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
+	@echo "$(RED)	Executable ./$(NAME) was removed.\n$(RESET)"
 
 re:	fclean $(NAME)
+	
