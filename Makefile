@@ -6,7 +6,7 @@
 #    By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 10:42:39 by rumachad          #+#    #+#              #
-#    Updated: 2024/10/17 15:00:35 by rumachad         ###   ########.fr        #
+#    Updated: 2024/10/18 10:17:17 by rumachad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,12 +23,15 @@ VPATH = $(SRC_PATH) $(SRC_PATH)/commands
 SRC = main.cpp Server.cpp User.cpp Commands.cpp Join.cpp Channel.cpp \
 		Who.cpp Mode.cpp Nick.cpp Quit.cpp PrivMsg.cpp Kick.cpp signals.cpp Topic.cpp
 
-OBJS = $(SRC:.cpp=.o)
+OBJ_PATH = obj/
+OBJ_FILES = $(SRC:.cpp=.o)
+OBJS = $(addprefix $(OBJ_PATH), $(OBJ_FILES))
 
 $(NAME):	$(OBJS)
 	$(CXX) -o $(NAME) $(OBJS)
 
-%.o: %.cpp
+$(OBJ_PATH)%.o: %.cpp
+	@mkdir -p $(OBJ_PATH)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 all: $(NAME)

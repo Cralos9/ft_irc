@@ -1,4 +1,4 @@
-*.o
+obj/
 .vscode
 ircserv
 compile_commands.json
