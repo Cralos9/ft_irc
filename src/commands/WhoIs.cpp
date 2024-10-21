@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   WhoIs.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 15:18:15 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/21 17:01:01 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/21 23:10:19 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,24 @@ int WhoIs::run()
 		std::cout << "User not found" << std::endl;
 		return (1);
 	}
+	/* Prepare rpl */
 	rpl = client_rpl(_user->get_hostname(), _user->get_nick(), RPL_WHOISUSER);
 	pos = rpl.size();
+
+	/* RPL_WHOISUSER (311) */
 	rpl.append(target->get_nick() + " " + target->get_username() + " " +
 				target->get_hostname() + " * :" + target->get_realname() + "\r\n");
 	_server.print(rpl);
 	_user->set_buffer(rpl);
+	_server.send_msg_one_user(_user->get_fd(), *_user);
+	
+	/* RPL_WHOISCHANNELS (319) */
 	rpl.erase(pos, rpl.length());
 	std::cout << rpl << std::endl;
-	/* rpl = ":" + _user->get_hostname() + " " + RPL_WHOISCHANNELS + " " + */
+	rpl.append(target->get_nick() + " :" +); /* Finish. Server function channels_user_joined() can use */
 	_server.send_msg_one_user(_user->get_fd(), *_user);
+	
+	/* RPL_ENDOFWHOIS (318) */
 	rpl =
 	rpl = ":" + _user->get_hostname() + " " + RPL_ENDOFWHOIS + " " + _user->get_nick()
 		+ " " + target->get_nick() + " :End of /WHOIS list" + "\r\n";

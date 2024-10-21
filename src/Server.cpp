@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/21 16:26:30 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/21 23:06:06 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,6 +266,18 @@ int Server::handle_commands(User &user)
 }
 
 /* Channel Functions */
+std::vector<const std::string> &Server::channels_user_joined(User &user)
+{
+	std::vector<const std::string> user_joined_ch;
+
+	for (it_ch it = _channel_list.begin(); it != _channel_list.end(); it++)
+	{
+		if (it->second.is_user_on_ch(user) == 1)
+			user_joined_ch.push_back(it->first);
+	}
+	return (user_joined_ch);
+}
+
 Channel *Server::check_channel(const std::string &ch_name)
 {
 	it_ch it = this->_channel_list.find(ch_name);
