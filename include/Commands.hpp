@@ -119,5 +119,26 @@ public:
 	int run();
 };
 
+class List : public ACommand
+{
+public:
+	
+	List(Server &server);
+	~List();
+
+	int run();
+};
+
+class Part : public ACommand
+{
+public:
+	
+	Part(Server &server);
+	~Part();
+
+	int run();
+};
+
+
 
 #endif

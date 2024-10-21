@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/02 16:55:87by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/21 13:39:11 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["PRIVMSG"] = new PrivMsg(*this); // PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
 	this->_commands["KICK"] = new Kick(*this); //KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
 	this->_commands["TOPIC"] = new Topic(*this); //topic TOPIC <channel> || TOPIC <channel> <new_topic>
+	this->_commands["PART"] = new Part(*this);
+	//this->_commands["LIST"] = new List(*this);
 	//whois whois <nick>
 	//part PART <channel> :<msg>
 	//invite INVITE <nick> <channel>
@@ -250,11 +252,14 @@ int Server::main_loop()
 int Server::handle_commands(User &user)
 {
 	const std::string msg = user.get_buffer();
-	const std::string command_name = msg.substr(0, msg.find_first_of(" "));
+	std::string command_name = msg.substr(0, msg.find_first_of(" "));
 	const size_t command_name_len = command_name.length() + 1;
 
+	//if (command_name.find_first_of("\r\n"))
+	command_name = command_name.substr(0, command_name.find_first_of("\r"));
 	ACommand * command = this->_commands.at(command_name);
 
+	//if (command_name != "LIST")
 	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
 	command->set_user(&user);
 	command->run();
