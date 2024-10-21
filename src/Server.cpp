@@ -177,12 +177,12 @@ bool	Server::check_password(User &user)
 	return false;
 }
 
-void Server::welcome_message(User &user) //#TODO Enviar msg com cores para o client //#TODO testar leaks para password errada
+void Server::welcome_message(User &user)
 {
-    std::string msg01 = ":" + user.get_username() + " " + RPL_WELCOME + " " + user.get_username() + " :" + "Welcome to the " + SERVER_NAME + " IRC Network, " + user.get_hostname() + "!" + "\r\n";
-    std::string msg02 = ":" + user.get_username() + " " + RPL_YOURHOST + " " + user.get_username() + " :" + "Your host is " + user.get_hostname() + ", running version v1.0" + "\r\n";
-    std::string msg03 = ":" + user.get_username() + " " + RPL_CREATED + " " + user.get_username() + " :" + "This server was created " + std::asctime(std::localtime(&_server_creation_time));
-    std::string msg04 = ":" + user.get_username() + " " + RPL_MYINFO + " " + user.get_username() + " " + user.get_hostname() + " v1.0 o iklt\r\n";
+    std::string msg01 = ":" + user.get_hostname() + " " + RPL_WELCOME + " " + user.get_nick() + " :" + "Welcome to the " + SERVER_NAME + " IRC Network, " + user.get_nick() + "!" + "\r\n";
+    std::string msg02 = ":" + user.get_hostname() + " " + RPL_YOURHOST + " " + user.get_nick() + " :" + "Your host is " + user.get_hostname() + ", running version v1.0" + "\r\n";
+    std::string msg03 = ":" + user.get_hostname() + " " + RPL_CREATED + " " + user.get_nick() + " :" + "This server was created " + std::asctime(std::localtime(&_server_creation_time));
+    std::string msg04 = ":" + user.get_hostname() + " " + RPL_MYINFO + " " + user.get_nick() + " " + user.get_hostname() + " v1.0 o iklt\r\n";
 
     send(user.get_fd(), msg01.c_str(), msg01.length(), 0);
     send(user.get_fd(), msg02.c_str(), msg02.length(), 0);
