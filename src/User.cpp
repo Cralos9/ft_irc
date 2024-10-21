@@ -70,11 +70,13 @@ bool User::_get_auth() const
 
 void User::set_nick(const std::string &nick)
 {
+	std::cout << "WHAAAAT  Nick " << nick << std::endl;
 	this->_nick = nick;
 }
 
 void User::set_username(const std::string &username)
 {
+	std::cout << "WHAAAAT User " << username << std::endl;
 	this->_username = username;
 }
 
@@ -99,10 +101,13 @@ void User::_set_auth(const bool &status)
 const std::string User::get_name(const std::string &buffer, const std::string &attribute,
 									const char delimiter)
 {
-	const size_t pos = buffer.find(attribute) + 5;
+	size_t pos = buffer.find(attribute);
 
 	if (pos != std::string::npos)
+	{
+		pos += 5;
 		return (buffer.substr(pos, buffer.find_first_of(delimiter, pos) - pos - 1));
+	}
 	return ("ERROR");
 }
 
@@ -114,6 +119,7 @@ bool User::get_info()
 	
 	if (nick != "ERROR" && username != "ERROR" && password != "ERROR")
 	{
+		std::cout << nick << ", " << username<< std::endl;
 		this->_nick = nick;
 		this->_username = username;
 		this->_password = password;
