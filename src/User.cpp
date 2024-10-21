@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/18 17:24:49 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/21 13:21:11 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 User::User() : _fd(0), _nick("Default"), _auth(true)
 {
-	std::cout << "User default constructor" << std::endl;
+	/* std::cout << "User default constructor" << std::endl; */
 }
 
 User::User(const int &fd, const std::string &hostname) : _fd(fd), _hostname(hostname), _auth(true)
 {
-	std::cout << "User Constructor" << std::endl;
+/* 	std::cout << "User Constructor" << std::endl; */
 }
 
 User::~User()
 {
-	std::cout << "User Destructor" << std::endl;
+	/* std::cout << "User Destructor" << std::endl; */
 }
 
 /* User getters */
