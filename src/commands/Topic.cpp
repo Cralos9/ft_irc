@@ -28,14 +28,26 @@ int Topic::run()
 	Channel *ch = _server.check_channel(this->_args[0]);
 	if ((this->_args.size() > 1))
 	{
-		ch->set_topic(this->_args[1]);
-		response = "TOPIC " + ch->get_name() + " " + ch->get_topic() + "\r\n";
-		this->_user->prepare_buffer(response);
+		if (ch->is_user_OP(*_user))
+		{
+			ch->set_topic(this->_args[1]);
+			response = "TOPIC " + ch->get_name() + " " + ch->get_topic() + "\r\n";
+			this->_user->prepare_buffer(response);
+		}
+		else
+		{
+			response = ":" + _user->get_hostname() + " 482 " + this->_user->get_nick() + " " + ch->get_name() + " " + "You're not the channel operator" + "\r\n";
+			this->_user->set_buffer(response);
+			this->_server.send_msg_one_user(_user->get_fd(), *_user);
+			return(1);
+		}
 	}
 	else
 	{
 		response = ":" + _user->get_hostname() + " 331 " + this->_user->get_nick() + " " + ch->get_name() + " " + ch->get_topic() + "\r\n";
 		this->_user->set_buffer(response);
+		this->_server.send_msg_one_user(_user->get_fd(), *_user);
+		return(1);
 	}
 	std::cout << this->_user->get_buffer();
     this->_server.send_msg_to_channel(*ch, *_user, CHSELF);

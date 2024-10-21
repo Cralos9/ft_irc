@@ -54,6 +54,8 @@ bool Channel::is_user_OP(User &user)
 
 std::string Channel::get_topic()
 {
+	if (this->_topic.empty())
+		return("Channel has no topic");
 	return(this->_topic);
 }
 
