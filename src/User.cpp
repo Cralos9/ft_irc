@@ -70,13 +70,11 @@ bool User::_get_auth() const
 
 void User::set_nick(const std::string &nick)
 {
-	std::cout << "WHAAAAT  Nick " << nick << std::endl;
 	this->_nick = nick;
 }
 
 void User::set_username(const std::string &username)
 {
-	std::cout << "WHAAAAT User " << username << std::endl;
 	this->_username = username;
 }
 
@@ -119,7 +117,6 @@ bool User::get_info()
 	
 	if (nick != "ERROR" && username != "ERROR" && password != "ERROR")
 	{
-		std::cout << nick << ", " << username<< std::endl;
 		this->_nick = nick;
 		this->_username = username;
 		this->_password = password;
