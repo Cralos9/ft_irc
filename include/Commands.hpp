@@ -139,6 +139,15 @@ public:
 	int run();
 };
 
+class WhoIs : public ACommand
+{
+public:
+
+	WhoIs(Server &server);
+	~WhoIs();
+
+	int run();
+};
 
 
 #endif

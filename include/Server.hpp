@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/18 12:18:37 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:01:15 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,25 @@
 # include "User.hpp"
 # include "Channel.hpp"
 # include "Commands.hpp"
-# include <signal.h>
 # include <cerrno>
 # include <errno.h>
 #include <ctime>
+# include <signal.h>
 
 #define RPL_WELCOME		"001"
 #define RPL_YOURHOST	"002"
 #define RPL_CREATED		"003"
 #define RPL_MYINFO		"004"
 #define RPL_ISUPPORT	"005"
+
+#define RPL_WHOISCERTFP		"276"
+#define RPL_WHOISREGNICK	"307"
+#define RPL_WHOISUSER		"311"
+#define RPL_WHOISSERVER 	"312"
+#define RPL_WHOISOPERATOR	"313"
+#define RPL_ENDOFWHOIS		"318"
+#define RPL_WHOISCHANNELS 	"319"
+
 #define SERVER_NAME		"TresPingados"
 #define NO_EVENTS		0
 #define CHSELF			140

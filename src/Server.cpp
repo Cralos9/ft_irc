@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/21 13:39:11 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:26:30 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["PRIVMSG"] = new PrivMsg(*this); // PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
 	this->_commands["KICK"] = new Kick(*this); //KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
 	this->_commands["TOPIC"] = new Topic(*this); //topic TOPIC <channel> || TOPIC <channel> <new_topic>
-	this->_commands["PART"] = new Part(*this);
+	this->_commands["PART"] = new Part(*this); //part PART <channel> :<msg>
+	_commands["WHOIS"] = new WhoIs(*this);
 	//this->_commands["LIST"] = new List(*this);
 	//whois whois <nick>
-	//part PART <channel> :<msg>
 	//invite INVITE <nick> <channel>
 	//pass? PASS <password>
 	//ping? PING <>
@@ -96,7 +96,7 @@ int Server::connect_client()
 	client.fd = accept(this->_fds[0].fd, (struct sockaddr *)&client_info, &len);
 	if (client.fd == -1)
 		print_error("Accept Error");
-
+	sleep(1);
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
@@ -106,7 +106,7 @@ int Server::connect_client()
 
 	receive_msg(_clients[client.fd]);
 	_clients[client.fd].get_info();
-
+	
 	if (_clients[client.fd]._get_auth())
 	{
 		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
@@ -164,7 +164,6 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 
 void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
-	std::cout << msg_sender.get_buffer() << std::endl;
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
 }
 
