@@ -99,10 +99,13 @@ void User::_set_auth(const bool &status)
 const std::string User::get_name(const std::string &buffer, const std::string &attribute,
 									const char delimiter)
 {
-	const size_t pos = buffer.find(attribute) + 5;
+	size_t pos = buffer.find(attribute);
 
 	if (pos != std::string::npos)
+	{
+		pos += 5;
 		return (buffer.substr(pos, buffer.find_first_of(delimiter, pos) - pos - 1));
+	}
 	return ("ERROR");
 }
 
