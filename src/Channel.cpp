@@ -52,6 +52,11 @@ bool Channel::is_user_OP(User &user)
 	return (true);
 }
 
+size_t Channel::get_user_map_size()
+{
+	return(_user_map.size());
+}
+
 std::string Channel::get_topic()
 {
 	if (this->_topic.empty())

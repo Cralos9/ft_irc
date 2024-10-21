@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 15:37:50 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/21 14:37:18 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ class Channel
 		bool is_user_on_ch(User &user);
 		std::string get_topic();
 		void set_topic(std::string topic);
+		size_t get_user_map_size();
 private:
 		std::string _topic;
 		std::map<User*, int> _user_map;

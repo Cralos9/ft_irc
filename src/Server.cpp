@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/21 13:39:11 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/21 14:40:52 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,10 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["KICK"] = new Kick(*this); //KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
 	this->_commands["TOPIC"] = new Topic(*this); //topic TOPIC <channel> || TOPIC <channel> <new_topic>
 	this->_commands["PART"] = new Part(*this);
-	//this->_commands["LIST"] = new List(*this);
-	//whois whois <nick>
-	//part PART <channel> :<msg>
-	//invite INVITE <nick> <channel>
+	this->_commands["LIST"] = new List(*this);
 	//pass? PASS <password>
+	//whois whois <nick>
+	//invite INVITE <nick> <channel>
 	//ping? PING <>
 	//pong? PONG <>
 
@@ -124,6 +123,19 @@ int Server::connect_client()
 	}
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
 	return EXIT_SUCCESS;
+}
+
+void Server::channel_list(User &user)
+{
+	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end(); it++)
+	{
+		std::stringstream size_as_str;
+		size_as_str << it->second.get_user_map_size();
+		std::string response = ":" + user.get_hostname() + " 322 " + user.get_nick() + " " + it->second.get_name() + " " \
+			+ size_as_str.str() + " :" + it->second.get_topic() + "\r\n";
+		user.set_buffer(response);
+		send_msg_one_user(user.get_fd(), user);
+	}
 }
 
 void Server::receive_msg(User &user)
@@ -255,12 +267,12 @@ int Server::handle_commands(User &user)
 	std::string command_name = msg.substr(0, msg.find_first_of(" "));
 	const size_t command_name_len = command_name.length() + 1;
 
-	//if (command_name.find_first_of("\r\n"))
-	command_name = command_name.substr(0, command_name.find_first_of("\r"));
+	if (command_name.find_first_of("\r\n"))
+		command_name = command_name.substr(0, command_name.find_first_of("\r"));
 	ACommand * command = this->_commands.at(command_name);
 
-	//if (command_name != "LIST")
-	command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
+	if (command_name != "LIST")
+		command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
 	command->set_user(&user);
 	command->run();
 	return (0);

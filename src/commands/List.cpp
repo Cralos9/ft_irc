@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:08:45 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/21 13:37:12 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/21 14:38:16 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ List::~List()
 
 int List::run()
 {
-    //std::string response = ":" + _user->get_hostname() + " 322 " + this->_user->get_nick() + " " + ch->get_name() + " " + "You're not the channel operator" + "\r\n";
-    std::cout << "list" << std::endl;
+    _server.channel_list(*_user);
     return(1);
 }
