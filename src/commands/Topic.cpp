@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:18 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/21 13:09:03 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:14:18 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,11 @@ int Topic::run()
 	}
 	else
 	{
-		response = ":" + _user->get_hostname() + " 331 " + this->_user->get_nick() + " " + ch->get_name() + " " + ch->get_topic() + "\r\n";
+		response = ":" + _user->get_hostname() + " 331 " + this->_user->get_nick() + " " + ch->get_name() + " ";
+		if (ch->get_topic() == "")
+			response = response + "No topic is set" + "\r\n";
+		else
+			response = response + ch->get_topic() + "\r\n";
 		this->_user->set_buffer(response);
 		this->_server.send_msg_one_user(_user->get_fd(), *_user);
 		return(1);

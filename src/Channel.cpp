@@ -59,8 +59,8 @@ size_t Channel::get_user_map_size()
 
 std::string Channel::get_topic()
 {
-	if (this->_topic.empty())
-		return("Channel has no topic");
+	// if (this->_topic.empty())
+	// 	return("Channel has no topic");
 	return(this->_topic);
 }
 

@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/21 15:13:50 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:13:21 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["TOPIC"] = new Topic(*this); //topic TOPIC <channel> || TOPIC <channel> <new_topic>
 	this->_commands["PART"] = new Part(*this);
 	this->_commands["LIST"] = new List(*this);
+	//invite INVITE <nick> <channel>
 	//pass? PASS <password>
 	//whois whois <nick>
-	//invite INVITE <nick> <channel>
 	//ping? PING <>
 	//pong? PONG <>
 
@@ -104,8 +104,12 @@ int Server::connect_client()
 	/*GOING TO CHECK FOR PASSWORD AND SEND WELCOME MESSAGE TO NEW CLIENT*/
 
 	receive_msg(_clients[client.fd]);
-	_clients[client.fd].get_info();
-
+	while((_clients[client.fd].get_info()) == 0)
+	{
+		if((_clients[client.fd].get_buffer()).empty())
+			return(EXIT_FAILURE);
+		receive_msg(_clients[client.fd]);
+	}
 	if (_clients[client.fd]._get_auth())
 	{
 		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
@@ -144,9 +148,13 @@ void Server::receive_msg(User &user)
 	char buffer[1024] = {0};
 	msg_bytes = recv(user.get_fd(), buffer, sizeof(buffer), 0);
 	
-	if (msg_bytes == -1)
-		print_error("recv Error");
-	
+	// if (msg_bytes == -1)
+	// 	print_error("recv Error");
+	if (msg_bytes <= 0)
+	{
+		this->disconnect_user(user);
+		return ;
+	}
 	user.set_buffer(buffer);
 	this->print_recv(buffer);
 }

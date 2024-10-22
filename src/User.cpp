@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/21 13:21:11 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:46:56 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,14 +114,15 @@ bool User::get_info()
 	const std::string password = get_name(_buffer, "PASS ", '\n');
 	const std::string nick = get_name(_buffer, "NICK ", '\n');
 	const std::string username = get_name(_buffer, "USER ", '0');
-	
-	if (nick != "ERROR" && username != "ERROR" && password != "ERROR")
-	{
+
+	if (nick != "ERROR")
 		this->_nick = nick;
+	if(username != "ERROR")
 		this->_username = username;
+	if(password != "ERROR")
 		this->_password = password;
+	if (!(this->_nick.empty()) && !(this->_username.empty()) && !(this->_password.empty()))
  		return (1);
-	}
 	return (0);
 }
 
