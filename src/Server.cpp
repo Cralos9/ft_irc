@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/21 23:06:06 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:41:12 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int Server::connect_client()
 	client.fd = accept(this->_fds[0].fd, (struct sockaddr *)&client_info, &len);
 	if (client.fd == -1)
 		print_error("Accept Error");
-	sleep(1);
+/* 	sleep(1); */
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
@@ -132,7 +132,7 @@ void Server::receive_msg(User &user)
 	char buffer[1024] = {0};
 	msg_bytes = recv(user.get_fd(), buffer, sizeof(buffer), 0);
 	
-	if (msg_bytes == -1)
+	if (msg_bytes < 0)
 		print_error("recv Error");
 	
 	user.set_buffer(buffer);
@@ -266,14 +266,14 @@ int Server::handle_commands(User &user)
 }
 
 /* Channel Functions */
-std::vector<const std::string> &Server::channels_user_joined(User &user)
+const std::string Server::channels_user_joined(User &user)
 {
-	std::vector<const std::string> user_joined_ch;
+	std::string user_joined_ch;
 
 	for (it_ch it = _channel_list.begin(); it != _channel_list.end(); it++)
 	{
 		if (it->second.is_user_on_ch(user) == 1)
-			user_joined_ch.push_back(it->first);
+			user_joined_ch.append(it->first + " ");
 	}
 	return (user_joined_ch);
 }

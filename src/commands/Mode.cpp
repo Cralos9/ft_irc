@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/17 15:43:07 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/22 11:59:52 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int Mode::run()
 	std::string buffer = _user->get_buffer();
 	size_t pos = buffer.find_first_of("+-");
 
-	if (_args.size() == 1)
+	if (_args.size() == 1) /* Valgrind Error. Corrigir */
 		return (1);
 	ch = _server.check_channel(_args[0]);
 	if (ch == NULL) {

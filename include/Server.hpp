@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/21 23:04:28 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/22 11:52:27 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ public:
 
 	Channel 	*create_channel(const std::string &ch_name);
 	Channel 	*check_channel(const std::string &ch_name);
-	std::vector<const std::string> &channels_user_joined(User &user);
+	const std::string channels_user_joined(User &user);
 
 	int 		handle_commands(User &user);
 	User 		*get_user(const std::string &nick);
