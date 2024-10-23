@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/18 11:00:15 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/21 14:55:45 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define USER_HPP
 
 #include "ft_irc.hpp"
-
 
 class User
 {
@@ -33,8 +32,10 @@ class User
 		const std::string &get_buffer() const;
 		const std::string &get_username() const;
 		const std::string &get_hostname() const;
-		const std::string& get_password() const;
+		const std::string &get_password() const;
+		const std::string &get_realname() const;
 
+		void get_Test();
 		bool get_info();
 		const std::string get_name(const std::string &buffer, const std::string &attribute,
 									const char delimiter);
@@ -46,6 +47,7 @@ class User
 	private:
 		int _fd;
 		std::string _username;
+		std::string _realname;
 		std::string _nick;
 		std::string _hostname;
 		std::string _buffer;
@@ -53,5 +55,6 @@ class User
 		bool 		_auth;
 };
 
+std::ostream &operator<<(std::ostream &out, const User &user);
 
 #endif

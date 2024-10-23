@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/22 14:46:56 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:35:57 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ const std::string &User::get_password() const
 	return(this->_password);
 }
 
+const std::string &User::get_realname() const
+{
+	return (_realname);
+}
+
 bool User::_get_auth() const
 {
 	return(_auth);
@@ -103,7 +108,7 @@ const std::string User::get_name(const std::string &buffer, const std::string &a
 
 	if (pos != std::string::npos)
 	{
-		pos += 5;
+		pos += attribute.length();
 		return (buffer.substr(pos, buffer.find_first_of(delimiter, pos) - pos - 1));
 	}
 	return ("ERROR");
@@ -114,13 +119,16 @@ bool User::get_info()
 	const std::string password = get_name(_buffer, "PASS ", '\n');
 	const std::string nick = get_name(_buffer, "NICK ", '\n');
 	const std::string username = get_name(_buffer, "USER ", '0');
+	const std::string realname = get_name(_buffer, ":", '\n');
 
 	if (nick != "ERROR")
-		this->_nick = nick;
+		_nick = nick;
 	if(username != "ERROR")
-		this->_username = username;
+		_username = username;
 	if(password != "ERROR")
-		this->_password = password;
+		_password = password;
+	if (realname != "ERROR")
+		_realname = realname;
 	if (!(this->_nick.empty()) && !(this->_username.empty()) && !(this->_password.empty()))
  		return (1);
 	return (0);
@@ -137,6 +145,7 @@ std::ostream &operator<<(std::ostream &out, const User &user)
 {
 	out << YELLOW << "Nick: " << user.get_nick() << std::endl
 		<< "User: " << user.get_username() << std::endl
-		<< "PASS: " << user.get_password() << RESET << std::endl;
+		<< "PASS: " << user.get_password() << std::endl
+		<< "RealName: " << user.get_realname() << RESET << std::endl;
 	return (out);
 }

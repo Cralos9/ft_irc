@@ -148,15 +148,14 @@ public:
 	int run();
 };
 
-class Whois : public ACommand
+class WhoIs : public ACommand
 {
 public:
 	
-	Whois(Server &server);
-	~Whois();
+	WhoIs(Server &server);
+	~WhoIs();
 
 	int run();
 };
-
 
 #endif

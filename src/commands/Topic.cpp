@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:18 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/22 14:14:18 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:36:04 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int Topic::run()
 		}
 		else
 		{
-			response = ":" + _user->get_hostname() + " 482 " + this->_user->get_nick() + " " + ch->get_name() + " " + "You're not the channel operator" + "\r\n";
+			response = ":" + _user->get_hostname() + " 482 " + _user->get_nick() + " " + ch->get_name() + " " + "You're not the channel operator" + "\r\n";
 			this->_user->set_buffer(response);
 			this->_server.send_msg_one_user(_user->get_fd(), *_user);
 			return(1);

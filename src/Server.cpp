@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/23 14:12:32 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:35:06 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["PART"] = new Part(*this);
 	this->_commands["LIST"] = new List(*this);
 	this->_commands["INVITE"] = new Invite(*this); //invite INVITE <nick> <channel>
+	_commands["WHOIS"] = new WhoIs(*this);
+	//this->_commands["LIST"] = new List(*this);
+	//whois whois <nick>
+	//invite INVITE <nick> <channel>
 	//pass? PASS <password>
 	//whois whois <nick>
 	//ping? PING <>
@@ -112,7 +116,7 @@ int Server::connect_client()
 	client.fd = accept(this->_fds[0].fd, (struct sockaddr *)&client_info, &len);
 	if (client.fd == -1)
 		print_error("Accept Error");
-
+/* 	sleep(1); */
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
@@ -201,7 +205,6 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 
 void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
-	std::cout << msg_sender.get_buffer() << std::endl;
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
 }
 
@@ -304,6 +307,18 @@ int Server::handle_commands(User &user)
 }
 
 /* Channel Functions */
+const std::string Server::channels_user_joined(User &user)
+{
+	std::string user_joined_ch;
+
+	for (it_ch it = _channel_list.begin(); it != _channel_list.end(); it++)
+	{
+		if (it->second.is_user_on_ch(user) == 1)
+			user_joined_ch.append(it->first + " ");
+	}
+	return (user_joined_ch);
+}
+
 Channel *Server::check_channel(const std::string &ch_name)
 {
 	it_ch it = this->_channel_list.find(ch_name);

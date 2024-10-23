@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/23 12:20:22 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:32:32 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,26 @@
 # include "User.hpp"
 # include "Channel.hpp"
 # include "Commands.hpp"
-# include <signal.h>
 # include <cerrno>
 # include <errno.h>
 #include <ctime>
 #include <fstream>
-
+# include <signal.h>
 
 #define RPL_WELCOME		"001"
 #define RPL_YOURHOST	"002"
 #define RPL_CREATED		"003"
 #define RPL_MYINFO		"004"
 #define RPL_ISUPPORT	"005"
+
+#define RPL_WHOISCERTFP		"276"
+#define RPL_WHOISREGNICK	"307"
+#define RPL_WHOISUSER		"311"
+#define RPL_WHOISSERVER 	"312"
+#define RPL_WHOISOPERATOR	"313"
+#define RPL_ENDOFWHOIS		"318"
+#define RPL_WHOISCHANNELS 	"319"
+
 #define SERVER_NAME		"TresPingados"
 #define NO_EVENTS		0
 #define CHSELF			140
@@ -65,6 +73,7 @@ public:
 
 	Channel 	*create_channel(const std::string &ch_name);
 	Channel 	*check_channel(const std::string &ch_name);
+	const std::string channels_user_joined(User &user);
 
 	int 		handle_commands(User &user);
 	User 		*get_user(const std::string &nick);
@@ -99,5 +108,6 @@ private:
 };
 
 it_fd			find_fd(std::vector<pollfd> &vec, const int fd);
+const std::string ERR_NOSUCHNICK(const std::string user_nick, const std::string target_nick);
 
 #endif

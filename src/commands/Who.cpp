@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:19:35 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/17 11:40:28 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:11:14 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,14 @@ Who::~Who()
 
 int Who::run()
 {
-	/* std::cout << "Mode Command" << std::endl; */
+	User *user = NULL;
+
+	user = _server.get_user(_args[0]);
+	if (user == NULL)
+	{
+		std::cout << "User does't exists" << std::endl;
+		return (1);
+	}
+	
 	return (0);
 }
