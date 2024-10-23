@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/22 11:52:27 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/23 10:31:13 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,6 @@ private:
 };
 
 it_fd			find_fd(std::vector<pollfd> &vec, const int fd);
+const std::string ERR_NOSUCHNICK(const std::string user_nick, const std::string target_nick);
 
 #endif
