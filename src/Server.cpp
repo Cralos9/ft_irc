@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/22 15:13:21 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:12:32 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["TOPIC"] = new Topic(*this); //topic TOPIC <channel> || TOPIC <channel> <new_topic>
 	this->_commands["PART"] = new Part(*this);
 	this->_commands["LIST"] = new List(*this);
-	//invite INVITE <nick> <channel>
+	this->_commands["INVITE"] = new Invite(*this); //invite INVITE <nick> <channel>
 	//pass? PASS <password>
 	//whois whois <nick>
 	//ping? PING <>
 	//pong? PONG <>
 
 	_server_creation_time = std::time(0);
+	get_hostname();
 }
 
 Server::~Server()
@@ -49,6 +50,22 @@ Server::~Server()
 }
 
 /* -------------------------------------------- */
+
+void Server::get_hostname()
+{
+	// Gets the hostname from /etc/hostname
+	std::ifstream hostnameFile("/etc/hostname");
+	if (!hostnameFile)
+	{
+		std::cerr << "Error opening /etc/hostname" << std::endl;
+		_server_hostname = "localhost";
+		return;
+	}
+
+	std::string hostname;
+	std::getline(hostnameFile, hostname);
+	_server_hostname = hostname;
+}
 
 int Server::create_server()
 {

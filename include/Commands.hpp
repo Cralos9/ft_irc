@@ -138,7 +138,25 @@ public:
 
 	int run();
 };
+class Invite : public ACommand
+{
+public:
+	
+	Invite(Server &server);
+	~Invite();
 
+	int run();
+};
+
+class Whois : public ACommand
+{
+public:
+	
+	Whois(Server &server);
+	~Whois();
+
+	int run();
+};
 
 
 #endif

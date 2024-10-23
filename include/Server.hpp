@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/21 14:11:02 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/23 12:20:22 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <cerrno>
 # include <errno.h>
 #include <ctime>
+#include <fstream>
+
 
 #define RPL_WELCOME		"001"
 #define RPL_YOURHOST	"002"
@@ -80,6 +82,9 @@ public:
 	void		welcome_message(User &user);
 
 	void 		channel_list(User &user);
+	void		get_hostname();
+	std::string	_server_hostname;
+
 	
 private:
 
