@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/23 14:35:06 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:05:29 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,22 +354,4 @@ void Server::disconnect_user(User &user)
 	this->active_fd--;
 	this->_clients.erase(this->_clients.find(fd));
 	this->_fds.erase(find_fd(this->_fds, fd));
-}
-
-it_fd find_fd(std::vector<pollfd> &vec, const int fd)
-{
-	it_fd it;
-	for (it = vec.begin(); it->fd != fd; it++)
-		;
-	return (it);
-}
-
-void Server::print(const std::string &str)
-{
-	std::cout << GREEN << "Server: " << RESET << str << std::endl;
-}
-
-void Server::print_recv(const std::string &str)
-{
-	std::cout << RED << "Client BUFFER:\n" << BLUE << str << RESET;
 }
