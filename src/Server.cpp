@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 15:11:26 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/24 16:47:52 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,20 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	std::memset(&this->_address, 0, sizeof(this->_address));
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
-	this->_commands["JOIN"] = new Join(*this); //JOIN <channel>
-	this->_commands["WHO"] = new Who(*this);   //who
-	this->_commands["MODE"] = new Mode(*this); //MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
-	this->_commands["NICK"] = new Nick(*this); //NICK <new_name>
-	this->_commands["QUIT"] = new Quit(*this); //QUIT :<msg>
-	this->_commands["PRIVMSG"] = new PrivMsg(*this); // PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
-	this->_commands["KICK"] = new Kick(*this); //KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
-	this->_commands["TOPIC"] = new Topic(*this); //topic TOPIC <channel> || TOPIC <channel> <new_topic>
+	this->_commands["JOIN"] = new Join(*this);			//JOIN <channel>
+	this->_commands["who"] = new Who(*this);			//WHO <mask>
+	this->_commands["MODE"] = new Mode(*this);			//MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
+	this->_commands["NICK"] = new Nick(*this);			//NICK <new_name>
+	this->_commands["QUIT"] = new Quit(*this);			//QUIT :<msg>
+	this->_commands["PRIVMSG"] = new PrivMsg(*this);	//PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
+	this->_commands["KICK"] = new Kick(*this);			//KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
+	this->_commands["TOPIC"] = new Topic(*this);		//TOPIC <channel> || TOPIC <channel> <new_topic>
 	this->_commands["PART"] = new Part(*this);
 	this->_commands["LIST"] = new List(*this);
-	this->_commands["INVITE"] = new Invite(*this); //invite INVITE <nick> <channel>
-	_commands["WHOIS"] = new WhoIs(*this);
+	this->_commands["INVITE"] = new Invite(*this);		//INVITE <nick> <channel>
+	this->_commands["WHOIS"] = new WhoIs(*this);
 	//this->_commands["LIST"] = new List(*this);
-	//whois whois <nick>
-	//invite INVITE <nick> <channel>
 	//pass? PASS <password>
-	//whois whois <nick>
 	//ping? PING <>
 	//pong? PONG <>
 
@@ -301,12 +298,21 @@ void Server::handle_commands(User &user)
 	std::string command_name = msg.substr(0, msg.find_first_of(" "));
 	const size_t command_name_len = command_name.length() + 1;
 
+
 	if (command_name.find_first_of("\r\n"))
 		command_name = command_name.substr(0, command_name.find_first_of("\r"));
 	ACommand * command = this->_commands.at(command_name);
-
-	if (command_name != "LIST")
+	
+	std::cout << "cmd " << command_name << std::endl;
+	std::cout << "msg.length() " << msg.length() << std::endl;
+	if (command_name == "who" && msg.length() != 5)
+	{
 		command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
+	}
+	else if (command_name != "LIST" && command_name != "who")
+	{
+		command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
+	}
 	command->set_user(&user);
 	command->run();
 }
@@ -359,4 +365,9 @@ void Server::disconnect_user(User &user)
 	this->active_fd--;
 	this->_clients.erase(this->_clients.find(fd));
 	this->_fds.erase(find_fd(this->_fds, fd));
+}
+
+std::map<int, User>& Server::get_all_clients()
+{
+	return _clients;
 }

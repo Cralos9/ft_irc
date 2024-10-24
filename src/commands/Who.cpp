@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:19:35 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 12:08:16 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/24 16:46:49 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,28 +26,88 @@
    will end up matching every visible user.
 
    The <mask> passed to WHO is matched against users' host, server, real
-   name and nickname if the channel <mask> cannot be found. */
-   
+   name and nickname if the channel <mask> cannot be found.
+ */
 Who::Who(Server &server) : ACommand(server)
 {
-/* 	std::cout << "Who constructor" << std::endl; */
+	/*	std::cout << "Who constructor" << std::endl; */
 }
 
 Who::~Who()
 {
-/* 	std::cout << "Who destructor" << std::endl; */
+	/*	std::cout << "Who destructor" << std::endl; */
 }
 
 int Who::run()
 {
-	if (_args[0].empty()) //If mask empty list everyone in server
+	std::string msg;
+	
+	if (_args.empty()) // If mask empty list everyone in server
 	{
-		// for (std::map<int, User>::iterator *it; it != _clients.end(); ++it)
-		// {
-		// 	_server.send_msg_all_users(_server._clients, _clients, CHSELF);
-		// }
+		std::map<int, User> &list = _server.get_all_clients();
+		for (std::map<int, User>::iterator it = list.begin(); it != list.end(); ++it) {
+			{
+				msg = ":" + _server._server_hostname + " " + "352" + _user->get_nick() + " * "
+					+ it->second.get_username() + " " + it->second.get_hostname() + " " + _server._server_hostname + " "
+					+ it->second.get_nick() + " H :0 " + it->second.get_username() + "\r\n";
+				
+				_user->set_buffer(msg);
+				_server.send_msg_one_user(_user->get_fd(), *_user);
+				msg.clear();
+			}
+		}
 	}
-	// If the mask is a channel, list everyone in the channel
-	// If the mask is a user, list the user information
+	else if (_server.check_channel(_args[0]) == NULL && _server.get_user(_args[0]) == NULL)
+	{
+		msg = ":" + _server._server_hostname + " 315 " + _user->get_nick() + " :End of WHO list\r\n";
+		
+		_user->set_buffer(msg);
+		_server.send_msg_one_user(_user->get_fd(), *_user);
+		msg.clear();
+		_args.clear();
+		return (EXIT_FAILURE);
+	}
+	else if (_server.check_channel(_args[0]) != NULL) // If the mask is a channel, list everyone in the channel
+	{
+		Channel *channel = _server.check_channel(_args[0]);
+		std::map<User *, int> users = channel->get_users();
+
+		for (std::map<User *, int>::iterator it = users.begin(); it != users.end(); it++)
+		{
+			msg = ":" + _server._server_hostname + " " + "352" + _user->get_nick() + " "
+				+ _args[0] + " "+ it->first->get_username() + it->first->get_hostname() + " " + _server._server_hostname + " "
+				+ it->first->get_nick() + " H :0 " + it->first->get_username() + "\r\n";
+			
+			_user->set_buffer(msg);
+			_server.send_msg_one_user(_user->get_fd(), *_user);
+			msg.clear();
+		}
+	}
+	else if (_server.get_user(_args[0]) != NULL) // If the mask is a user, list the user information
+	{
+		User *target = _server.get_user(_args[0]);
+		msg = ":" + _server._server_hostname + " " + "352" + _user->get_nick() + " * "
+			+ target->get_username() + target->get_hostname() + " " + _server._server_hostname + " "
+				+ target->get_nick() + " H :0"+ target->get_username() + "\r\n";
+		
+		_user->set_buffer(msg);
+		_server.send_msg_one_user(_user->get_fd(), *_user);
+		msg.clear();
+	}
+	else
+	{
+		msg = ":" + _server._server_hostname + " " + "mask not accepted" + "\r\n";
+		
+		_user->set_buffer(msg);
+		_server.send_msg_one_user(_user->get_fd(), *_user);
+		msg.clear();
+	}
+	// General end of WHO list
+	msg = ":" + _server._server_hostname + " 315 " + _user->get_nick() + " :End of WHO list\r\n";
+	
+	_user->set_buffer(msg);
+	_server.send_msg_one_user(_user->get_fd(), *_user);
+	msg.clear();
+	_args.clear();
 	return (EXIT_SUCCESS);
 }
