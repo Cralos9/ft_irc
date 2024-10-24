@@ -6,7 +6,7 @@
 /*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 16:47:52 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/24 16:51:05 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,8 +303,6 @@ void Server::handle_commands(User &user)
 		command_name = command_name.substr(0, command_name.find_first_of("\r"));
 	ACommand * command = this->_commands.at(command_name);
 	
-	std::cout << "cmd " << command_name << std::endl;
-	std::cout << "msg.length() " << msg.length() << std::endl;
 	if (command_name == "who" && msg.length() != 5)
 	{
 		command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
