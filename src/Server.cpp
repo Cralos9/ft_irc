@@ -124,29 +124,7 @@ int Server::connect_client()
 	this->_fds.push_back(client);
 	/*GOING TO CHECK FOR PASSWORD AND SEND WELCOME MESSAGE TO NEW CLIENT*/
 
-	receive_msg(_clients[client.fd]);
-	while((_clients[client.fd].get_info()) == 0)
-	{
-		if((_clients[client.fd].get_buffer()).empty())
-			return(EXIT_FAILURE);
-		receive_msg(_clients[client.fd]);
-	}
-	if (_clients[client.fd]._get_auth())
-	{
-		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
-		{
-			std::cout << RED << "Password Error" << RESET << std::endl;
-			disconnect_user(_clients[client.fd]);
-			return EXIT_FAILURE;
-		}
-		else
-		{
-			std::cout << GREEN << "Password Accepted" << RESET << std::endl;
-			welcome_message(_clients[client.fd]); //Send welcome message to user
-			_clients[client.fd]._set_auth(false);
-		}
-	}
-	std::cout << "New client " << this->active_fd << " connected" << std::endl;
+	std::cout << "New Client: " << active_fd << " connected" << std::endl;
 	return EXIT_SUCCESS;
 }
 
@@ -239,18 +217,40 @@ int Server::fds_loop()
 	{
 		if (this->_fds[i].revents == NO_EVENTS)
 			continue;
-		if (this->_fds[i].revents != POLLIN)
+		if (_fds[i].revents != POLLIN && _fds[i].revents != POLLOUT)
 			print_error("Error revents");
 		if (this->_fds[i].fd == this->_fds[0].fd)
-		{
-			if (this->connect_client())
-				break;	
-		}
+			this->connect_client();
 		else
 		{
 			User &user = this->_clients.at(this->_fds[i].fd);
-			this->receive_msg(user);
-			handle_commands(user);
+			if (this->_fds[i].revents & POLLIN)
+			{
+				this->receive_msg(user);
+				if (user._get_auth())
+				{
+					if (user.get_info() == 0)
+						return (1);
+					std::cout << user << std::endl;
+					if (!check_password(user))  //check if User password matches Server Password
+					{
+						std::cout << RED << "Password Error" << RESET << std::endl;
+						return (1);
+					}
+					else
+					{
+						std::cout << GREEN << "Password Accepted" << RESET << std::endl;
+						welcome_message(user);
+						user._set_auth(false);
+					}
+				}
+				this->_fds[i].events |= POLLOUT;
+			}
+			else if (this->_fds[i].revents & POLLOUT)
+			{
+				this->handle_commands(user);
+				this->_fds[i].events = POLLIN;
+			}
 		}
 	}
 	return (0);
