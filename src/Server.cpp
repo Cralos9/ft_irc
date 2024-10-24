@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 12:22:14 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/24 14:32:40 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,7 +239,7 @@ int Server::fds_loop()
 	{
 		if (this->_fds[i].revents == NO_EVENTS)
 			continue;
-		if (this->_fds[i].revents != POLLIN && this->_fds[i].revents != POLLOUT)
+		if (this->_fds[i].revents != POLLIN)
 			print_error("Error revents");
 		if (this->_fds[i].fd == this->_fds[0].fd)
 		{
@@ -249,22 +249,14 @@ int Server::fds_loop()
 		else
 		{
 			User &user = this->_clients.at(this->_fds[i].fd);
-			if (this->_fds[i].revents & POLLIN)
+			this->receive_msg(user);
+			try
 			{
-				this->receive_msg(user);
-				this->_fds[i].events |= POLLOUT;
+				this->handle_commands(user);
 			}
-			else if (this->_fds[i].revents & POLLOUT)
+			catch (std::exception &e)
 			{
-				try
-				{
-					this->_fds[i].events = POLLIN;
-					this->handle_commands(user);
-				}
-				catch (std::exception &e)
-				{
-					std::cerr << "Command Not Found" << std::endl;
-				}
+				std::cerr << "Command Not Found" << std::endl;
 			}
 		}
 	}
@@ -298,6 +290,8 @@ int Server::main_loop()
 
 void Server::handle_commands(User &user)
 {
+	Parser::parse_buffer(user.get_buffer());
+	return ;
 	const std::string msg = user.get_buffer();
 	std::string command_name = msg.substr(0, msg.find_first_of(" "));
 	const size_t command_name_len = command_name.length() + 1;

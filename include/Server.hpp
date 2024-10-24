@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 12:17:51 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/24 14:25:15 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <ctime>
 #include <fstream>
 # include <signal.h>
+# include "Parser.hpp"
 
 #define RPL_WELCOME		"001"
 #define RPL_YOURHOST	"002"
