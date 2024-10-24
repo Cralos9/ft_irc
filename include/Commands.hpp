@@ -28,7 +28,7 @@ public:
 	ACommand(Server &server);
 	virtual ~ACommand();
 
-	void set_args(const std::string &args);
+	void set_args(std::vector<std::string> &args);
 	void set_user(User *user);
 	virtual int run() = 0;
 
@@ -157,5 +157,7 @@ public:
 
 	int run();
 };
+
+std::vector<std::string> parse_split(const std::string &buffer);
 
 #endif

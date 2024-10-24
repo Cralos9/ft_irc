@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 14:32:40 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:45:36by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,14 +250,7 @@ int Server::fds_loop()
 		{
 			User &user = this->_clients.at(this->_fds[i].fd);
 			this->receive_msg(user);
-			try
-			{
-				this->handle_commands(user);
-			}
-			catch (std::exception &e)
-			{
-				std::cerr << "Command Not Found" << std::endl;
-			}
+			handle_commands(user);
 		}
 	}
 	return (0);
@@ -290,20 +283,21 @@ int Server::main_loop()
 
 void Server::handle_commands(User &user)
 {
-	Parser::parse_buffer(user.get_buffer());
-	return ;
-	const std::string msg = user.get_buffer();
-	std::string command_name = msg.substr(0, msg.find_first_of(" "));
-	const size_t command_name_len = command_name.length() + 1;
+	ACommand *command = NULL;
+	std::vector<std::string> split = parse_split(user.get_buffer());
 
-	if (command_name.find_first_of("\r\n"))
-		command_name = command_name.substr(0, command_name.find_first_of("\r"));
-	ACommand * command = this->_commands.at(command_name);
-
-	if (command_name != "LIST")
-		command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
-	command->set_user(&user);
-	command->run();
+	try
+	{
+		command = _commands.at(split[0]);
+		split.erase(split.begin());
+		command->set_args(split);
+		command->set_user(&user);
+		command->run();
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << "Unknown Command" << std::endl;
+	}
 }
 
 /* Channel Functions */

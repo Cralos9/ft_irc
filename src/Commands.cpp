@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:18:50 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/23 10:30:21 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:53:39 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,26 @@ ACommand::~ACommand()
 /* 	std::cout << "ACommand Destructor" << std::endl; */
 }
 
-void ACommand::set_args(const std::string &args)
+void ACommand::set_args(std::vector<std::string> &args)
 {
-	std::istringstream iss(args);
-	std::string token;
-
-	this->_args.erase(this->_args.begin(), this->_args.end());
-	while (std::getline(iss, token, ' '))
-    {
-        std::size_t pos = token.find('\r');
-        if (pos != std::string::npos)
-			token = token.substr(0, pos);
-        this->_args.push_back(token);
-    }
+	_args = args;
 }
 
 void ACommand::set_user(User *user) 
 {
 	this->_user = user;
+}
+
+/* Split the buffer into tokens
+The 1 token is the Command Name
+The rest is params for the Command */
+std::vector<std::string> parse_split(const std::string &buffer)
+{
+	std::istringstream iss(buffer.substr(0, buffer.find('\r')));
+	std::string token;
+	std::vector<std::string> args;
+
+	while (std::getline(iss, token, ' '))
+		args.push_back(token);
+	return (args);
 }
