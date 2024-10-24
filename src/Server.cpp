@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 12:05:29 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:22:14 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,7 +239,7 @@ int Server::fds_loop()
 	{
 		if (this->_fds[i].revents == NO_EVENTS)
 			continue;
-		if (this->_fds[i].revents != POLLIN)
+		if (this->_fds[i].revents != POLLIN && this->_fds[i].revents != POLLOUT)
 			print_error("Error revents");
 		if (this->_fds[i].fd == this->_fds[0].fd)
 		{
@@ -249,15 +249,22 @@ int Server::fds_loop()
 		else
 		{
 			User &user = this->_clients.at(this->_fds[i].fd);
-			this->receive_msg(user);
-			try
+			if (this->_fds[i].revents & POLLIN)
 			{
-				if (this->handle_commands(user))
-					break;
+				this->receive_msg(user);
+				this->_fds[i].events |= POLLOUT;
 			}
-			catch (std::exception &e)
+			else if (this->_fds[i].revents & POLLOUT)
 			{
-				std::cerr << "Command Not Found" << std::endl;
+				try
+				{
+					this->_fds[i].events = POLLIN;
+					this->handle_commands(user);
+				}
+				catch (std::exception &e)
+				{
+					std::cerr << "Command Not Found" << std::endl;
+				}
 			}
 		}
 	}
@@ -289,7 +296,7 @@ int Server::main_loop()
 	return (0);
 }
 
-int Server::handle_commands(User &user)
+void Server::handle_commands(User &user)
 {
 	const std::string msg = user.get_buffer();
 	std::string command_name = msg.substr(0, msg.find_first_of(" "));
@@ -303,7 +310,6 @@ int Server::handle_commands(User &user)
 		command->set_args(msg.substr(command_name_len, msg.length() - command_name_len));
 	command->set_user(&user);
 	command->run();
-	return (0);
 }
 
 /* Channel Functions */

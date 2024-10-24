@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:19:35 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/23 14:39:46 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:08:16 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ int Who::run()
 {
 	if (_args[0].empty()) //If mask empty list everyone in server
 	{
-		for (std::map<int, User>::iterator *it; it != _clients.end(); ++it)
-		{
-			_server.send_msg_all_users(server._clients, _clients, CHSELF);
-		}
+		// for (std::map<int, User>::iterator *it; it != _clients.end(); ++it)
+		// {
+		// 	_server.send_msg_all_users(_server._clients, _clients, CHSELF);
+		// }
 	}
 	// If the mask is a channel, list everyone in the channel
 	// If the mask is a user, list the user information
