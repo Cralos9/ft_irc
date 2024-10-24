@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 12:22:14 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:11:26 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,29 +123,6 @@ int Server::connect_client()
 	this->active_fd++;
 	this->_fds.push_back(client);
 	/*GOING TO CHECK FOR PASSWORD AND SEND WELCOME MESSAGE TO NEW CLIENT*/
-
-	receive_msg(_clients[client.fd]);
-	while((_clients[client.fd].get_info()) == 0)
-	{
-		if((_clients[client.fd].get_buffer()).empty())
-			return(EXIT_FAILURE);
-		receive_msg(_clients[client.fd]);
-	}
-	if (_clients[client.fd]._get_auth())
-	{
-		if (!check_password(_clients[client.fd]))  //check if User password matches Server Password
-		{
-			std::cout << RED << "Password Error" << RESET << std::endl;
-			disconnect_user(_clients[client.fd]);
-			return EXIT_FAILURE;
-		}
-		else
-		{
-			std::cout << GREEN << "Password Accepted" << RESET << std::endl;
-			welcome_message(_clients[client.fd]); //Send welcome message to user
-			_clients[client.fd]._set_auth(false);
-		}
-	}
 	std::cout << "New client " << this->active_fd << " connected" << std::endl;
 	return EXIT_SUCCESS;
 }
@@ -249,21 +226,43 @@ int Server::fds_loop()
 		else
 		{
 			User &user = this->_clients.at(this->_fds[i].fd);
-			if (this->_fds[i].revents & POLLIN)
+			if (user._get_auth())
 			{
-				this->receive_msg(user);
-				this->_fds[i].events |= POLLOUT;
-			}
-			else if (this->_fds[i].revents & POLLOUT)
-			{
-				try
+				receive_msg(user);
+				while((user.get_info()) == 0)
+					return(0);
+				std::cout << user.get_info() << std::endl;
+				if (!check_password(user))  //check if User password matches Server Password
 				{
-					this->_fds[i].events = POLLIN;
-					this->handle_commands(user);
+						std::cout << RED << "Password Error" << RESET << std::endl;
+						disconnect_user(user);
+						return EXIT_FAILURE;
 				}
-				catch (std::exception &e)
+				else
 				{
-					std::cerr << "Command Not Found" << std::endl;
+						std::cout << GREEN << "Password Accepted" << RESET << std::endl;
+						welcome_message(user);
+						user._set_auth(false);
+				}
+			}
+			else
+			{
+				if (this->_fds[i].revents & POLLIN)
+				{
+					this->receive_msg(user);
+					this->_fds[i].events |= POLLOUT;
+				}
+				if (this->_fds[i].revents & POLLOUT)
+				{
+					try
+					{
+						this->_fds[i].events = POLLIN;
+						this->handle_commands(user);
+					}
+					catch (std::exception &e)
+					{
+						std::cerr << "Command Not Found" << std::endl;
+					}
 				}
 			}
 		}
