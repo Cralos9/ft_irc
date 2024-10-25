@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 17:06:18 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/25 09:40:28 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ public:
 	void 		channel_list(User &user);
 	void		get_hostname();
 	std::string	_server_hostname;
+
+	std::map<int, User>		&get_all_clients();
 
 	
 private:

@@ -6,7 +6,7 @@
 /*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/10/23 12:37:44 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:23:23 by jmarinho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,6 @@ int Invite::run()
 		return to client c1r3s6.42porto.com 401 jmarinho manel :No such nick/Channel
 	if channel doesnt exits in channel list
 		return to client c1r3s6.42porto.com 403 jmarinho geral :No such channel */
-
-	std::cout << "args0 " << _args[0] << std::endl;
-	std::cout << "args1 " << _args[1] << std::endl;
 		
 	std::string NO_CH_OR_USER = ":" + _server._server_hostname + "401" + _args[0] + ":No such nick/Channel";
 	std::string CH_NOT_EXIST = ":" + _server._server_hostname + "403" + _args[1] + ":No such channel";
