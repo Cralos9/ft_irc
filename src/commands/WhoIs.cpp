@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 15:18:15 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/23 10:40:34 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:26:20 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,7 @@ WhoIs::~WhoIs()
 /* 	std::cout << "WhoIs destructor" << std::endl; */
 }
 
-const std::string client_rpl(const std::string &hostname, const std::string &nickname
-								, const std::string &rpl_numeric)
-{
-	return (":" + hostname + " " + rpl_numeric + " " + nickname + " ");
-}
+
 
 int WhoIs::run()
 {

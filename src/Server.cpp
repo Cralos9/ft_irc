@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/25 10:40:01 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:50:20 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ int Server::connect_client()
 	client.fd = accept(this->_fds[0].fd, (struct sockaddr *)&client_info, &len);
 	if (client.fd == -1)
 		print_error("Accept Error");
-/* 	sleep(1); */
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
@@ -203,15 +202,13 @@ void Server::welcome_message(User &user)
 	const std::string isupport = client_rpl(user.get_hostname(), user.get_nick(), RPL_ISUPPORT)
 								+ "CHANMODES=b,k,l,imnpst\r\n";
 	
-	const std::string nomotd = client_rpl(user.get_hostname(), user.get_nick(), ERR_NOMOTD)
-								+ ":MOTD File is missing\r\n";
-
     send(user.get_fd(), msg01.c_str(), msg01.length(), 0);
     send(user.get_fd(), msg02.c_str(), msg02.length(), 0);
     send(user.get_fd(), msg03.c_str(), msg03.length(), 0);
     send(user.get_fd(), msg04.c_str(), msg04.length(), 0);
     send(user.get_fd(), isupport.c_str(), isupport.length(), 0);
-    send(user.get_fd(), nomotd.c_str(), nomotd.length(), 0);
+	const std::string &motd = numeric_motd(_server_hostname, user.get_nick()); 
+    send(user.get_fd(), motd.c_str(), motd.length(), 0);
 }
 
 

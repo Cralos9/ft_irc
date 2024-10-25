@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/25 10:09:19 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:32:40 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,6 @@
 #define RESET "\033[0m"
 
 void print_error(std::string error_msg);
-
-template <typename Container>
-typename Container::iterator advance_map(Container &map, int index)
-{
-	typename Container::iterator it;
-
-	for (it = map.begin(); it->first != index; it++)
-		;
-	return (it);
-}
-const std::string client_rpl(const std::string &hostname, const std::string &nickname
-								, const std::string &rpl_numeric);
 
 
 #endif
