@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/25 10:18:29 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/25 10:40:01 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["LIST"] = new List(*this);
 	this->_commands["INVITE"] = new Invite(*this);		//INVITE <nick> <channel>
 	this->_commands["WHOIS"] = new WhoIs(*this);
+	this->_commands["PASS"] = new Pass(*this);
 	//this->_commands["LIST"] = new List(*this);
 	//pass? PASS <password>
 	//ping? PING <>

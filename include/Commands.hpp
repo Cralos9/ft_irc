@@ -158,6 +158,16 @@ public:
 	int run();
 };
 
+class Pass : public ACommand
+{
+public:
+
+	Pass(Server &server);
+	~Pass();
+
+	int run();
+};
+
 std::vector<std::string> parse_split(const std::string &buffer);
 
 #endif

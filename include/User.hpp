@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/21 14:55:45 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/25 10:38:26 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ class User
 		void set_username(const std::string &username);
 		void set_hostname(const std::string &hostname);
 		void set_buffer(const std::string &buffer);
+		void set_password(const std::string &password);
 
 		const int &get_fd() const;
 		const std::string &get_nick() const;
