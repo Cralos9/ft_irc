@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/25 09:40:28 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/25 10:17:13 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,12 @@
 #define RPL_WHOISOPERATOR	"313"
 #define RPL_ENDOFWHOIS		"318"
 #define RPL_WHOISCHANNELS 	"319"
+#define ERR_NOMOTD			"422"
 
 #define SERVER_NAME		"TresPingados"
 #define NO_EVENTS		0
-#define CHSELF			140
 #define CHOTHER			141
+#define CHSELF			140
 
 typedef std::vector<pollfd>::iterator it_fd;
 typedef std::map<int, User>::iterator it_user;

@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/25 09:40:10 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/25 10:18:29 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,15 +194,23 @@ bool	Server::check_password(User &user)
 
 void Server::welcome_message(User &user)
 {
-    std::string msg01 = ":" + user.get_hostname() + " " + RPL_WELCOME + " " + user.get_nick() + " :" + "Welcome to the " + SERVER_NAME + " IRC Network, " + user.get_nick() + "!" + "\r\n";
-    std::string msg02 = ":" + user.get_hostname() + " " + RPL_YOURHOST + " " + user.get_nick() + " :" + "Your host is " + user.get_hostname() + ", running version v1.0" + "\r\n";
-    std::string msg03 = ":" + user.get_hostname() + " " + RPL_CREATED + " " + user.get_nick() + " :" + "This server was created " + std::asctime(std::localtime(&_server_creation_time));
-    std::string msg04 = ":" + user.get_hostname() + " " + RPL_MYINFO + " " + user.get_nick() + " " + user.get_hostname() + " v1.0 o iklt\r\n";
+    const std::string msg01 = ":" + user.get_hostname() + " " + RPL_WELCOME + " " + user.get_nick() + " :" + "Welcome to the " + SERVER_NAME + " IRC Network, " + user.get_nick() + "!" + "\r\n";
+    const std::string msg02 = ":" + user.get_hostname() + " " + RPL_YOURHOST + " " + user.get_nick() + " :" + "Your host is " + user.get_hostname() + ", running version v1.0" + "\r\n";
+	const std::string msg03 = ":" + user.get_hostname() + " " + RPL_CREATED + " " + user.get_nick() + " :" + "This server was created " + std::asctime(std::localtime(&_server_creation_time));
+    const std::string msg04 = ":" + user.get_hostname() + " " + RPL_MYINFO + " " + user.get_nick() + " " + user.get_hostname() + " v1.0 o iklt\r\n";
+
+	const std::string isupport = client_rpl(user.get_hostname(), user.get_nick(), RPL_ISUPPORT)
+								+ "CHANMODES=b,k,l,imnpst\r\n";
+	
+	const std::string nomotd = client_rpl(user.get_hostname(), user.get_nick(), ERR_NOMOTD)
+								+ ":MOTD File is missing\r\n";
 
     send(user.get_fd(), msg01.c_str(), msg01.length(), 0);
     send(user.get_fd(), msg02.c_str(), msg02.length(), 0);
     send(user.get_fd(), msg03.c_str(), msg03.length(), 0);
     send(user.get_fd(), msg04.c_str(), msg04.length(), 0);
+    send(user.get_fd(), isupport.c_str(), isupport.length(), 0);
+    send(user.get_fd(), nomotd.c_str(), nomotd.length(), 0);
 }
 
 
