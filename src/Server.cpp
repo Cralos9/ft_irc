@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/25 15:50:20 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/25 16:21:43 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,10 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["INVITE"] = new Invite(*this);		//INVITE <nick> <channel>
 	this->_commands["WHOIS"] = new WhoIs(*this);
 	this->_commands["PASS"] = new Pass(*this);
+/* 	this->_commands["PONG"] = new Ping(*this); */
+	this->_commands["PING"] = new Pong(*this);
 	//this->_commands["LIST"] = new List(*this);
 	//pass? PASS <password>
-	//ping? PING <>
 	//pong? PONG <>
 
 	_server_creation_time = std::time(0);
@@ -119,7 +120,6 @@ int Server::connect_client()
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
 	this->active_fd++;
 	this->_fds.push_back(client);
-	/*GOING TO CHECK FOR PASSWORD AND SEND WELCOME MESSAGE TO NEW CLIENT*/
 
 	std::cout << "New Client: " << active_fd << " connected" << std::endl;
 	return EXIT_SUCCESS;

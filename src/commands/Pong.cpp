@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Pass.cpp                                           :+:      :+:    :+:   */
+/*   Pong.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/25 10:33:09 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/25 15:57:48 by rumachad         ###   ########.fr       */
+/*   Created: 2024/10/25 15:57:01 by rumachad          #+#    #+#             */
+/*   Updated: 2024/10/25 16:23:59 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Pass::Pass(Server &server) : ACommand(server)
+Pong::Pong(Server &server) : ACommand(server)
 {
-/* 	std::cout << "Pass constructor" << std::endl; */
+	std::cout << "Pong constructor" << std::endl;
 }
 
-Pass::~Pass()
+Pong::~Pong()
 {
-/* 	std::cout << "Pass destructor" << std::endl; */
+	std::cout << "Pong destructor" << std::endl;
 }
 
-int Pass::run()
+int Pong::run()
 {
-	if (_user->_get_auth() == false)
-		return (0);
-	_user->set_password(_args[0]);
-	if (_server.check_password(*_user))
-		return (0);
+	_user->prepare_buffer("PONG " + _server._server_hostname + " " + _args[0] + "\r\n");
+	_server.print(_user->get_buffer());
+	_server.send_msg_one_user(_user->get_fd(), *_user);
 	return (0);
 }

@@ -168,6 +168,16 @@ public:
 	int run();
 };
 
+class Pong : public ACommand
+{
+public:
+
+	Pong(Server &server);
+	~Pong();
+
+	int run();
+};
+
 std::vector<std::string> parse_split(const std::string &buffer);
 
 #endif
