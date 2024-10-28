@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:18:50 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 14:54:04 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:16:59by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-ACommand::ACommand(Server &server, bool &usable_pre_reg) : _user(NULL), _server(server), _usable_pre_reg(usable_pre_reg)
+ACommand::ACommand(Server &server, bool usable_pre_reg) : _user(NULL), _server(server), _usable_pre_reg(usable_pre_reg)
 {
 /* 	std::cout << "ACommands Constructor" << std::endl; */
 }
@@ -36,7 +36,10 @@ void ACommand::set_user(User *user)
 void ACommand::check()
 {
 	if (_user->_get_auth() == true && !_usable_pre_reg)
-		throw (client_rpl(_server._server_hostname, _user->get_nick(), ERR_NOTREGISTERED));
+	{
+		/* Need to change the throw */
+		throw (std::range_error("Test"));
+	}
 }
 
 /* Split the buffer into tokens

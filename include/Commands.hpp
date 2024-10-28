@@ -26,7 +26,7 @@ class ACommand
 {
 public:
 
-	ACommand(Server &server, bool &usable_pre_reg);
+	ACommand(Server &server, bool usable_pre_reg);
 	virtual ~ACommand();
 
 	void check();
@@ -39,7 +39,7 @@ protected:
 	std::vector<std::string> _args;
 	User *_user;
 	Server &_server;
-	bool &_usable_pre_reg;
+	bool _usable_pre_reg;
 };
 
 class Join : public ACommand
@@ -177,6 +177,16 @@ public:
 
 	Pong(Server &server, bool usable_pre_reg);
 	~Pong();
+
+	int run();
+};
+
+class UserCMD : public ACommand
+{
+public:
+
+	UserCMD(Server &server, bool usable_pre_reg);
+	~UserCMD();
 
 	int run();
 };

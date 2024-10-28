@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 13:47:19 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 16:09:26 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 #define RPL_ENDOFMOTD		"376"
 #define ERR_NOMOTD			"422"
 #define ERR_NOTREGISTERED	"451"
+#define ERR_ALREADYREGISTERED "462"
 
 
 const std::string client_rpl(const std::string &hostname, const std::string &nickname

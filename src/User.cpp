@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/28 11:10:31 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/28 16:04:29 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,11 @@ void User::set_buffer(const std::string &buffer)
 void User::set_password(const std::string &password)
 {
 	_password = password;
+}
+
+void User::set_realname(const std::string &realname)
+{
+	_realname = realname;
 }
 
 void User::_set_auth(const bool &status)
