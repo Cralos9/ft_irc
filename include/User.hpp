@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/25 10:38:26 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:45:46 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class User
 		const std::string &get_password() const;
 		const std::string &get_realname() const;
 
+		void erase_buffer();
 		void get_Test();
 		bool get_info();
 		const std::string get_name(const std::string &buffer, const std::string &attribute,
@@ -44,6 +45,7 @@ class User
 		
 		bool		_get_auth() const;
 		void 		_set_auth(const bool &status);
+		bool								welcome_flag;
 		
 	private:
 		int _fd;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/25 10:37:56 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 11:10:31 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,11 @@ const std::string User::get_name(const std::string &buffer, const std::string &a
 		return (buffer.substr(pos, buffer.find_first_of(delimiter, pos) - pos - 1));
 	}
 	return ("ERROR");
+}
+
+void User::erase_buffer()
+{
+	this->_buffer.erase();
 }
 
 bool User::get_info()

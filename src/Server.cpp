@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/25 16:21:43 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:50:00 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["PASS"] = new Pass(*this);
 /* 	this->_commands["PONG"] = new Ping(*this); */
 	this->_commands["PING"] = new Pong(*this);
-	//this->_commands["LIST"] = new List(*this);
 	//pass? PASS <password>
 	//pong? PONG <>
 
@@ -132,7 +131,7 @@ void Server::channel_list(User &user)
 		std::stringstream size_as_str;
 		size_as_str << it->second.get_user_map_size();
 		std::string response = ":" + user.get_hostname() + " 322 " + user.get_nick() + " " + it->second.get_name() + " " \
-			+ size_as_str.str() + " :" + it->second.get_topic() + "\r\n";
+			+ size_as_str.str() + " " + it->second.get_topic() + "\r\n";
 		user.set_buffer(response);
 		send_msg_one_user(user.get_fd(), user);
 	}
@@ -209,8 +208,16 @@ void Server::welcome_message(User &user)
     send(user.get_fd(), isupport.c_str(), isupport.length(), 0);
 	const std::string &motd = numeric_motd(_server_hostname, user.get_nick()); 
     send(user.get_fd(), motd.c_str(), motd.length(), 0);
+	user.welcome_flag = true;
 }
 
+bool Server::check_nickname(User &user)
+{
+	for (it_user it = _clients.begin(); it != _clients.end(); it++)
+		if (it->second.get_nick() == user.get_nick() && it->first != user.get_fd())
+			return(1);
+	return(0);
+}
 
 int Server::fds_loop()
 {
@@ -220,8 +227,11 @@ int Server::fds_loop()
 	{
 		if (this->_fds[i].revents == NO_EVENTS)
 			continue;
-		if (_fds[i].revents != POLLIN && _fds[i].revents != POLLOUT)
+		if (!(_fds[i].revents & POLLIN) && !(_fds[i].revents & POLLOUT))
+		{
+			std::cout << _fds[i].revents << std::endl;
 			print_error("Error revents");
+		}
 		if (this->_fds[i].fd == this->_fds[0].fd)
 			this->connect_client();
 		else
@@ -230,28 +240,13 @@ int Server::fds_loop()
 			if (this->_fds[i].revents & POLLIN)
 			{
 				this->receive_msg(user);
-				if (user._get_auth())
-				{
-					if (user.get_info() == 0)
-						return (1);
-					std::cout << user << std::endl;
-					if (!check_password(user))  //check if User password matches Server Password
-					{
-						std::cout << RED << "Password Error" << RESET << std::endl;
-						return (1);
-					}
-					else
-					{
-						std::cout << GREEN << "Password Accepted" << RESET << std::endl;
-						welcome_message(user);
-						user._set_auth(false);
-					}
-				}
 				this->_fds[i].events |= POLLOUT;
 			}
 			else if (this->_fds[i].revents & POLLOUT)
 			{
 				this->handle_commands(user);
+				if (user._get_auth() == false && user.welcome_flag == false)
+					welcome_message(user);
 				this->_fds[i].events = POLLIN;
 			}
 		}
@@ -287,19 +282,24 @@ int Server::main_loop()
 void Server::handle_commands(User &user)
 {
 	ACommand *command = NULL;
-	std::vector<std::string> split = parse_split(user.get_buffer());
+	std::vector<std::string> lines = split_lines(user.get_buffer());
 
-	try
+	for(std::vector<std::string>::iterator it = lines.begin(); it != lines.end(); it++)
 	{
-		command = _commands.at(split[0]);
-		split.erase(split.begin());
-		command->set_args(split);
-		command->set_user(&user);
-		command->run();
-	}
-	catch (const std::exception &e)
-	{
-		std::cerr << "Unknown Command" << std::endl;
+		std::vector<std::string> split = parse_split(*it);
+		try
+		{
+			command = _commands.at(split[0]);
+			split.erase(split.begin());
+			command->set_args(split);
+			command->set_user(&user);
+			command->run();
+		}
+		catch (const std::exception &e)
+		{
+			std::cerr << "Unknown Command" << std::endl;
+		}
+
 	}
 }
 

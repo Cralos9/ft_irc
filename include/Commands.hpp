@@ -16,6 +16,7 @@
 # include "User.hpp"
 # include "Channel.hpp"
 # include "Server.hpp"
+# include "RPL.hpp"
 
 class Server;
 
@@ -179,5 +180,6 @@ public:
 };
 
 std::vector<std::string> parse_split(const std::string &buffer);
+std::vector<std::string> split_lines(const std::string &buffer);
 
 #endif

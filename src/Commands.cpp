@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:18:50 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 15:53:39 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:21:06 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,19 @@ void ACommand::set_user(User *user)
 /* Split the buffer into tokens
 The 1 token is the Command Name
 The rest is params for the Command */
+
+
+std::vector<std::string> split_lines(const std::string &buffer)
+{
+	std::istringstream iss(buffer);
+	std::string token;
+	std::vector<std::string> args;
+
+	while (std::getline(iss, token))
+		args.push_back(token);
+	return (args);
+}
+
 std::vector<std::string> parse_split(const std::string &buffer)
 {
 	std::istringstream iss(buffer.substr(0, buffer.find('\r')));

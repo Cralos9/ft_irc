@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:18 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/23 14:36:04 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 10:44:19 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int Topic::run()
 		}
 		else
 		{
-			response = ":" + _user->get_hostname() + " 482 " + _user->get_nick() + " " + ch->get_name() + " " + "You're not the channel operator" + "\r\n";
+			response = client_rpl(_user->get_hostname(), _user->get_nick(), "482");
+			response = response + " " + ch->get_name() + " " + "You're not the channel operator" + "\r\n";
 			this->_user->set_buffer(response);
 			this->_server.send_msg_one_user(_user->get_fd(), *_user);
 			return(1);
@@ -44,7 +45,8 @@ int Topic::run()
 	}
 	else
 	{
-		response = ":" + _user->get_hostname() + " 331 " + this->_user->get_nick() + " " + ch->get_name() + " ";
+		response = client_rpl(_user->get_hostname(), _user->get_nick(), "331");
+		response = response + " " + ch->get_name() + " ";
 		if (ch->get_topic() == "")
 			response = response + "No topic is set" + "\r\n";
 		else
