@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 14:50:00 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:56:45 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,22 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	std::memset(&this->_address, 0, sizeof(this->_address));
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
-	this->_commands["JOIN"] = new Join(*this);			//JOIN <channel>
-	this->_commands["who"] = new Who(*this);			//WHO <mask>
-	this->_commands["MODE"] = new Mode(*this);			//MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
-	this->_commands["NICK"] = new Nick(*this);			//NICK <new_name>
-	this->_commands["QUIT"] = new Quit(*this);			//QUIT :<msg>
-	this->_commands["PRIVMSG"] = new PrivMsg(*this);	//PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
-	this->_commands["KICK"] = new Kick(*this);			//KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
-	this->_commands["TOPIC"] = new Topic(*this);		//TOPIC <channel> || TOPIC <channel> <new_topic>
-	this->_commands["PART"] = new Part(*this);
-	this->_commands["LIST"] = new List(*this);
-	this->_commands["INVITE"] = new Invite(*this);		//INVITE <nick> <channel>
-	this->_commands["WHOIS"] = new WhoIs(*this);
-	this->_commands["PASS"] = new Pass(*this);
+	this->_commands["JOIN"] = new Join(*this, false);			//JOIN <channel>
+	this->_commands["who"] = new Who(*this, false);			//WHO <mask>
+	this->_commands["MODE"] = new Mode(*this, false);			//MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
+	this->_commands["NICK"] = new Nick(*this, true);			//NICK <new_name>
+	this->_commands["QUIT"] = new Quit(*this, true);			//QUIT :<msg>
+	this->_commands["PRIVMSG"] = new PrivMsg(*this, false);	//PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
+	this->_commands["KICK"] = new Kick(*this, false);			//KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
+	this->_commands["TOPIC"] = new Topic(*this, false);		//TOPIC <channel> || TOPIC <channel> <new_topic>
+	this->_commands["PART"] = new Part(*this, false);
+	this->_commands["LIST"] = new List(*this, false);
+	this->_commands["INVITE"] = new Invite(*this, false);		//INVITE <nick> <channel>
+	this->_commands["WHOIS"] = new WhoIs(*this, false);
+	this->_commands["PASS"] = new Pass(*this, true);
 /* 	this->_commands["PONG"] = new Ping(*this); */
-	this->_commands["PING"] = new Pong(*this);
+	this->_commands["PING"] = new Pong(*this, true);
+	//this->_commands["LIST"] = new List(*this);
 	//pass? PASS <password>
 	//pong? PONG <>
 
@@ -290,9 +291,9 @@ void Server::handle_commands(User &user)
 		try
 		{
 			command = _commands.at(split[0]);
-			split.erase(split.begin());
 			command->set_args(split);
 			command->set_user(&user);
+			command->check();
 			command->run();
 		}
 		catch (const std::exception &e)

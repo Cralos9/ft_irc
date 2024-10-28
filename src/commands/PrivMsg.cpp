@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:37:43 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/18 13:48:10 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:28:33 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-PrivMsg::PrivMsg(Server &server) : ACommand(server)
+PrivMsg::PrivMsg(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 /* 	std::cout << "PrivMsg constructor" << std::endl;*/
 }

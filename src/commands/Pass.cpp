@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 10:33:09 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 14:36:15 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:56:52 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Pass::Pass(Server &server) : ACommand(server)
+Pass::Pass(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 /* 	std::cout << "Pass constructor" << std::endl; */
 }

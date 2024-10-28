@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/23 10:46:05 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:25:30 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Mode::Mode(Server &server) : ACommand(server)
+Mode::Mode(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 /* 	std::cout << "Mode constructor" << std::endl; */
 }

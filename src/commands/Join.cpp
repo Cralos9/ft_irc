@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/21 15:44:58 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:23:13 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Join::Join(Server &server) : ACommand(server)
+Join::Join(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 /* 	std::cout << "Join Server Constructor" << std::endl; */
 }

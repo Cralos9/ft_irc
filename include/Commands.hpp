@@ -26,9 +26,10 @@ class ACommand
 {
 public:
 
-	ACommand(Server &server);
+	ACommand(Server &server, bool &usable_pre_reg);
 	virtual ~ACommand();
 
+	void check();
 	void set_args(std::vector<std::string> &args);
 	void set_user(User *user);
 	virtual int run() = 0;
@@ -38,13 +39,14 @@ protected:
 	std::vector<std::string> _args;
 	User *_user;
 	Server &_server;
+	bool &_usable_pre_reg;
 };
 
 class Join : public ACommand
 {
 public:
 
-	Join(Server &server);
+	Join(Server &server, bool usable_pre_reg);
 	~Join();
 
 	int run();
@@ -54,7 +56,7 @@ class Who : public ACommand
 {
 public:
 	
-	Who(Server &server);
+	Who(Server &server, bool usable_pre_reg);
 	~Who();
 
 	int run();
@@ -64,7 +66,7 @@ class Mode : public ACommand
 {
 public:
 	
-	Mode(Server &server);
+	Mode(Server &server, bool usable_pre_reg);
 	~Mode();
 
 	int run();
@@ -74,7 +76,7 @@ class Nick : public ACommand
 {
 public:
 	
-	Nick(Server &server);
+	Nick(Server &server, bool usable_pre_reg);
 	~Nick();
 
 	int run();
@@ -84,7 +86,7 @@ class Quit : public ACommand
 {
 public:
 	
-	Quit(Server &server);
+	Quit(Server &server, bool usable_pre_reg);
 	~Quit();
 
 	int run();
@@ -94,7 +96,7 @@ class PrivMsg : public ACommand
 {
 public:
 	
-	PrivMsg(Server &server);
+	PrivMsg(Server &server, bool usable_pre_reg);
 	~PrivMsg();
 
 	int run();
@@ -104,7 +106,7 @@ class Kick : public ACommand
 {
 public:
 	
-	Kick(Server &server);
+	Kick(Server &server, bool usable_pre_reg);
 	~Kick();
 
 	int run();
@@ -114,7 +116,7 @@ class Topic : public ACommand
 {
 public:
 	
-	Topic(Server &server);
+	Topic(Server &server, bool usable_pre_reg);
 	~Topic();
 
 	int run();
@@ -124,7 +126,7 @@ class List : public ACommand
 {
 public:
 	
-	List(Server &server);
+	List(Server &server, bool usable_pre_reg);
 	~List();
 
 	int run();
@@ -134,7 +136,7 @@ class Part : public ACommand
 {
 public:
 	
-	Part(Server &server);
+	Part(Server &server, bool usable_pre_reg);
 	~Part();
 
 	int run();
@@ -143,7 +145,7 @@ class Invite : public ACommand
 {
 public:
 	
-	Invite(Server &server);
+	Invite(Server &server, bool usable_pre_reg);
 	~Invite();
 
 	int run();
@@ -153,7 +155,7 @@ class WhoIs : public ACommand
 {
 public:
 	
-	WhoIs(Server &server);
+	WhoIs(Server &server, bool usable_pre_reg);
 	~WhoIs();
 
 	int run();
@@ -163,7 +165,7 @@ class Pass : public ACommand
 {
 public:
 
-	Pass(Server &server);
+	Pass(Server &server, bool usable_pre_reg);
 	~Pass();
 
 	int run();
@@ -173,7 +175,7 @@ class Pong : public ACommand
 {
 public:
 
-	Pong(Server &server);
+	Pong(Server &server, bool usable_pre_reg);
 	~Pong();
 
 	int run();

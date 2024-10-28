@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:19:35 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/24 16:46:49 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:24:33 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
    The <mask> passed to WHO is matched against users' host, server, real
    name and nickname if the channel <mask> cannot be found.
  */
-Who::Who(Server &server) : ACommand(server)
+Who::Who(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 	/*	std::cout << "Who constructor" << std::endl; */
 }

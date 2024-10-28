@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:15:15 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/17 16:33:38 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:27:27 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Kick::Kick(Server &server) : ACommand(server)
+Kick::Kick(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 /* 	std::cout << "Kick constructor" << std::endl;
  */}

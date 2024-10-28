@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:18 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/28 10:44:19 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:56:56 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Topic::Topic(Server &server) : ACommand(server)
+Topic::Topic(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 /* 	std::cout << "Topic Server Constructor" << std::endl;
  */}

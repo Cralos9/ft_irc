@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:18:50 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 14:21:06 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:54:04 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-ACommand::ACommand(Server &server) : _user(NULL), _server(server)
+ACommand::ACommand(Server &server, bool &usable_pre_reg) : _user(NULL), _server(server), _usable_pre_reg(usable_pre_reg)
 {
 /* 	std::cout << "ACommands Constructor" << std::endl; */
 }
@@ -24,12 +24,19 @@ ACommand::~ACommand()
 
 void ACommand::set_args(std::vector<std::string> &args)
 {
+	args.erase(args.begin());
 	_args = args;
 }
 
 void ACommand::set_user(User *user) 
 {
 	this->_user = user;
+}
+
+void ACommand::check()
+{
+	if (_user->_get_auth() == true && !_usable_pre_reg)
+		throw (client_rpl(_server._server_hostname, _user->get_nick(), ERR_NOTREGISTERED));
 }
 
 /* Split the buffer into tokens

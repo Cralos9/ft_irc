@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 15:18:15 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/25 15:26:20 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:29:07 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-WhoIs::WhoIs(Server &server) : ACommand(server)
+WhoIs::WhoIs(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 /* 	std::cout << "WhoIs constructor" << std::endl; */
 }

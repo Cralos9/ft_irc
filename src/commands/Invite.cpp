@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarinho <jmarinho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/10/24 15:23:23 by jmarinho         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:29:19 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
    are allowed to invite other users.  When the channel has invite-only
    flag set, only channel operators may issue INVITE command. */
 
-Invite::Invite(Server &server) : ACommand(server)
+Invite::Invite(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 /* 	std::cout << "Invite Server Constructor" << std::endl; */
 }

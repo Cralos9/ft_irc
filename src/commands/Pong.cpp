@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:57:01 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/25 16:23:59 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:28:22 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Pong::Pong(Server &server) : ACommand(server)
+Pong::Pong(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
 {
 	std::cout << "Pong constructor" << std::endl;
 }
