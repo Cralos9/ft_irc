@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/29 15:20:29 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:15:09 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@ Nick::~Nick()
 
 int Nick::run()
 {
-	const std::string nick = _user->get_name(_user->get_buffer(), "NICK ", '\n');
+	std::string nick = _user->get_name(_user->get_buffer(), "NICK ", '\n');
 	_user->prepare_buffer(_user->get_buffer());
-	if (_server.check_nickname(_args[0]))
+	if (_server.check_nickname(nick))
 	{
+		_user->set_nick(nick);
 		_user->error_flag = 2;
 		return(1);
 	}
-	if (_user->error_flag == 2)
-		_user->error_flag = 0;
-	_server.send_msg_one_user(_user->get_fd(), *_user);
+	if (_user->welcome_flag == true)
+		_server.send_msg_one_user(_user->get_fd(), *_user);
 	_user->set_nick(nick);
 	return (1);
 }

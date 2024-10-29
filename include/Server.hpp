@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 14:45:38 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/29 15:23:48 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,10 @@ public:
 	bool		check_password(User &user);
 	void		welcome_message(User &user);
 
-	bool		check_nickname(User &user);
+	bool		check_nickname(std::string &nickname);
 	void 		channel_list(User &user);
 	void		get_hostname();
+	void		send_error(User &user);
 	std::string	_server_hostname;
 
 	std::map<int, User>		&get_all_clients();

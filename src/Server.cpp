@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 16:25:21 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:17:56 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,12 +213,30 @@ void Server::welcome_message(User &user)
 	user.welcome_flag = true;
 }
 
-bool Server::check_nickname(User &user)
+bool Server::check_nickname(std::string &nickname)
 {
 	for (it_user it = _clients.begin(); it != _clients.end(); it++)
-		if (it->second.get_nick() == user.get_nick() && it->first != user.get_fd())
+		if (it->second.get_nick() == nickname)
 			return(1);
 	return(0);
+}
+
+void Server::send_error(User &user)
+{
+	if (user.error_flag == 1)
+	{
+		std::string teste = client_rpl(user.get_hostname(), user.get_nick(), "464");
+		teste = teste + " Wrong Password\r\n";
+	 	user.set_buffer(teste);
+	}
+	else if (user.error_flag == 2)
+	{
+		std::string teste = client_rpl(user.get_hostname(), user.get_nick(), "433");
+		teste = teste + user.get_nick() + " :Nickname already in use\r\n";
+	 	user.set_buffer(teste);
+	}
+	send_msg_one_user(user.get_fd(), user);
+	user.error_flag = 0;
 }
 
 int Server::fds_loop()
@@ -247,8 +265,23 @@ int Server::fds_loop()
 			else if (this->_fds[i].revents & POLLOUT)
 			{
 				this->handle_commands(user);
+				if (user.error_flag == 0 && !(user.get_nick()).empty())
+				{
+					std::cout << "auth is done" << std::endl;
+					user._set_auth(false);
+				}
+				else
+				{
+					send_error(user);
+					this->_fds[i].events = POLLIN;
+					return(1);
+				}
 				if (user._get_auth() == false && user.welcome_flag == false)
+				{
+					std::cout << "Welcome flag " << user.welcome_flag << std::endl;
 					welcome_message(user);
+				}
+				user.erase_buffer();
 				this->_fds[i].events = POLLIN;
 			}
 		}
@@ -292,6 +325,7 @@ void Server::handle_commands(User &user)
 		{
 			std::vector<std::string> split = parse_split(*it);
 			command = _commands.at(split[0]);
+			std::cout << "Command right fucking now: " << split[0] << std::endl;
 			command->set_args(split);
 			command->set_user(&user);
 			command->check();
@@ -349,6 +383,7 @@ void Server::disconnect_user(User &user)
 {
 	const int fd = user.get_fd();
 
+	user.welcome_flag = false;
 	close(fd);
 	this->active_fd--;
 	this->_clients.erase(this->_clients.find(fd));
