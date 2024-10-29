@@ -19,14 +19,14 @@ UserCMD::UserCMD(Server &server, bool usable_pre_reg) : ACommand(server, usable_
 
 UserCMD::~UserCMD()
 {
-	std::cout << "UserCMD destructor" << std::endl;
+/* 	std::cout << "UserCMD destructor" << std::endl; */
 }
 
 int UserCMD::run()
 {
 /* 	if (_user->_get_auth())
 	{
-		_user->set_buffer(client_rpl(_server._server_hostname, _user->get_nick(), ERR_ALREADYREGISTERED)
+		_user->set_buffer(client_rpl(_server._hostname, _user->get_nick(), ERR_ALREADYREGISTERED)
 							+ ":You may not register\r\n");
 		_server.send_msg_one_user(_user->get_fd(), *_user);
 	} */

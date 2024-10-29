@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:19:35 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 13:24:33 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/29 14:13:27 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int Who::run()
 		std::map<int, User> &list = _server.get_all_clients();
 		for (std::map<int, User>::iterator it = list.begin(); it != list.end(); ++it) {
 			{
-				msg = ":" + _server._server_hostname + " " + "352" + _user->get_nick() + " * "
-					+ it->second.get_username() + " " + it->second.get_hostname() + " " + _server._server_hostname + " "
+				msg = ":" + _server._hostname + " " + "352" + _user->get_nick() + " * "
+					+ it->second.get_username() + " " + it->second.get_hostname() + " " + _server._hostname + " "
 					+ it->second.get_nick() + " H :0 " + it->second.get_username() + "\r\n";
 				
 				_user->set_buffer(msg);
@@ -59,7 +59,7 @@ int Who::run()
 	}
 	else if (_server.check_channel(_args[0]) == NULL && _server.get_user(_args[0]) == NULL)
 	{
-		msg = ":" + _server._server_hostname + " 315 " + _user->get_nick() + " :End of WHO list\r\n";
+		msg = ":" + _server._hostname + " 315 " + _user->get_nick() + " :End of WHO list\r\n";
 		
 		_user->set_buffer(msg);
 		_server.send_msg_one_user(_user->get_fd(), *_user);
@@ -74,8 +74,8 @@ int Who::run()
 
 		for (std::map<User *, int>::iterator it = users.begin(); it != users.end(); it++)
 		{
-			msg = ":" + _server._server_hostname + " " + "352" + _user->get_nick() + " "
-				+ _args[0] + " "+ it->first->get_username() + it->first->get_hostname() + " " + _server._server_hostname + " "
+			msg = ":" + _server._hostname + " " + "352" + _user->get_nick() + " "
+				+ _args[0] + " "+ it->first->get_username() + it->first->get_hostname() + " " + _server._hostname + " "
 				+ it->first->get_nick() + " H :0 " + it->first->get_username() + "\r\n";
 			
 			_user->set_buffer(msg);
@@ -86,8 +86,8 @@ int Who::run()
 	else if (_server.get_user(_args[0]) != NULL) // If the mask is a user, list the user information
 	{
 		User *target = _server.get_user(_args[0]);
-		msg = ":" + _server._server_hostname + " " + "352" + _user->get_nick() + " * "
-			+ target->get_username() + target->get_hostname() + " " + _server._server_hostname + " "
+		msg = ":" + _server._hostname + " " + "352" + _user->get_nick() + " * "
+			+ target->get_username() + target->get_hostname() + " " + _server._hostname + " "
 				+ target->get_nick() + " H :0"+ target->get_username() + "\r\n";
 		
 		_user->set_buffer(msg);
@@ -96,14 +96,14 @@ int Who::run()
 	}
 	else
 	{
-		msg = ":" + _server._server_hostname + " " + "mask not accepted" + "\r\n";
+		msg = ":" + _server._hostname + " " + "mask not accepted" + "\r\n";
 		
 		_user->set_buffer(msg);
 		_server.send_msg_one_user(_user->get_fd(), *_user);
 		msg.clear();
 	}
 	// General end of WHO list
-	msg = ":" + _server._server_hostname + " 315 " + _user->get_nick() + " :End of WHO list\r\n";
+	msg = ":" + _server._hostname + " 315 " + _user->get_nick() + " :End of WHO list\r\n";
 	
 	_user->set_buffer(msg);
 	_server.send_msg_one_user(_user->get_fd(), *_user);

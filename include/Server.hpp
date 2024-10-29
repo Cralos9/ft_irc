@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 14:45:38 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:10:20 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,10 @@ public:
 	bool		check_password(User &user);
 	void		welcome_message(User &user);
 
-	bool		check_nickname(User &user);
+	bool		check_nickname(const std::string &nickname);
 	void 		channel_list(User &user);
 	void		get_hostname();
-	std::string	_server_hostname;
+	std::string	_hostname;
 
 	std::map<int, User>		&get_all_clients();
 
@@ -98,6 +98,5 @@ private:
 };
 
 it_fd			find_fd(std::vector<pollfd> &vec, const int fd);
-const std::string ERR_NOSUCHNICK(const std::string user_nick, const std::string target_nick);
 
 #endif

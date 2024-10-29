@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/10/28 13:29:19 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/29 14:13:27 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ int Invite::run()
 	if channel doesnt exits in channel list
 		return to client c1r3s6.42porto.com 403 jmarinho geral :No such channel */
 		
-	std::string NO_CH_OR_USER = ":" + _server._server_hostname + "401" + _args[0] + ":No such nick/Channel";
-	std::string CH_NOT_EXIST = ":" + _server._server_hostname + "403" + _args[1] + ":No such channel";
-	std::string USER_ON_CH = ":" + _server._server_hostname + "443" + _args[0] + ":User already on channel";
+	std::string NO_CH_OR_USER = ":" + _server._hostname + "401" + _args[0] + ":No such nick/Channel";
+	std::string CH_NOT_EXIST = ":" + _server._hostname + "403" + _args[1] + ":No such channel";
+	std::string USER_ON_CH = ":" + _server._hostname + "443" + _args[0] + ":User already on channel";
 	
 	if (_server.get_user(_args[0]) == NULL) // Check if user exists
 	{
@@ -62,7 +62,7 @@ int Invite::run()
 	{
 		Channel *ch = _server.check_channel(_args[1]);
 		User *invited = _server.get_user(_args[0]);
-		std::string INVITE_SEND_CLIENT = ":" + _server._server_hostname + " " + "341" + " " + invited->get_nick() + " " + _args[0] + " " + _args[1] + "\r\n";
+		std::string INVITE_SEND_CLIENT = ":" + _server._hostname + " " + "341" + " " + invited->get_nick() + " " + _args[0] + " " + _args[1] + "\r\n";
 		std::string INVITE_SEND_USER = ":" + invited->get_nick() + "!" + " INVITE " + _args[0] + " " + _args[1] + "\r\n";
 		
 		if (ch->is_user_on_ch(*invited)) //Check if user is already on channel

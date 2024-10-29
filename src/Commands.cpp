@@ -46,7 +46,6 @@ void ACommand::check()
 The 1 token is the Command Name
 The rest is params for the Command */
 
-
 std::vector<std::string> split_lines(const std::string &buffer)
 {
 	std::istringstream iss(buffer);

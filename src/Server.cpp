@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 16:25:21 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/29 15:27:10 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,13 @@ void Server::get_hostname()
 	if (!hostnameFile)
 	{
 		std::cerr << "Error opening /etc/hostname" << std::endl;
-		_server_hostname = "localhost";
+		_hostname = "localhost";
 		return;
 	}
 
 	std::string hostname;
 	std::getline(hostnameFile, hostname);
-	_server_hostname = hostname;
+	_hostname = hostname;
 }
 
 int Server::create_server()
@@ -208,15 +208,15 @@ void Server::welcome_message(User &user)
     send(user.get_fd(), msg03.c_str(), msg03.length(), 0);
     send(user.get_fd(), msg04.c_str(), msg04.length(), 0);
     send(user.get_fd(), isupport.c_str(), isupport.length(), 0);
-	const std::string &motd = numeric_motd(_server_hostname, user.get_nick()); 
+	const std::string &motd = numeric_motd(_hostname, user.get_nick()); 
     send(user.get_fd(), motd.c_str(), motd.length(), 0);
 	user.welcome_flag = true;
 }
 
-bool Server::check_nickname(User &user)
+bool Server::check_nickname(const std::string &nickname)
 {
 	for (it_user it = _clients.begin(); it != _clients.end(); it++)
-		if (it->second.get_nick() == user.get_nick() && it->first != user.get_fd())
+		if (it->second.get_nick() == nickname)
 			return(1);
 	return(0);
 }
