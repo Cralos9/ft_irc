@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 16:17:56 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:16:54 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void Server::channel_list(User &user)
 	}
 }
 
-void Server::receive_msg(User &user)
+int Server::receive_msg(User &user)
 {
 	int msg_bytes;
 	char buffer[1024] = {0};
@@ -149,11 +149,13 @@ void Server::receive_msg(User &user)
 	// 	print_error("recv Error");
 	if (msg_bytes <= 0)
 	{
+		std::cout << "testeeeeeeeeee" << std::endl;
 		this->disconnect_user(user);
-		return ;
+		return (1);
 	}
 	user.set_buffer(buffer);
 	this->print_recv(buffer);
+	return(0);               
 }
 
 void Server::send_msg_all_users(User &msg_sender)
@@ -259,17 +261,15 @@ int Server::fds_loop()
 			User &user = this->_clients.at(this->_fds[i].fd);
 			if (this->_fds[i].revents & POLLIN)
 			{
-				this->receive_msg(user);
+				if (this->receive_msg(user))
+					return(1);
 				this->_fds[i].events |= POLLOUT;
 			}
 			else if (this->_fds[i].revents & POLLOUT)
 			{
 				this->handle_commands(user);
 				if (user.error_flag == 0 && !(user.get_nick()).empty())
-				{
-					std::cout << "auth is done" << std::endl;
 					user._set_auth(false);
-				}
 				else
 				{
 					send_error(user);
@@ -277,11 +277,8 @@ int Server::fds_loop()
 					return(1);
 				}
 				if (user._get_auth() == false && user.welcome_flag == false)
-				{
-					std::cout << "Welcome flag " << user.welcome_flag << std::endl;
 					welcome_message(user);
-				}
-				user.erase_buffer();
+				// user.erase_buffer();
 				this->_fds[i].events = POLLIN;
 			}
 		}

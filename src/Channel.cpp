@@ -125,10 +125,10 @@ void Channel::add_user(User &user)
 		this->_user_map[&user] = NOP;
 	for (std::map<User *, int>::iterator it = this->_user_map.begin(); it != this->_user_map.end(); it++)
 	{
-		if (it->second == OP)
-			this->all_users = this->all_users + "@" + it->first->get_nick() + " ";
-		else
-			this->all_users = this->all_users + it->first->get_nick() + " ";
+			if (it->second == OP)
+				this->all_users = this->all_users + "@" + it->first->get_nick() + " ";
+			else
+				this->all_users = this->all_users + it->first->get_nick() + " ";
 	}
 	std::string user_list;
 	user_list = ":" + user.get_hostname() + " 353 " + user.get_nick() + " = " + this->_name + " " + this->all_users + "\r\n";

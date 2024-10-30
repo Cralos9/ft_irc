@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 15:23:48 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:45:32 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ public:
 	void		send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
 	void		send_msg_all_users(User &msg_sender);
 	void 		send_msg_one_user(const int receiver_fd, User &msg_sender);
-	void 		receive_msg(User &user);
+	int 		receive_msg(User &user);
 
 	Channel 	*create_channel(const std::string &ch_name);
 	Channel 	*check_channel(const std::string &ch_name);
