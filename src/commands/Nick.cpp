@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/29 15:44:40 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:03:08 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,8 @@ int Nick::run()
 	}
 /* 	if (_server.check_nickname(_args[0]))
 	{
-		const std::string err = client_rpl(_server._hostname, _user->get_nick(),
-								ERR_NICKNAMEINUSE) + _args[0] + " :Nickname already in use\r\n";
-		_server.print(err);
-	 	_user->set_buffer(err);
-		_server.send_msg_one_user(_user->get_fd(), *_user);
+		_numeric_args.push_back(_args[0]);
+		_server.send_numeric(*_user, ERR_NOSUCHNICK, _numeric_args, ":Nickname is already in use");
 		return (1);
 	} */
 	_user->prepare_buffer("NICK " + _args[0] + "\r\n");

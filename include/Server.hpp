@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 16:10:20 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:57:19 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ public:
 	void		send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
 	void		send_msg_all_users(User &msg_sender);
 	void 		send_msg_one_user(const int receiver_fd, User &msg_sender);
+	void		send_numeric(const User &user, const std::string &numeric, std::vector<std::string> &args,
+								const std::string &msg);
 	void 		receive_msg(User &user);
 
 	Channel 	*create_channel(const std::string &ch_name);

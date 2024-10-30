@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:29:25 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 16:06:41 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:58:05 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,5 @@ const std::string numeric_motd(const std::string &hostname, const std::string &u
 					+ " Message of the day -\r\n";
 	rpl.append(client_rpl(hostname, user_nick, RPL_MOTD) + ":- Jose Figueiras is innocent 🇵🇹\r\n");
 	rpl.append(client_rpl(hostname, user_nick, RPL_ENDOFMOTD) + ":End of /MOTD\r\n");
-
 	return (rpl);
 }

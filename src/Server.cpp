@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 15:27:10 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:59:04 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,18 @@ void Server::receive_msg(User &user)
 	this->print_recv(buffer);
 }
 
+void Server::send_numeric(const User &user, const std::string &numeric, std::vector<std::string> &args,
+							const std::string &msg)
+{
+	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
+	for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++) {
+		rpl.append(*it + " ");
+	}
+	rpl.append(msg + "\r\n");
+	print(rpl);
+	send(user.get_fd(), rpl.c_str(), rpl.length(), 0);
+}
+
 void Server::send_msg_all_users(User &msg_sender)
 {
 	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
@@ -296,7 +308,7 @@ void Server::handle_commands(User &user)
 			command->set_user(&user);
 			command->check();
 			command->run();
-			
+			command->clear();
 		}
 		catch (const std::exception &e)
 		{

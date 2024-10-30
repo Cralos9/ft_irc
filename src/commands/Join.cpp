@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 15:03:02 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:16:02 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,8 @@ int Join::run()
 
 	if (channel[0] != '#')
 	{
-		const std::string err = client_rpl(_server._hostname, _user->get_nick(),
-								ERR_NOSUCHCHANNEL) + channel + " :No such channel\r\n";
-		_user->set_buffer(err);
-		_server.send_msg_one_user(_user->get_fd(), *_user);
+		_numeric_args.push_back(_args[0]);
+		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, _numeric_args, ":No such channel");
 		return(1);
 	}
 	_user->prepare_buffer("JOIN " + channel + "\r\n");
