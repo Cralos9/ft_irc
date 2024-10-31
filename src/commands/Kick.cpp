@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:15:15 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/30 14:05:00 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:48:17 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int Kick::run()
 	channel = _server.check_channel(this->_args[0]);
 	if (channel == NULL)
 	{
-		_numeric_args.push_back(_args[0]);
-		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, _numeric_args, ":No such channel");
+		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
+								_args[0].c_str());
 		return (1);
 	}
 
@@ -41,15 +41,13 @@ int Kick::run()
 	kicked = channel->get_user(this->_args[1]);
 	if (kicked == NULL)
 	{
-		_numeric_args.push_back(_args[1]);
-		_numeric_args.push_back(_args[0]);
-		_server.send_numeric(*_user, ERR_USERNOTINCHANNEL, _numeric_args, ":They aren't on that channel");
+		_server.send_numeric(*_user, ERR_USERNOTINCHANNEL, "%s %s :They aren't on that channel",
+								kicked->get_nick().c_str(), channel->get_name().c_str());
 		return (1);
 	}
 
 	channel->delete_user_vec(*kicked);
 	_user->prepare_buffer(_user->get_buffer());
 	_server.send_msg_to_channel(*channel, *_user, CHSELF);
-	_server.print(_user->get_buffer());
 	return(0);
 }

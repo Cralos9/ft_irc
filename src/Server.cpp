@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/04 11:26:25 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/04 14:15:33 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,14 +156,23 @@ int Server::receive_msg(User &user)
 	return(0);         
 }
 
-void Server::send_numeric(const User &user, const std::string &numeric, std::vector<std::string> &args,
-							const std::string &msg)
+void Server::send_numeric(const User &user, const std::string &numeric,
+							const std::string msg, ...)
 {
 	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
-	for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++) {
-		rpl.append(*it + " ");
+
+	std::va_list params;
+	va_start(params, msg);
+	for (std::string::const_iterator it = msg.begin(); it != msg.end(); it++) {
+		if (*it == '%')
+		{
+			rpl.append(va_arg(params, const char *));
+			it++;
+		}
+		else
+			rpl += *it;
 	}
-	rpl.append(msg + "\r\n");
+	rpl.append("\r\n");
 	print(rpl);
 	send(user.get_fd(), rpl.c_str(), rpl.length(), 0);
 }
@@ -171,6 +180,7 @@ void Server::send_numeric(const User &user, const std::string &numeric, std::vec
 
 void Server::send_msg_all_users(User &msg_sender)
 {
+	print(msg_sender.get_buffer());
 	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
 	{
 		send(user->first, msg_sender.get_buffer().c_str(),
@@ -182,6 +192,7 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 {
 	const std::map<User *, int> &ch_users = ch.get_users();
 
+	print(msg_sender.get_buffer());
 	for (std::map<User *, int>::const_iterator it = ch_users.begin(); it != ch_users.end(); it++) {
 		if (flag == CHOTHER && msg_sender.get_fd() != it->first->get_fd())
 			send(it->first->get_fd(), msg_sender.get_buffer().c_str(),
@@ -194,6 +205,7 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 
 void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
+	print(msg_sender.get_buffer());
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
 }
 
@@ -208,21 +220,19 @@ bool	Server::check_password(User &user)
 
 void Server::welcome_message(User &user)
 {
-    const std::string msg01 = ":" + user.get_hostname() + " " + RPL_WELCOME + " " + user.get_nick() + " :" + "Welcome to the " + SERVER_NAME + " IRC Network, " + user.get_nick() + "!" + "\r\n";
-    const std::string msg02 = ":" + user.get_hostname() + " " + RPL_YOURHOST + " " + user.get_nick() + " :" + "Your host is " + user.get_hostname() + ", running version v1.0" + "\r\n";
-	const std::string msg03 = ":" + user.get_hostname() + " " + RPL_CREATED + " " + user.get_nick() + " :" + "This server was created " + std::asctime(std::localtime(&_server_creation_time));
-    const std::string msg04 = ":" + user.get_hostname() + " " + RPL_MYINFO + " " + user.get_nick() + " " + user.get_hostname() + " v1.0 o iklt\r\n";
+	std::string time = std::asctime(std::localtime(&_server_creation_time));
 
-	const std::string isupport = client_rpl(user.get_hostname(), user.get_nick(), RPL_ISUPPORT)
-								+ "CHANMODES=b,k,l,imnpst\r\n";
-	
-    send(user.get_fd(), msg01.c_str(), msg01.length(), 0);
-    send(user.get_fd(), msg02.c_str(), msg02.length(), 0);
-    send(user.get_fd(), msg03.c_str(), msg03.length(), 0);
-    send(user.get_fd(), msg04.c_str(), msg04.length(), 0);
-    send(user.get_fd(), isupport.c_str(), isupport.length(), 0);
-	const std::string &motd = numeric_motd(_hostname, user.get_nick()); 
-    send(user.get_fd(), motd.c_str(), motd.length(), 0);
+	time[time.find('\n')] = '\0';
+	send_numeric(user, RPL_WELCOME, ":Welcome to the " SERVER_NAME " IRC Network, %s!",
+					user.get_nick().c_str());
+	send_numeric(user, RPL_YOURHOST, ":Your host is %s running version v1.0",
+					user.get_hostname().c_str());
+	send_numeric(user, RPL_CREATED, ":This server was created %s", time.c_str());
+	send_numeric(user, RPL_MYINFO, "localhost v1.0 o iklt");
+	send_numeric(user, RPL_ISUPPORT, "CHANMODES=b,k,l,imnpst");
+	send_numeric(user, RPL_MOTDSTART, ":- %s Message of the day -", _hostname.c_str());
+	send_numeric(user, RPL_MOTD, ":- Jose Figueiras is innocent 🇵🇹");
+	send_numeric(user, RPL_ENDOFMOTD, ":End of /MOTD");
 	user.welcome_flag = true;
 }
 
@@ -339,7 +349,6 @@ void Server::handle_commands(User &user)
 			command->set_user(&user);
 			command->check();
 			command->run();
-			command->clear();
 		}
 		catch (const std::exception &e)
 		{

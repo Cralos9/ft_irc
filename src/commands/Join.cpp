@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/31 14:42:07 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/04 14:08:14 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int Join::run()
 
 	if (channel[0] != '#')
 	{
-		_numeric_args.push_back(_args[0]);
-		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, _numeric_args, ":No such channel");
+		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
+								_args[0].c_str());
 		return(1);
 	}
 	_user->prepare_buffer("JOIN " + channel + "\r\n");
@@ -38,7 +38,6 @@ int Join::run()
 	if (ch == NULL)
 		ch = _server.create_channel(channel);
 	ch->add_user(*_user);
-	_server.print(_user->get_buffer());
 	_server.send_msg_to_channel(*ch, *_user, CHSELF);
 	return (0);
 }

@@ -42,12 +42,6 @@ void ACommand::check()
 	}
 }
 
-void ACommand::clear()
-{
-	_args.erase(_args.begin(), _args.end());
-	_numeric_args.erase(_numeric_args.begin(), _numeric_args.end());
-}
-
 /* Split the buffer into tokens
 The 1 token is the Command Name
 The rest is params for the Command */

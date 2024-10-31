@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:37:43 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/30 14:06:01 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:51:37 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,11 @@ int PrivMsg::run()
 		ch = _server.check_channel(_args[0]);
 		if (ch == NULL)
 		{
-			_numeric_args.push_back(_args[0]);
-			_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, _numeric_args, ":No such channel");
+			_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
+								_args[0].c_str());
 			return (1);
 		}
 		_user->prepare_buffer(_user->get_buffer());
-		_server.print(_user->get_buffer());
 		_server.send_msg_to_channel(*ch, *_user, CHOTHER); 
 	}
 	else
@@ -45,8 +44,8 @@ int PrivMsg::run()
 		receiver = this->_server.get_user(this->_args[0]);
 		if (receiver == NULL)
 		{
-			_numeric_args.push_back(_args[0]);
-			_server.send_numeric(*_user, ERR_NOSUCHNICK, _numeric_args, ":No such nick");
+			_server.send_numeric(*_user, ERR_NOSUCHNICK, "%s :No such nick",
+									_args[0].c_str());
 			return (1);
 		}
 		_user->prepare_buffer(_user->get_buffer());

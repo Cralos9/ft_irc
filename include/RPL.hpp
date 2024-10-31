@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/30 15:24:04 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/30 17:12:36 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #define RPL_NOTOPIC				"331"
 #define RPL_TOPIC				"332"
 #define RPL_INVITING			"341"
+#define RPL_WHOREPLY			"352"
 #define RPL_MOTD				"372"
 #define RPL_MOTDSTART			"375"
 #define RPL_ENDOFMOTD			"376"

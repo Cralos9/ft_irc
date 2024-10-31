@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:57:01 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 16:14:27 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:51:34 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ Pong::~Pong()
 int Pong::run()
 {
 	_user->prepare_buffer("PONG " + _server._hostname + " " + _args[0] + "\r\n");
-	_server.print(_user->get_buffer());
 	_server.send_msg_one_user(_user->get_fd(), *_user);
 	return (0);
 }

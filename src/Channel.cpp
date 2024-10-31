@@ -133,7 +133,6 @@ void Channel::add_user(User &user)
 	std::string user_list;
 	user_list = ":" + user.get_hostname() + " 353 " + user.get_nick() + " = " + this->_name + " " + this->all_users + "\r\n";
 	user.set_buffer(user_list);
-	std::cout << user.get_buffer();
 	this->all_users = "";
 	/* for (std::vector<std::string>::iterator it = this->_user_map.begin(); it != this->_user_map.end(); it++)
 		std::cout << *it << std::endl; */

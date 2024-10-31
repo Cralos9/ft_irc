@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/10/30 16:13:04 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:07:37 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,13 @@ int Invite::run()
 		
 	if (_server.get_user(_args[0]) == NULL) // Check if user exists
 	{
-		_numeric_args.push_back(_args[0]);
-		_server.send_numeric(*_user, ERR_NOSUCHNICK, _numeric_args, ":No such nick");
+		_server.send_numeric(*_user, ERR_NOSUCHNICK, "%s :No such nick", _args[0].c_str());
 		return EXIT_FAILURE;
 	}
 	else if (_server.check_channel(_args[1]) == NULL) //Check if channel exists
 	{
-		_numeric_args.push_back(_args[1]);
-		_server.send_numeric(*_user, ERR_NOSUCHNICK, _numeric_args, ":No such nick");
+		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
+								_args[1].c_str());
 		return EXIT_FAILURE;
 	}
 	else
@@ -61,13 +60,14 @@ int Invite::run()
 		
 		if (ch->is_user_on_ch(*invited)) //Check if user is already on channel
 		{
-			_server.send_numeric(*_user, ERR_USERONCHANNEL, _numeric_args, ":User already on channel");
+			_server.send_numeric(*_user, ERR_USERONCHANNEL, "%s :User already on channel",
+									_args[0].c_str());
 			return EXIT_FAILURE;
 		}
 		else if (ch->is_user_OP(*_user)) //Validate if user is OP
 		{
-			_numeric_args.push_back(_args[0]);
-			_server.send_numeric(*_user, RPL_INVITING, _numeric_args, _args[1]);
+			_server.send_numeric(*_user, RPL_INVITING, "%s %s", _args[0].c_str(),
+									_args[1].c_str());
 			_user->prepare_buffer("INVITE " + _args[0] + " " + _args[1] + "\r\n");
 			_server.print(_user->get_buffer());
 			_server.send_msg_one_user(invited->get_fd(), *_user);

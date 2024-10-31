@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/04 11:25:34 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/04 14:12:52 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <ctime>
 # include <fstream>
 # include <signal.h>
+# include <cstdarg>
 # include "RPL.hpp"
 # include <fcntl.h>
 
@@ -57,8 +58,8 @@ public:
 	void		send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
 	void		send_msg_all_users(User &msg_sender);
 	void 		send_msg_one_user(const int receiver_fd, User &msg_sender);
-	void		send_numeric(const User &user, const std::string &numeric, std::vector<std::string> &args,
-								const std::string &msg);
+	void 		send_numeric(const User &user, const std::string &numeric,
+								const std::string msg, ...);
 	int 		receive_msg(User &user);
 
 	Channel 	*create_channel(const std::string &ch_name);

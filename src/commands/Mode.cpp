@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/30 15:27:33 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:51:08 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,24 @@ int Mode::run()
 	ch = _server.check_channel(_args[0]);
 	if (ch == NULL)
 	{
-		_numeric_args.push_back(_args[0]);
-		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, _numeric_args, ":No such channel");
+		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
+								_args[0].c_str());
 		return (1);
 	}
 	
 	/* User who executed the command */
 	if (ch->is_user_OP(*_user) == false)
 	{
-		_numeric_args.push_back(_args[0]);
-		_server.send_numeric(*_user, ERR_CHANOPRIVSNEEDED, _numeric_args, ":You're not the channel operator");
+		_server.send_numeric(*_user, ERR_CHANOPRIVSNEEDED, "%s :You're not the channel operator",
+								_args[0].c_str());
 	}
 
 	/* Target User from the command */
 	target = ch->get_user(_args[2]);
 	if (target == NULL)
 	{
-		_numeric_args.push_back(_args[0]);
-		_server.send_numeric(*_user, ERR_NOSUCHNICK, _numeric_args, ":No such nick");
+		_server.send_numeric(*_user, ERR_NOSUCHNICK, "%s :No such nick",
+								target->get_nick().c_str());
 		return (1);
 	}
 	if (pos != std::string::npos && buffer[pos + 1] == 'o')
@@ -59,7 +59,6 @@ int Mode::run()
 		ch->change_user_it(*target, buffer[pos]);
 		_user->prepare_buffer(_user->get_buffer());
 		_server.send_msg_to_channel(*ch, *_user, CHSELF);
-		_server.print(_user->get_buffer());
 	}
 	return (0);
 }
