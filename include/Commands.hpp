@@ -30,6 +30,7 @@ public:
 	virtual ~ACommand();
 
 	void check();
+	void clear();
 	void set_args(std::vector<std::string> &args);
 	void set_user(User *user);
 	virtual int run() = 0;
@@ -37,6 +38,7 @@ public:
 protected:
 
 	std::vector<std::string> _args;
+	std::vector<std::string> _numeric_args;
 	User *_user;
 	Server &_server;
 	bool _usable_pre_reg;

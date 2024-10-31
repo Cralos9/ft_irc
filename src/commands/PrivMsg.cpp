@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:37:43 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 16:14:03 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:06:01 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,8 @@ int PrivMsg::run()
 		ch = _server.check_channel(_args[0]);
 		if (ch == NULL)
 		{
-			const std::string err = client_rpl(_server._hostname, _user->get_nick(),
-								ERR_NOSUCHCHANNEL) + _args[0] + " :No such channel\r\n";
-			_user->set_buffer(err);
-			_server.print(err);
-			_server.send_msg_one_user(_user->get_fd(), *_user);
+			_numeric_args.push_back(_args[0]);
+			_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, _numeric_args, ":No such channel");
 			return (1);
 		}
 		_user->prepare_buffer(_user->get_buffer());
@@ -48,11 +45,8 @@ int PrivMsg::run()
 		receiver = this->_server.get_user(this->_args[0]);
 		if (receiver == NULL)
 		{
-			const std::string err = client_rpl(_server._hostname, _user->get_nick(),
-								ERR_NOSUCHNICK) + _args[0] + " :No such nick\r\n";
-			_user->set_buffer(err);
-			_server.print(err);
-			_server.send_msg_one_user(_user->get_fd(), *_user);
+			_numeric_args.push_back(_args[0]);
+			_server.send_numeric(*_user, ERR_NOSUCHNICK, _numeric_args, ":No such nick");
 			return (1);
 		}
 		_user->prepare_buffer(_user->get_buffer());

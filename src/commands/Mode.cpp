@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 13:25:30 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:27:33 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,26 @@ int Mode::run()
 	if (_args.size() == 1) /* Valgrind Error. Corrigir */
 		return (1);
 	ch = _server.check_channel(_args[0]);
-	if (ch == NULL) {
-		_server.print("No Channel Found");
+	if (ch == NULL)
+	{
+		_numeric_args.push_back(_args[0]);
+		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, _numeric_args, ":No such channel");
 		return (1);
 	}
 	
 	/* User who executed the command */
-	if (ch->is_user_OP(*_user) == false) {
-		_server.print(_user->get_nick() + " is not OP");
-		return (1);
+	if (ch->is_user_OP(*_user) == false)
+	{
+		_numeric_args.push_back(_args[0]);
+		_server.send_numeric(*_user, ERR_CHANOPRIVSNEEDED, _numeric_args, ":You're not the channel operator");
 	}
 
 	/* Target User from the command */
 	target = ch->get_user(_args[2]);
-	if (target == NULL) {
-		_server.print("User doesn't have OP");
+	if (target == NULL)
+	{
+		_numeric_args.push_back(_args[0]);
+		_server.send_numeric(*_user, ERR_NOSUCHNICK, _numeric_args, ":No such nick");
 		return (1);
 	}
 	if (pos != std::string::npos && buffer[pos + 1] == 'o')

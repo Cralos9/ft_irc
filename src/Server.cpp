@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/31 14:36:10 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/31 14:41:37 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,31 @@ int Server::receive_msg(User &user)
 	}
 	user.set_buffer(buffer);
 	this->print_recv(buffer);
-	return(0);               
+	return(0);         
+}
+
+void Server::send_numeric(const User &user, const std::string &numeric, std::vector<std::string> &args,
+							const std::string &msg)
+{
+	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
+	for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++) {
+		rpl.append(*it + " ");
+	}
+	rpl.append(msg + "\r\n");
+	print(rpl);
+	send(user.get_fd(), rpl.c_str(), rpl.length(), 0);
+}
+
+void Server::send_numeric(const User &user, const std::string &numeric, std::vector<std::string> &args,
+							const std::string &msg)
+{
+	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
+	for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++) {
+		rpl.append(*it + " ");
+	}
+	rpl.append(msg + "\r\n");
+	print(rpl);
+	send(user.get_fd(), rpl.c_str(), rpl.length(), 0);
 }
 
 void Server::send_msg_all_users(User &msg_sender)
@@ -325,7 +349,7 @@ void Server::handle_commands(User &user)
 			command->set_user(&user);
 			command->check();
 			command->run();
-			
+			command->clear();
 		}
 		catch (const std::exception &e)
 		{
