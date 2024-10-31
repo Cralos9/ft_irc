@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/30 15:16:54 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/31 14:30:02 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ int Server::connect_client()
 		print_error("Accept Error");
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
+	this->_clients[client.fd].error_flag = 0;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
 	this->active_fd++;
 	this->_fds.push_back(client);
@@ -145,11 +146,8 @@ int Server::receive_msg(User &user)
 	char buffer[1024] = {0};
 	msg_bytes = recv(user.get_fd(), buffer, sizeof(buffer), 0);
 	
-	// if (msg_bytes == -1)
-	// 	print_error("recv Error");
 	if (msg_bytes <= 0)
 	{
-		std::cout << "testeeeeeeeeee" << std::endl;
 		this->disconnect_user(user);
 		return (1);
 	}
@@ -272,7 +270,8 @@ int Server::fds_loop()
 					user._set_auth(false);
 				else
 				{
-					send_error(user);
+					if (user.error_flag != 0)
+						send_error(user);
 					this->_fds[i].events = POLLIN;
 					return(1);
 				}
@@ -322,7 +321,6 @@ void Server::handle_commands(User &user)
 		{
 			std::vector<std::string> split = parse_split(*it);
 			command = _commands.at(split[0]);
-			std::cout << "Command right fucking now: " << split[0] << std::endl;
 			command->set_args(split);
 			command->set_user(&user);
 			command->check();
@@ -379,7 +377,11 @@ User *Server::get_user(const std::string &nick)
 void Server::disconnect_user(User &user)
 {
 	const int fd = user.get_fd();
-
+	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end(); it++)
+	{
+		if(it->second.is_user_on_ch(user))
+			it->second.delete_user_vec(user);
+	}
 	user.welcome_flag = false;
 	close(fd);
 	this->active_fd--;

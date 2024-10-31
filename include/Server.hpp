@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/30 14:45:32 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/31 12:14:06 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@
 # include "Commands.hpp"
 # include <cerrno>
 # include <errno.h>
-#include <ctime>
-#include <fstream>
+# include <ctime>
+# include <fstream>
 # include <signal.h>
 # include "RPL.hpp"
+# include <fcntl.h>
 
 #define SERVER_NAME		"TresPingados"
 #define NO_EVENTS		0
