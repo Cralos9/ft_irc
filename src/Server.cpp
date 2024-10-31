@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 15:27:10 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/31 14:36:10 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ int Server::connect_client()
 		print_error("Accept Error");
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
+	this->_clients[client.fd].error_flag = 0;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
 	this->active_fd++;
 	this->_fds.push_back(client);
@@ -139,21 +140,20 @@ void Server::channel_list(User &user)
 	}
 }
 
-void Server::receive_msg(User &user)
+int Server::receive_msg(User &user)
 {
 	int msg_bytes;
 	char buffer[1024] = {0};
 	msg_bytes = recv(user.get_fd(), buffer, sizeof(buffer), 0);
 	
-	// if (msg_bytes == -1)
-	// 	print_error("recv Error");
 	if (msg_bytes <= 0)
 	{
 		this->disconnect_user(user);
-		return ;
+		return (1);
 	}
 	user.set_buffer(buffer);
 	this->print_recv(buffer);
+	return(0);               
 }
 
 void Server::send_msg_all_users(User &msg_sender)
@@ -213,12 +213,30 @@ void Server::welcome_message(User &user)
 	user.welcome_flag = true;
 }
 
-bool Server::check_nickname(const std::string &nickname)
+bool Server::check_nickname(std::string &nickname)
 {
 	for (it_user it = _clients.begin(); it != _clients.end(); it++)
 		if (it->second.get_nick() == nickname)
 			return(1);
 	return(0);
+}
+
+void Server::send_error(User &user)
+{
+	if (user.error_flag == 1)
+	{
+		std::string teste = client_rpl(user.get_hostname(), user.get_nick(), "464");
+		teste = teste + " Wrong Password\r\n";
+	 	user.set_buffer(teste);
+	}
+	else if (user.error_flag == 2)
+	{
+		std::string teste = client_rpl(user.get_hostname(), user.get_nick(), "433");
+		teste = teste + user.get_nick() + " :Nickname already in use\r\n";
+	 	user.set_buffer(teste);
+	}
+	send_msg_one_user(user.get_fd(), user);
+	user.error_flag = 0;
 }
 
 int Server::fds_loop()
@@ -241,14 +259,25 @@ int Server::fds_loop()
 			User &user = this->_clients.at(this->_fds[i].fd);
 			if (this->_fds[i].revents & POLLIN)
 			{
-				this->receive_msg(user);
+				if (this->receive_msg(user))
+					return(1);
 				this->_fds[i].events |= POLLOUT;
 			}
 			else if (this->_fds[i].revents & POLLOUT)
 			{
 				this->handle_commands(user);
+				if (user.error_flag == 0 && !(user.get_nick()).empty())
+					user._set_auth(false);
+				else
+				{
+					if (user.error_flag != 0)
+						send_error(user);
+					this->_fds[i].events = POLLIN;
+					return(1);
+				}
 				if (user._get_auth() == false && user.welcome_flag == false)
 					welcome_message(user);
+				// user.erase_buffer();
 				this->_fds[i].events = POLLIN;
 			}
 		}
@@ -348,7 +377,12 @@ User *Server::get_user(const std::string &nick)
 void Server::disconnect_user(User &user)
 {
 	const int fd = user.get_fd();
-
+	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end(); it++)
+	{
+		if(it->second.is_user_on_ch(user))
+			it->second.delete_user_vec(user);
+	}
+	user.welcome_flag = false;
 	close(fd);
 	this->active_fd--;
 	this->_clients.erase(this->_clients.find(fd));

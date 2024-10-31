@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 10:33:09 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/28 14:56:52 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:09:39 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int Pass::run()
 	if (!(_server.check_password(*_user)))
 	{
 		std::cout << RED << "Password Error" << RESET << std::endl;
+		_user->error_flag = 1;
 		return (1);
 	}
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 16:10:20 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/10/31 14:35:35 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@
 # include "Commands.hpp"
 # include <cerrno>
 # include <errno.h>
-#include <ctime>
-#include <fstream>
+# include <ctime>
+# include <fstream>
 # include <signal.h>
 # include "RPL.hpp"
+# include <fcntl.h>
 
 #define SERVER_NAME		"TresPingados"
 #define NO_EVENTS		0
@@ -56,7 +57,7 @@ public:
 	void		send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
 	void		send_msg_all_users(User &msg_sender);
 	void 		send_msg_one_user(const int receiver_fd, User &msg_sender);
-	void 		receive_msg(User &user);
+	int 		receive_msg(User &user);
 
 	Channel 	*create_channel(const std::string &ch_name);
 	Channel 	*check_channel(const std::string &ch_name);
@@ -77,10 +78,11 @@ public:
 	bool		check_password(User &user);
 	void		welcome_message(User &user);
 
-	bool		check_nickname(const std::string &nickname);
+	bool		check_nickname(std::string &nickname);
 	void 		channel_list(User &user);
 	void		get_hostname();
-	std::string	_hostname;
+	void		send_error(User &user);
+	std::string	_server_hostname;
 
 	std::map<int, User>		&get_all_clients();
 
