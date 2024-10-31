@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/31 14:47:04 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/31 15:32:45 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,16 +390,19 @@ User *Server::get_user(const std::string &nick)
 void Server::disconnect_user(User &user)
 {
 	const int fd = user.get_fd();
+	user.welcome_flag = false;
+	this->active_fd--;
+	this->_fds.erase(find_fd(this->_fds, fd));
+	close(fd);
 	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end(); it++)
 	{
 		if(it->second.is_user_on_ch(user))
+		{
 			it->second.delete_user_vec(user);
+			return ;
+		}
 	}
-	user.welcome_flag = false;
-	close(fd);
-	this->active_fd--;
 	this->_clients.erase(this->_clients.find(fd));
-	this->_fds.erase(find_fd(this->_fds, fd));
 }
 
 std::map<int, User>& Server::get_all_clients()
