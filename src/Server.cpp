@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/31 14:41:37 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/31 14:47:04 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,17 +168,6 @@ void Server::send_numeric(const User &user, const std::string &numeric, std::vec
 	send(user.get_fd(), rpl.c_str(), rpl.length(), 0);
 }
 
-void Server::send_numeric(const User &user, const std::string &numeric, std::vector<std::string> &args,
-							const std::string &msg)
-{
-	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
-	for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++) {
-		rpl.append(*it + " ");
-	}
-	rpl.append(msg + "\r\n");
-	print(rpl);
-	send(user.get_fd(), rpl.c_str(), rpl.length(), 0);
-}
 
 void Server::send_msg_all_users(User &msg_sender)
 {

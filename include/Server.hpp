@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/31 14:40:21 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/10/31 14:44:55 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ public:
 	void 		send_msg_one_user(const int receiver_fd, User &msg_sender);
 	void		send_numeric(const User &user, const std::string &numeric, std::vector<std::string> &args,
 								const std::string &msg);
-	void 		receive_msg(User &user);
+	int 		receive_msg(User &user);
 
 	Channel 	*create_channel(const std::string &ch_name);
 	Channel 	*check_channel(const std::string &ch_name);
@@ -84,7 +84,7 @@ public:
 	void 		channel_list(User &user);
 	void		get_hostname();
 	void		send_error(User &user);
-	std::string	_server_hostname;
+	std::string	_hostname;
 
 	std::map<int, User>		&get_all_clients();
 
