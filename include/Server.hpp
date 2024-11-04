@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/31 14:44:55 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/04 11:25:34 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ public:
 
 	std::map<int, User>		&get_all_clients();
 
-	
 private:
 
 	int									active_fd;

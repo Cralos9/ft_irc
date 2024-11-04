@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/31 15:32:45 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/04 11:26:25 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,17 +236,18 @@ bool Server::check_nickname(std::string &nickname)
 
 void Server::send_error(User &user)
 {
+	std::string reply;
 	if (user.error_flag == 1)
 	{
-		std::string teste = client_rpl(user.get_hostname(), user.get_nick(), "464");
-		teste = teste + " Wrong Password\r\n";
-	 	user.set_buffer(teste);
+		reply = client_rpl(user.get_hostname(), user.get_nick(), "464");
+		reply = reply + " Wrong Password\r\n";
+	 	user.set_buffer(reply);
 	}
 	else if (user.error_flag == 2)
 	{
-		std::string teste = client_rpl(user.get_hostname(), user.get_nick(), "433");
-		teste = teste + user.get_nick() + " :Nickname already in use\r\n";
-	 	user.set_buffer(teste);
+		reply = client_rpl(user.get_hostname(), user.get_nick(), "433");
+		reply = reply + user.get_nick() + " :Nickname already in use\r\n";
+	 	user.set_buffer(reply);
 	}
 	send_msg_one_user(user.get_fd(), user);
 	user.error_flag = 0;
@@ -279,7 +280,7 @@ int Server::fds_loop()
 			else if (this->_fds[i].revents & POLLOUT)
 			{
 				this->handle_commands(user);
-				if (user.error_flag == 0 && !(user.get_nick()).empty())
+				if (user.error_flag == 0 && !(user.get_username()).empty())
 					user._set_auth(false);
 				else
 				{
