@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/04 14:15:33 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/05 15:54:02 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ int Server::receive_msg(User &user)
 void Server::send_numeric(const User &user, const std::string &numeric,
 							const std::string msg, ...)
 {
+	std::cout << _hostname <<" " << numeric << " " << user.get_nick()<< std::endl;
 	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
 
 	std::va_list params;
@@ -193,7 +194,8 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 	const std::map<User *, int> &ch_users = ch.get_users();
 
 	print(msg_sender.get_buffer());
-	for (std::map<User *, int>::const_iterator it = ch_users.begin(); it != ch_users.end(); it++) {
+	for (std::map<User *, int>::const_iterator it = ch_users.begin(); it != ch_users.end(); it++) 
+	{
 		if (flag == CHOTHER && msg_sender.get_fd() != it->first->get_fd())
 			send(it->first->get_fd(), msg_sender.get_buffer().c_str(),
 				msg_sender.get_buffer().length(), 0);

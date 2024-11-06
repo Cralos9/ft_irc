@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:15:15 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/04 13:48:17 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/06 11:42:59 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ int Kick::run()
 	if (kicked == NULL)
 	{
 		_server.send_numeric(*_user, ERR_USERNOTINCHANNEL, "%s %s :They aren't on that channel",
-								kicked->get_nick().c_str(), channel->get_name().c_str());
+								_args[1].c_str(), channel->get_name().c_str());
 		return (1);
 	}
 
-	channel->delete_user_vec(*kicked);
 	_user->prepare_buffer(_user->get_buffer());
 	_server.send_msg_to_channel(*channel, *_user, CHSELF);
+	channel->delete_user_vec(*kicked);
 	return(0);
 }
