@@ -43,3 +43,10 @@ Basic Structure of the IRC Server
 
 Concurrency and Synchronization
 To safely manage shared resources like client_nicks and channels, especially in a multithreaded environment, you’ll need to use mutexes.
+
+TODO
+
+- MODE Change the channel’s mode (i, t, k, l)
+- Eliminar Channels com 0 users
+- Rever a funcao 'receive_msg' (recv pode receber mensagens partidas ex: "PASS", "123")
+- Nicknames com caracteres invalidos

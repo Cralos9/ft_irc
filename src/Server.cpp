@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/05 15:54:02 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:53:10 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 /* 	this->_commands["PONG"] = new Ping(*this); */
 	this->_commands["PING"] = new Pong(*this, true);
 	this->_commands["USER"] = new UserCMD(*this, true);
-	//this->_commands["LIST"] = new List(*this);
 	//pass? PASS <password>
 	//pong? PONG <>
 
