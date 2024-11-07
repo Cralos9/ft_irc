@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:38:31 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 15:24:11 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:45:17 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,7 @@ int Part::run()
     _user->make_msg("PART", _args);
     _server.send_msg_to_channel(*channel, *_user, CHSELF);
     channel->delete_user(*_user);
+    if (channel->get_users().size() == 0)
+        _server.delete_channel(*channel);
     return(1);
 }

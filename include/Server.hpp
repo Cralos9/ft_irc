@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/07 15:25:48 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:44:58 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ public:
 	bool		check_nickname(std::string &nickname);
 	void		get_hostname();
 	void		send_error(User &user);
+
+	void		delete_channel(Channel &channel);
 	std::string	_hostname;
 
 	std::map<int, User>		&get_all_clients();

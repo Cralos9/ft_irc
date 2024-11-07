@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/07 15:28:14 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:47:00 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,6 +347,11 @@ void Server::handle_commands(User &user)
 			std::cerr << e.what() << std::endl;
 		}
 	}
+}
+
+void Server::delete_channel(Channel &channel)
+{
+	_channel_list.erase(channel.get_name());
 }
 
 /* Channel Functions */
