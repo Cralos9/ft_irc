@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:40 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 12:34:58 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:34:35 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,13 @@ Quit::~Quit()
 
 int Quit::run()
 {
-	std::string hold_buffer = this->_user->get_buffer();
-	std::string reason = hold_buffer.substr(hold_buffer.find(":") + 1, hold_buffer.find("\r") - hold_buffer.find(":") - 1);
-	this->_user->prepare_buffer("ERROR :Closing Link: " + _user->get_nick() + " " + "(" + reason + ")" + "\r\n");
+	// std::string hold_buffer = this->_user->get_buffer();
+	// std::string reason = "(" + _args[0] + ")";
+	// std::vector<std::string> error_args;
+	// error_args[0] = this->_user->get_nick();
+	// this->_user->make_msg("ERROR :Closing Link: " );
 	this->_server.send_msg_one_user(_user->get_fd(), *_user);
-	this->_user->prepare_buffer(hold_buffer);
+	this->_user->make_msg("QUIT", _args);
 	this->_server.send_msg_all_users(*this->_user);
 	this->_server.disconnect_user(*this->_user);
 	return (1);

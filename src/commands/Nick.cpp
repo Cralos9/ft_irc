@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/06 13:37:45 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:28:51 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ Nick::~Nick()
 int Nick::run()
 {
 	std::string nick = _args[0];
-	_user->prepare_buffer("NICK " + _args[0] + "\r\n");
+	_user->make_msg("NICK ", _args);
 	if (nick.find_first_of("#; ") != std::string::npos)
 	{
 		if (_user->welcome_flag == false)

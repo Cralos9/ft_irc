@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:37:43 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/04 13:51:37 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:40:01 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int PrivMsg::run()
 								_args[0].c_str());
 			return (1);
 		}
-		_user->prepare_buffer(_user->get_buffer());
+		_user->make_msg("PRIVMSG", _args);
 		_server.send_msg_to_channel(*ch, *_user, CHOTHER); 
 	}
 	else
@@ -48,7 +48,7 @@ int PrivMsg::run()
 									_args[0].c_str());
 			return (1);
 		}
-		_user->prepare_buffer(_user->get_buffer());
+		_user->make_msg("PRIVMSG", _args);
 		_server.send_msg_one_user(receiver->get_fd(), *_user);
 	}
 	return (0);

@@ -5,9 +5,9 @@ program should not crash in any circumstances
 
 
 You must be able to authenticate, set a nickname, a username, join a channel,
-send and receive private messages using your reference client.
+send and receive private make_msgs using your reference client.
 
-	◦ All the messages sent from one client to a channel have to be forwarded to
+	◦ All the make_msgs sent from one client to a channel have to be forwarded to
 	every other client that joined the channel.
 	◦ You must have operators and regular users.
 	◦ Then, you have to implement the commands that are specific to channel
@@ -36,10 +36,17 @@ Basic Structure of the IRC Server
 		The first step is to set up a server that listens for incoming TCP connections.
 
 	Handling IRC Commands
-		Once the basic server is set up, you need to parse incoming messages and handle IRC commands like NICK, JOIN, and PRIVMSG.
+		Once the basic server is set up, you need to parse incoming make_msgs and handle IRC commands like NICK, JOIN, and PRIVMSG.
 	
 	Storing Client State
 		You need to maintain client information such as their nickname and the channel they are in. You can use C++ data structures like std::map or std::unordered_map to store this data.
 
 Concurrency and Synchronization
 To safely manage shared resources like client_nicks and channels, especially in a multithreaded environment, you’ll need to use mutexes.
+
+TODO
+
+- MODE Change the channel’s mode (i, t, k, l)
+- Eliminar Channels com 0 users
+- Rever a funcao 'receive_msg' (recv pode receber mensagens partidas ex: "PASS", "123")
+- Nicknames com caracteres invalidos

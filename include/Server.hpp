@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/04 14:12:52 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:25:48 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include <ctime>
 # include <fstream>
 # include <signal.h>
-# include <cstdarg>
 # include "RPL.hpp"
 # include <fcntl.h>
 
@@ -65,11 +64,12 @@ public:
 	Channel 	*create_channel(const std::string &ch_name);
 	Channel 	*check_channel(const std::string &ch_name);
 	const std::string channels_user_joined(User &user);
+	const std::map<std::string, Channel> &get_channels() const;
 
 	void 		handle_commands(User &user);
 	User 		*get_user(const std::string &nick);
 	
-	void		 disconnect_user(User &user);
+	void		disconnect_user(User &user);
 	void 		close_all_fds();
 
 	void 		print(const std::string &str);
@@ -79,10 +79,9 @@ public:
 	static bool should_end;
 
 	bool		check_password(User &user);
-	void		welcome_message(User &user);
+	void		welcome_make_msg(User &user);
 
 	bool		check_nickname(std::string &nickname);
-	void 		channel_list(User &user);
 	void		get_hostname();
 	void		send_error(User &user);
 	std::string	_hostname;

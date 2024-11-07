@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/07 15:22:25 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:28:14 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 /* 	this->_commands["PONG"] = new Ping(*this); */
 	this->_commands["PING"] = new Pong(*this, true);
 	this->_commands["USER"] = new UserCMD(*this, true);
-	//this->_commands["LIST"] = new List(*this);
 	//pass? PASS <password>
 	//pong? PONG <>
 
@@ -127,19 +126,6 @@ int Server::connect_client()
 	return EXIT_SUCCESS;
 }
 
-void Server::channel_list(User &user)
-{
-	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end(); it++)
-	{
-		std::stringstream size_as_str;
-		size_as_str << it->second.get_user_map_size();
-		std::string response = ":" + user.get_hostname() + " 322 " + user.get_nick() + " " + it->second.get_name() + " " \
-			+ size_as_str.str() + " " + it->second.get_topic() + "\r\n";
-		user.set_buffer(response);
-		send_msg_one_user(user.get_fd(), user);
-	}
-}
-
 int Server::receive_msg(User &user)
 {
 	int msg_bytes;
@@ -176,7 +162,6 @@ void Server::send_numeric(const User &user, const std::string &numeric,
 	print(rpl);
 	send(user.get_fd(), rpl.c_str(), rpl.length(), 0);
 }
-
 
 void Server::send_msg_all_users(User &msg_sender)
 {
@@ -219,7 +204,7 @@ bool	Server::check_password(User &user)
 	return false;
 }
 
-void Server::welcome_message(User &user)
+void Server::welcome_make_msg(User &user)
 {
 	std::string time = std::asctime(std::localtime(&_server_creation_time));
 
@@ -231,7 +216,7 @@ void Server::welcome_message(User &user)
 	send_numeric(user, RPL_CREATED, ":This server was created %s", time.c_str());
 	send_numeric(user, RPL_MYINFO, "localhost v1.0 o iklt");
 	send_numeric(user, RPL_ISUPPORT, "CHANMODES=b,k,l,imnpst");
-	send_numeric(user, RPL_MOTDSTART, ":- %s Message of the day -", _hostname.c_str());
+	send_numeric(user, RPL_MOTDSTART, ":- %s make_msg of the day -", _hostname.c_str());
 	send_numeric(user, RPL_MOTD, ":- Jose Figueiras is innocent 🇵🇹");
 	send_numeric(user, RPL_ENDOFMOTD, ":End of /MOTD");
 	user.welcome_flag = true;
@@ -299,7 +284,7 @@ int Server::fds_loop()
 			{
 				this->handle_commands(user);
 				if (user.error_flag == 0 && !(user.get_username()).empty())
-					user._set_auth(false);
+					user.set_auth(false);
 				else
 				{
 					if (user.error_flag != 0)
@@ -307,8 +292,8 @@ int Server::fds_loop()
 					this->_fds[i].events = POLLIN;
 					return(1);
 				}
-				if (user._get_auth() == false && user.welcome_flag == false)
-					welcome_message(user);
+				if (user.get_auth() == false && user.welcome_flag == false)
+					welcome_make_msg(user);
 				// user.erase_buffer();
 				this->_fds[i].events = POLLIN;
 			}
@@ -323,7 +308,6 @@ int Server::main_loop()
 
 	while (!should_end)
 	{
-
 		ret = poll(this->_fds.data(), this->active_fd, -1);
 		if (ret == -1)
 		{
@@ -416,8 +400,8 @@ void Server::disconnect_user(User &user)
 	{
 		if(it->second.is_user_on_ch(user))
 		{
-			it->second.delete_user_vec(user);
-			if (it->second.get_user_map_size() == 0)
+			it->second.delete_user(user);
+			if (it->second.get_users().size() == 0)
 			{
 				std::map<std::string, Channel>::iterator temp = it;
 				it++;
@@ -428,6 +412,11 @@ void Server::disconnect_user(User &user)
 		it++;
 	}
 	this->_clients.erase(this->_clients.find(fd));
+}
+
+const std::map<std::string, Channel> &Server::get_channels() const
+{
+	return (_channel_list);
 }
 
 std::map<int, User>& Server::get_all_clients()

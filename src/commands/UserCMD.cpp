@@ -24,7 +24,7 @@ UserCMD::~UserCMD()
 
 int UserCMD::run()
 {
-/* 	if (_user->_get_auth())
+/* 	if (_user->get_auth())
 	{
 		_user->set_buffer(client_rpl(_server._hostname, _user->get_nick(), ERR_ALREADYREGISTERED)
 							+ ":You may not register\r\n");

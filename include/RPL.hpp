@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/30 17:12:36 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:34:20 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "ft_irc.hpp"
 
-/* RPL_ Messages */
+/* RPL_ make_msgs */
 #define RPL_WELCOME				"001"
 #define RPL_YOURHOST			"002"
 #define RPL_CREATED				"003"
@@ -28,6 +28,9 @@
 #define RPL_WHOISOPERATOR		"313"
 #define RPL_ENDOFWHOIS			"318"
 #define RPL_WHOISCHANNELS 		"319"
+#define RPL_LISTSTART			"321"
+#define RPL_LIST				"322"
+#define RPL_LISTEND				"323"
 #define RPL_NOTOPIC				"331"
 #define RPL_TOPIC				"332"
 #define RPL_INVITING			"341"
@@ -36,7 +39,7 @@
 #define RPL_MOTDSTART			"375"
 #define RPL_ENDOFMOTD			"376"
 
-/* ERR_ Messages*/
+/* ERR_ make_msgs*/
 #define ERR_NOSUCHNICK			"401"
 #define ERR_NOSUCHCHANNEL		"403"
 #define ERR_NOMOTD				"422"

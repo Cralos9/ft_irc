@@ -13,28 +13,33 @@
 
 #include "Channel.hpp"
 
+Channel::Channel()
+{
+/* 	std::cout << "Channel Constructor" << std::endl; */
+}
 
-void Channel::set_name(std::string name)
+Channel::~Channel()
+{
+/* 	std::cout << "Channel Destructor" << std::endl; */
+}
+
+Channel::Channel(const std::string &name) : _name(name)
+{
+/* 	std::cout << "Channel Name constructor" << std::endl; */
+}
+
+/* Setters */
+void Channel::set_name(const std::string &name)
 {
 	this->_name = name;
 }
 
-std::string Channel::get_name()
-{
-	return(this->_name);
-}
-
-void Channel::set_admin(std::string admin)
+void Channel::set_admin(const std::string &admin)
 {
 	this->_admin = admin;
 }
 
-std::string Channel::get_admin()
-{
-	return(this->_admin);
-}
-
-void Channel::set_user(std::string user)
+void Channel::set_user(const std::string &user)
 {
 	if (this->_users.empty())
 		this->_users = user;
@@ -42,6 +47,40 @@ void Channel::set_user(std::string user)
 		this->_users = this->_users + " " + user;
 }
 
+void Channel::set_topic(const std::string &topic)
+{
+	this->_topic = topic;
+}
+
+/* Getters */
+const std::string &Channel::get_name() const
+{
+	return(this->_name);
+}
+
+const std::string Channel::get_user_size() const
+{
+	std::ostringstream oss;
+	oss << _user_map.size();
+	return (oss.str());
+}
+
+const std::string &Channel::get_admin() const
+{
+	return(this->_admin);
+}
+
+const std::string &Channel::get_topic() const
+{
+	return(this->_topic);
+}
+
+const std::map<User *, int> &Channel::get_users() const
+{
+	return (_user_map);
+}
+
+/* Utility Functions */
 bool Channel::is_user_OP(User &user)
 {
 	std::map<User *, int>::iterator it = _user_map.find(&user);
@@ -50,23 +89,6 @@ bool Channel::is_user_OP(User &user)
 	if (it->second == NOP)
 		return (false);
 	return (true);
-}
-
-size_t Channel::get_user_map_size()
-{
-	return(_user_map.size());
-}
-
-std::string Channel::get_topic()
-{
-	// if (this->_topic.empty())
-	// 	return("Channel has no topic");
-	return(this->_topic);
-}
-
-void Channel::set_topic(std::string topic)
-{
-	this->_topic = topic;
 }
 
 bool Channel::is_user_on_ch(User &user)
@@ -96,11 +118,6 @@ User *Channel::get_user(const std::string &username)
 	return (NULL);
 }
 
-const std::map<User *, int> &Channel::get_users() const
-{
-	return (_user_map);
-}
-
 void Channel::change_user_it(User &user, char sig)
 {
 	std::map<User *, int>::iterator it = _user_map.find(&user);
@@ -112,7 +129,7 @@ void Channel::change_user_it(User &user, char sig)
 		it->second = NOP;
 }
 
-void Channel::delete_user_vec(User &del_user)
+void Channel::delete_user(User &del_user)
 {
 	_user_map.erase(_user_map.find(&del_user));
 }

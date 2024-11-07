@@ -35,7 +35,7 @@ void ACommand::set_user(User *user)
 
 void ACommand::check()
 {
-	if (_user->_get_auth() == true && !_usable_pre_reg)
+	if (_user->get_auth() == true && !_usable_pre_reg)
 	{
 		/* Need to change the throw */
 		throw (std::range_error("Test"));
