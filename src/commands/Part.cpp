@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:38:31 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/04 13:51:26 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:25:57 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,6 @@ int Part::run()
     }
     _user->prepare_buffer("PART " + _args[0] + "\r\n");
     _server.send_msg_to_channel(*channel, *_user, CHSELF);
-    channel->delete_user_vec(*_user);
+    channel->delete_user(*_user);
     return(1);
 }

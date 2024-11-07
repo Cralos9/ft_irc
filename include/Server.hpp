@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/04 14:12:52 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:38:48 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ public:
 	Channel 	*create_channel(const std::string &ch_name);
 	Channel 	*check_channel(const std::string &ch_name);
 	const std::string channels_user_joined(User &user);
+	const std::map<std::string, Channel> &get_channels() const;
 
 	void 		handle_commands(User &user);
 	User 		*get_user(const std::string &nick);
@@ -82,7 +83,6 @@ public:
 	void		welcome_message(User &user);
 
 	bool		check_nickname(std::string &nickname);
-	void 		channel_list(User &user);
 	void		get_hostname();
 	void		send_error(User &user);
 	std::string	_hostname;

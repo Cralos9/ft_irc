@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:15:15 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/06 11:42:59 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:25:57 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,6 @@ int Kick::run()
 
 	_user->prepare_buffer(_user->get_buffer());
 	_server.send_msg_to_channel(*channel, *_user, CHSELF);
-	channel->delete_user_vec(*kicked);
+	channel->delete_user(*kicked);
 	return(0);
 }

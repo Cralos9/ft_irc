@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/06 16:53:10 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:45:33 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,19 +126,6 @@ int Server::connect_client()
 	return EXIT_SUCCESS;
 }
 
-void Server::channel_list(User &user)
-{
-	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end(); it++)
-	{
-		std::stringstream size_as_str;
-		size_as_str << it->second.get_user_map_size();
-		std::string response = ":" + user.get_hostname() + " 322 " + user.get_nick() + " " + it->second.get_name() + " " \
-			+ size_as_str.str() + " " + it->second.get_topic() + "\r\n";
-		user.set_buffer(response);
-		send_msg_one_user(user.get_fd(), user);
-	}
-}
-
 int Server::receive_msg(User &user)
 {
 	int msg_bytes;
@@ -158,7 +145,6 @@ int Server::receive_msg(User &user)
 void Server::send_numeric(const User &user, const std::string &numeric,
 							const std::string msg, ...)
 {
-	std::cout << _hostname <<" " << numeric << " " << user.get_nick()<< std::endl;
 	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
 
 	std::va_list params;
@@ -176,7 +162,6 @@ void Server::send_numeric(const User &user, const std::string &numeric,
 	print(rpl);
 	send(user.get_fd(), rpl.c_str(), rpl.length(), 0);
 }
-
 
 void Server::send_msg_all_users(User &msg_sender)
 {
@@ -316,7 +301,6 @@ int Server::main_loop()
 
 	while (!should_end)
 	{
-
 		ret = poll(this->_fds.data(), this->active_fd, -1);
 		if (ret == -1)
 		{
@@ -401,19 +385,20 @@ User *Server::get_user(const std::string &nick)
 void Server::disconnect_user(User &user)
 {
 	const int fd = user.get_fd();
-	user.welcome_flag = false;
 	this->active_fd--;
 	this->_fds.erase(find_fd(this->_fds, fd));
 	close(fd);
 	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end(); it++)
 	{
 		if(it->second.is_user_on_ch(user))
-		{
-			it->second.delete_user_vec(user);
-			return ;
-		}
+			it->second.delete_user(user);
 	}
 	this->_clients.erase(this->_clients.find(fd));
+}
+
+const std::map<std::string, Channel> &Server::get_channels() const
+{
+	return (_channel_list);
 }
 
 std::map<int, User>& Server::get_all_clients()

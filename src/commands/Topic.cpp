@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:18 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/31 16:15:14 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:13:04 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int Topic::run()
 	}
 	if ((_args.size() > 1))
 	{
+		/* Erase the ':' from Topic Name */
+		_args[1] = _args[1].substr(1, _args[1].length());
 		if (ch->is_user_OP(*_user))
 		{
 			ch->set_topic(this->_args[1]);
