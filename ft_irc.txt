@@ -47,6 +47,10 @@ To safely manage shared resources like client_nicks and channels, especially in 
 TODO
 
 - MODE Change the channel’s mode (i, t, k, l)
-- Eliminar Channels com 0 users
-- Rever a funcao 'receive_msg' (recv pode receber mensagens partidas ex: "PASS", "123")
 - Nicknames com caracteres invalidos
+- Verificar o numero de argumentos de cada comando
+
+Implementado
+
+- receive_msg aceita mensagens partidas ("Pass", "123")
+- Eliminar Channels com 0 users
