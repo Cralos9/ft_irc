@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/04 14:08:14 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:37:46 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int Join::run()
 								_args[0].c_str());
 		return(1);
 	}
-	_user->prepare_buffer("JOIN " + channel + "\r\n");
+	_user->make_msg("JOIN", _args);
 	_server.send_msg_one_user(_user->get_fd(), *_user);
 	Channel *ch = _server.check_channel(_args[0]);
 	if (ch == NULL)

@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/07 11:38:48 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:34:20 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include <ctime>
 # include <fstream>
 # include <signal.h>
-# include <cstdarg>
 # include "RPL.hpp"
 # include <fcntl.h>
 
@@ -80,7 +79,7 @@ public:
 	static bool should_end;
 
 	bool		check_password(User &user);
-	void		welcome_message(User &user);
+	void		welcome_make_msg(User &user);
 
 	bool		check_nickname(std::string &nickname);
 	void		get_hostname();

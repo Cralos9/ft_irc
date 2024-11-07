@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/07 11:45:33 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:34:20 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ bool	Server::check_password(User &user)
 	return false;
 }
 
-void Server::welcome_message(User &user)
+void Server::welcome_make_msg(User &user)
 {
 	std::string time = std::asctime(std::localtime(&_server_creation_time));
 
@@ -216,7 +216,7 @@ void Server::welcome_message(User &user)
 	send_numeric(user, RPL_CREATED, ":This server was created %s", time.c_str());
 	send_numeric(user, RPL_MYINFO, "localhost v1.0 o iklt");
 	send_numeric(user, RPL_ISUPPORT, "CHANMODES=b,k,l,imnpst");
-	send_numeric(user, RPL_MOTDSTART, ":- %s Message of the day -", _hostname.c_str());
+	send_numeric(user, RPL_MOTDSTART, ":- %s make_msg of the day -", _hostname.c_str());
 	send_numeric(user, RPL_MOTD, ":- Jose Figueiras is innocent 🇵🇹");
 	send_numeric(user, RPL_ENDOFMOTD, ":End of /MOTD");
 	user.welcome_flag = true;
@@ -277,7 +277,7 @@ int Server::fds_loop()
 			{
 				this->handle_commands(user);
 				if (user.error_flag == 0 && !(user.get_username()).empty())
-					user._set_auth(false);
+					user.set_auth(false);
 				else
 				{
 					if (user.error_flag != 0)
@@ -285,8 +285,8 @@ int Server::fds_loop()
 					this->_fds[i].events = POLLIN;
 					return(1);
 				}
-				if (user._get_auth() == false && user.welcome_flag == false)
-					welcome_message(user);
+				if (user.get_auth() == false && user.welcome_flag == false)
+					welcome_make_msg(user);
 				// user.erase_buffer();
 				this->_fds[i].events = POLLIN;
 			}

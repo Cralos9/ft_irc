@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/10/25 15:32:40 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:23:51 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <iterator>
 #include <map>
 #include <algorithm>
+#include <cstdarg>
 
 #define GREEN "\033[0;32m"
 #define RED "\033[0;31m"

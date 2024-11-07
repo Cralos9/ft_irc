@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 11:41:19 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 15:07:12 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:29:13 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,3 +29,4 @@ it_fd find_fd(std::vector<pollfd> &vec, const int fd)
 		;
 	return (it);
 }
+

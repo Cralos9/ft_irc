@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/10/31 16:07:37 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:38:33 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int Invite::run()
 		{
 			_server.send_numeric(*_user, RPL_INVITING, "%s %s", _args[0].c_str(),
 									_args[1].c_str());
-			_user->prepare_buffer("INVITE " + _args[0] + " " + _args[1] + "\r\n");
+			_user->make_msg("INVITE", _args);
 			_server.print(_user->get_buffer());
 			_server.send_msg_one_user(invited->get_fd(), *_user);
 		}

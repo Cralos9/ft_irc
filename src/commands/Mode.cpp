@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/04 13:51:08 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:38:53 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int Mode::run()
 	if (pos != std::string::npos && buffer[pos + 1] == 'o')
 	{
 		ch->change_user_it(*target, buffer[pos]);
-		_user->prepare_buffer(_user->get_buffer());
+		_user->make_msg("MODE", _args);
 		_server.send_msg_to_channel(*ch, *_user, CHSELF);
 	}
 	return (0);

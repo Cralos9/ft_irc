@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/04 10:50:05 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:36:52 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ const std::string &User::get_realname() const
 	return (_realname);
 }
 
-bool User::_get_auth() const
+bool User::get_auth() const
 {
 	return(_auth);
 }
@@ -103,7 +103,7 @@ void User::set_realname(const std::string &realname)
 	_realname = realname;
 }
 
-void User::_set_auth(const bool &status)
+void User::set_auth(const bool &status)
 {
 	
 	this->_auth = status;
@@ -111,49 +111,18 @@ void User::_set_auth(const bool &status)
 
 /* -------------------------------------- */
 
-const std::string User::get_name(const std::string &buffer, const std::string &attribute,
-									const char delimiter)
-{
-	size_t pos = buffer.find(attribute);
-
-	if (pos != std::string::npos)
-	{
-		pos += attribute.length();
-		return (buffer.substr(pos, buffer.find_first_of(delimiter, pos) - pos - 1));
-	}
-	return ("ERROR");
-}
-
 void User::erase_buffer()
 {
 	this->_buffer.erase();
 }
 
-bool User::get_info()
+void User::make_msg(const std::string &command, const std::vector<std::string> &params)
 {
-	const std::string password = get_name(_buffer, "PASS ", '\n');
-	const std::string nick = get_name(_buffer, "NICK ", '\n');
-	const std::string username = get_name(_buffer, "USER ", '0');
-	const std::string realname = get_name(_buffer, ":", '\n');
-
-	if (nick != "ERROR")
-		_nick = nick;
-	if(username != "ERROR")
-		_username = username;
-	if(password != "ERROR")
-		_password = password;
-	if (realname != "ERROR")
-		_realname = realname;
-	if (!(this->_nick.empty()) && !(this->_username.empty()) && !(this->_password.empty()))
- 		return (1);
-	return (0);
-}
-
-void User::prepare_buffer(const std::string &command)
-{
-	std::ostringstream oss;
-	oss << ":" << this->_nick << "!" << this->_username << "@" << this->_hostname << " " << command;
-	this->_buffer = oss.str();
+	_buffer = ":" + _nick + "!" + _username + "@" + _hostname + " " + command + " ";
+	for (std::vector<std::string>::const_iterator it = params.begin(); it != params.end(); it++) {
+		_buffer.append(*it + ' ');
+	}
+	_buffer.append("\r\n");
 }
 
 std::ostream &operator<<(std::ostream &out, const User &user)
