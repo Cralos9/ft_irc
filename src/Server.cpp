@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/05 15:54:02 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:22:25 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,6 @@ int Server::receive_msg(User &user)
 void Server::send_numeric(const User &user, const std::string &numeric,
 							const std::string msg, ...)
 {
-	std::cout << _hostname <<" " << numeric << " " << user.get_nick()<< std::endl;
 	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
 
 	std::va_list params;
@@ -257,8 +256,15 @@ void Server::send_error(User &user)
 	}
 	else if (user.error_flag == 2)
 	{
-		reply = client_rpl(user.get_hostname(), user.get_nick(), "433");
+		reply = client_rpl(user.get_hostname(), "*", "433");
 		reply = reply + user.get_nick() + " :Nickname already in use\r\n";
+	 	user.set_buffer(reply);
+	}
+	else if (user.error_flag == 3)
+	{
+	
+		reply = client_rpl(user.get_hostname(), "*", "432");
+		reply = reply + user.get_nick() + " :Erroneus nickname\r\n";
 	 	user.set_buffer(reply);
 	}
 	send_msg_one_user(user.get_fd(), user);
@@ -402,17 +408,24 @@ User *Server::get_user(const std::string &nick)
 void Server::disconnect_user(User &user)
 {
 	const int fd = user.get_fd();
-	user.welcome_flag = false;
 	this->active_fd--;
 	this->_fds.erase(find_fd(this->_fds, fd));
 	close(fd);
-	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end(); it++)
+
+	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end();)
 	{
 		if(it->second.is_user_on_ch(user))
 		{
 			it->second.delete_user_vec(user);
-			return ;
+			if (it->second.get_user_map_size() == 0)
+			{
+				std::map<std::string, Channel>::iterator temp = it;
+				it++;
+				_channel_list.erase(temp);
+				continue ;
+			}
 		}
+		it++;
 	}
 	this->_clients.erase(this->_clients.find(fd));
 }

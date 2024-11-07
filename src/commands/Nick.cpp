@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/04 14:08:28 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/06 13:37:45 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,26 @@ int Nick::run()
 {
 	std::string nick = _args[0];
 	_user->prepare_buffer("NICK " + _args[0] + "\r\n");
-	if (_server.check_nickname(nick))
+	if (nick.find_first_of("#; ") != std::string::npos)
 	{
-		_user->set_nick(nick);
-		_user->error_flag = 2;
+		if (_user->welcome_flag == false)
+		{
+			_user->set_nick(nick);
+			_user->error_flag = 3;
+		}
+		else
+			_server.send_numeric(*_user, "432", "%s :Erroneus nickname", nick.c_str());
+		return(1);
+	}
+	else if (_server.check_nickname(nick))
+	{
+		if (_user->welcome_flag == false)
+		{
+			_user->set_nick(nick);
+			_user->error_flag = 2;
+		}
+		else
+			_server.send_numeric(*_user, "433", "%s :Nickname already in use", nick.c_str());
 		return(1);
 	}
 	if (_user->welcome_flag == true)
