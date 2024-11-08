@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 15:28:51 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/08 10:36:02 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int Nick::run()
 			_user->error_flag = 3;
 		}
 		else
-			_server.send_numeric(*_user, "432", "%s :Erroneus nickname", nick.c_str());
+			_server.send_numeric(*_user, ERR_ERRONEUSNICKNAME, "%s :Erroneus nickname", nick.c_str());
 		return(1);
 	}
 	else if (_server.check_nickname(nick))
@@ -45,7 +45,7 @@ int Nick::run()
 			_user->error_flag = 2;
 		}
 		else
-			_server.send_numeric(*_user, "433", "%s :Nickname already in use", nick.c_str());
+			_server.send_numeric(*_user, ERR_NICKNAMEINUSE, "%s :Nickname already in use", nick.c_str());
 		return(1);
 	}
 	if (_user->welcome_flag == true)

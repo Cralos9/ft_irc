@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/07 12:34:20 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/08 10:36:59 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,14 @@
 #define ERR_NOSUCHNICK			"401"
 #define ERR_NOSUCHCHANNEL		"403"
 #define ERR_NOMOTD				"422"
+#define ERR_ERRONEUSNICKNAME	"432" 
 #define ERR_NICKNAMEINUSE		"433"
 #define ERR_USERNOTINCHANNEL	"441"
 #define ERR_USERONCHANNEL		"443"
 #define ERR_NOTREGISTERED		"451"
 #define ERR_NOTONCHANNEL		"442"
 #define ERR_ALREADYREGISTERED	"462"
+#define ERR_PASSWDMISMATCH		"464"
 #define ERR_CHANOPRIVSNEEDED	"482"
 
 const std::string client_rpl(const std::string &hostname, const std::string &nickname

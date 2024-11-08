@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/07 15:47:00 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/08 10:37:08 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,20 +235,20 @@ void Server::send_error(User &user)
 	std::string reply;
 	if (user.error_flag == 1)
 	{
-		reply = client_rpl(user.get_hostname(), user.get_nick(), "464");
+		reply = client_rpl(user.get_hostname(), user.get_nick(), ERR_PASSWDMISMATCH);
 		reply = reply + " Wrong Password\r\n";
 	 	user.set_buffer(reply);
 	}
 	else if (user.error_flag == 2)
 	{
-		reply = client_rpl(user.get_hostname(), "*", "433");
+		reply = client_rpl(user.get_hostname(), "*", ERR_ERRONEUSNICKNAME);
 		reply = reply + user.get_nick() + " :Nickname already in use\r\n";
 	 	user.set_buffer(reply);
 	}
 	else if (user.error_flag == 3)
 	{
 	
-		reply = client_rpl(user.get_hostname(), "*", "432");
+		reply = client_rpl(user.get_hostname(), "*", ERR_ERRONEUSNICKNAME);
 		reply = reply + user.get_nick() + " :Erroneus nickname\r\n";
 	 	user.set_buffer(reply);
 	}
