@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/07 15:44:58 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/08 11:28:39 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ public:
 	const std::string channels_user_joined(User &user);
 	const std::map<std::string, Channel> &get_channels() const;
 
-	void 		handle_commands(User &user);
+	int 		handle_commands(User &user);
 	User 		*get_user(const std::string &nick);
 	
 	void		disconnect_user(User &user);

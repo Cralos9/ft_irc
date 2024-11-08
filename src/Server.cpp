@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 10:37:08 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/08 11:38:05 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,7 +282,8 @@ int Server::fds_loop()
 			}
 			else if (this->_fds[i].revents & POLLOUT)
 			{
-				this->handle_commands(user);
+				if(this->handle_commands(user))
+					return(0);
 				if (user.error_flag == 0 && !(user.get_username()).empty())
 					user.set_auth(false);
 				else
@@ -326,7 +327,7 @@ int Server::main_loop()
 	return (0);
 }
 
-void Server::handle_commands(User &user)
+int Server::handle_commands(User &user)
 {
 	ACommand *command = NULL;
 	std::vector<std::string> lines = split_lines(user.get_buffer());
@@ -341,12 +342,15 @@ void Server::handle_commands(User &user)
 			command->set_user(&user);
 			command->check();
 			command->run();
+			if (split[0] == "QUIT")
+				return(1);
 		}
 		catch (const std::exception &e)
 		{
 			std::cerr << e.what() << std::endl;
 		}
 	}
+	return(0);
 }
 
 void Server::delete_channel(Channel &channel)

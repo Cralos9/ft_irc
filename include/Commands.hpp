@@ -30,7 +30,7 @@ public:
 	virtual ~ACommand();
 
 	void check();
-	void set_args(std::vector<std::string> &args);
+	void set_args(std::vector<std::string> args);
 	void set_user(User *user);
 	virtual int run() = 0;
 

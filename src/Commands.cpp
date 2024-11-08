@@ -22,7 +22,7 @@ ACommand::~ACommand()
 /* 	std::cout << "ACommand Destructor" << std::endl; */
 }
 
-void ACommand::set_args(std::vector<std::string> &args)
+void ACommand::set_args(std::vector<std::string> args)
 {
 	args.erase(args.begin());
 	_args = args;
