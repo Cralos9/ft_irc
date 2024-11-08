@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 11:38:05 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/08 12:20:03 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,8 +138,10 @@ int Server::receive_msg(User &user)
 		return (1);
 	}
 	user.set_buffer(buffer);
-	this->print_recv(buffer);
-	return(0);         
+	if (user.get_buffer().find("\r\n") == std::string::npos)
+		return (1);
+	print_recv(user.get_buffer());
+	return(0);
 }
 
 void Server::send_numeric(const User &user, const std::string &numeric,
@@ -234,25 +236,15 @@ void Server::send_error(User &user)
 {
 	std::string reply;
 	if (user.error_flag == 1)
-	{
-		reply = client_rpl(user.get_hostname(), user.get_nick(), ERR_PASSWDMISMATCH);
-		reply = reply + " Wrong Password\r\n";
-	 	user.set_buffer(reply);
-	}
+		send_numeric(user, ERR_PASSWDMISMATCH, ":Password Incorrect");
 	else if (user.error_flag == 2)
-	{
-		reply = client_rpl(user.get_hostname(), "*", ERR_ERRONEUSNICKNAME);
-		reply = reply + user.get_nick() + " :Nickname already in use\r\n";
-	 	user.set_buffer(reply);
-	}
-	else if (user.error_flag == 3)
-	{
-	
-		reply = client_rpl(user.get_hostname(), "*", ERR_ERRONEUSNICKNAME);
-		reply = reply + user.get_nick() + " :Erroneus nickname\r\n";
-	 	user.set_buffer(reply);
-	}
-	send_msg_one_user(user.get_fd(), user);
+		send_numeric(user, ERR_NICKNAMEINUSE, "%s :Nickname in use", user.get_nick().c_str());
+	// else if (user.error_flag == 3)
+	// {
+	// 	reply = client_rpl(user.get_hostname(), "*", ERR_ERRONEUSNICKNAME);
+	// 	reply = reply + user.get_nick() + " :Erroneus nickname\r\n";
+	//  	user.set_buffer(reply);
+	// }
 	user.error_flag = 0;
 }
 
@@ -262,41 +254,41 @@ int Server::fds_loop()
 
 	for (int i = 0; i < tmp; i++)
 	{
-		if (this->_fds[i].revents == NO_EVENTS)
+		if (_fds[i].revents == NO_EVENTS)
 			continue;
 		if (!(_fds[i].revents & POLLIN) && !(_fds[i].revents & POLLOUT))
 		{
 			std::cout << _fds[i].revents << std::endl;
 			print_error("Error revents");
 		}
-		if (this->_fds[i].fd == this->_fds[0].fd)
-			this->connect_client();
+		if (_fds[i].fd == _fds[0].fd)
+			connect_client();
 		else
 		{
-			User &user = this->_clients.at(this->_fds[i].fd);
-			if (this->_fds[i].revents & POLLIN)
+			User &user = _clients.at(this->_fds[i].fd);
+			if (_fds[i].revents & POLLIN)
 			{
 				if (this->receive_msg(user))
-					return(1);
-				this->_fds[i].events |= POLLOUT;
+					continue;
+				_fds[i].events |= POLLOUT;
 			}
-			else if (this->_fds[i].revents & POLLOUT)
+			else if (_fds[i].revents & POLLOUT)
 			{
-				if(this->handle_commands(user))
+				if(handle_commands(user))
 					return(0);
+				user.erase_buffer();
 				if (user.error_flag == 0 && !(user.get_username()).empty())
 					user.set_auth(false);
 				else
 				{
 					if (user.error_flag != 0)
 						send_error(user);
-					this->_fds[i].events = POLLIN;
+					_fds[i].events = POLLIN;
 					return(1);
 				}
 				if (user.get_auth() == false && user.welcome_flag == false)
 					welcome_make_msg(user);
-				// user.erase_buffer();
-				this->_fds[i].events = POLLIN;
+				_fds[i].events = POLLIN;
 			}
 		}
 	}

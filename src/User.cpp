@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 12:36:52 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/07 14:14:04 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void User::set_hostname(const std::string &hostname)
 
 void User::set_buffer(const std::string &buffer)
 {
-	this->_buffer = buffer;
+	_buffer += buffer;
 }
 
 void User::set_password(const std::string &password)
@@ -106,14 +106,14 @@ void User::set_realname(const std::string &realname)
 void User::set_auth(const bool &status)
 {
 	
-	this->_auth = status;
+	_auth = status;
 }
 
 /* -------------------------------------- */
 
 void User::erase_buffer()
 {
-	this->_buffer.erase();
+	this->_buffer.clear();
 }
 
 void User::make_msg(const std::string &command, const std::vector<std::string> &params)
