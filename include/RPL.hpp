@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 11:54:42 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/08 18:19:35 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@
 /* ERR_ make_msgs*/
 #define ERR_NOSUCHNICK			"401"
 #define ERR_NOSUCHCHANNEL		"403"
+#define ERR_UNKOWNCOMMAND		"421"
 #define ERR_NOMOTD				"422"
 #define ERR_ERRONEUSNICKNAME	"432" 
 #define ERR_NICKNAMEINUSE		"433"
@@ -49,6 +50,7 @@
 #define ERR_USERONCHANNEL		"443"
 #define ERR_NOTREGISTERED		"451"
 #define ERR_NOTONCHANNEL		"442"
+#define ERR_NEEDMOREPARAMS		"461"
 #define ERR_ALREADYREGISTERED	"462"
 #define ERR_PASSWDMISMATCH		"464"
 #define ERR_CHANOPRIVSNEEDED	"482"

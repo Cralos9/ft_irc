@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:19:35 by rumachad          #+#    #+#             */
-/*   Updated: 2024/10/29 14:13:27 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:16:42 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
    The <mask> passed to WHO is matched against users' host, server, real
    name and nickname if the channel <mask> cannot be found.
  */
-Who::Who(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+Who::Who(Server &server) : ACommand(server, false, 0)
 {
 	/*	std::cout << "Who constructor" << std::endl; */
 }

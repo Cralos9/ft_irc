@@ -12,7 +12,8 @@
 
 #include "Commands.hpp"
 
-ACommand::ACommand(Server &server, bool usable_pre_reg) : _user(NULL), _server(server), _usable_pre_reg(usable_pre_reg)
+ACommand::ACommand(Server &server, bool usable_pre_reg, const size_t min_params)
+	: _user(NULL), _server(server), _usable_pre_reg(usable_pre_reg), _min_params(min_params)
 {
 /* 	std::cout << "ACommands Constructor" << std::endl; */
 }
@@ -24,22 +25,31 @@ ACommand::~ACommand()
 
 void ACommand::set_args(std::vector<std::string> args)
 {
-	args.erase(args.begin());
 	_args = args;
 }
 
 void ACommand::set_user(User *user) 
 {
-	this->_user = user;
+	_user = user;
 }
 
-void ACommand::check()
+int ACommand::check()
 {
+	const std::string command_name = _args[0];
+	_args.erase(_args.begin());
+
 	if (_user->get_auth() == true && !_usable_pre_reg)
 	{
-		/* Need to change the throw */
-		throw (std::range_error("Test"));
+		_server.send_numeric(*_user, ERR_NOTREGISTERED, ":You have not registered");
+		return (1);
 	}
+	if (_args.size() < _min_params)
+	{
+		_server.send_numeric(*_user, ERR_NEEDMOREPARAMS, "%s :Not enough parameters",
+								command_name.c_str());
+		return (1);
+	}
+	return (0);
 }
 
 /* Split the buffer into tokens

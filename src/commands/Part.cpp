@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:38:31 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 15:45:17 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:14:12 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Part::Part(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+Part::Part(Server &server) : ACommand(server, false, 2)
 {
 /* 	std::cout << "Part Server Constructor" << std::endl; */
 }

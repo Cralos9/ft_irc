@@ -12,7 +12,7 @@
 
 #include "Commands.hpp"
 
-UserCMD::UserCMD(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+UserCMD::UserCMD(Server &server) : ACommand(server, true, 4)
 {
 /* 	std::cout << "User constructor" << std::endl; */
 }

@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:18 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 12:40:31 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:36:22 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Topic::Topic(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+Topic::Topic(Server &server) : ACommand(server, false, 1)
 {
 /* 	std::cout << "Topic Server Constructor" << std::endl;
  */}
