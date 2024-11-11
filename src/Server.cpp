@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 12:20:03 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/11 12:32:16 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 
 void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
+	std::cout << "Message :";
 	print(msg_sender.get_buffer());
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
 }
