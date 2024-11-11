@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 10:33:09 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/07 12:17:15 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:34:23 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Pass::Pass(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+Pass::Pass(Server &server) : ACommand(server, true, 1)
 {
 /* 	std::cout << "Pass constructor" << std::endl; */
 }

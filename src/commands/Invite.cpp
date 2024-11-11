@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/11/07 12:38:33 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:00:32 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
    are allowed to invite other users.  When the channel has invite-only
    flag set, only channel operators may issue INVITE command. */
 
-Invite::Invite(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+Invite::Invite(Server &server) : ACommand(server, false, 2)
 {
 /* 	std::cout << "Invite Server Constructor" << std::endl; */
 }

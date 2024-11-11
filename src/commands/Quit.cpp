@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:40 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 15:38:25 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/08 18:47:05 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Quit::Quit(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+Quit::Quit(Server &server) : ACommand(server, false, 1)
 {
 /* 	std::cout << "Quit constructor" << std::endl; */
 }

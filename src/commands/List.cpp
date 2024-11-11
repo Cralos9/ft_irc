@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:08:45 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 12:02:29 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:18:11 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-List::List(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+List::List(Server &server) : ACommand(server, false, 0)
 {
 /* 	std::cout << "List Server Constructor" << std::endl; */
 }

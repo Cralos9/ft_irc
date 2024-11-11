@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:15:15 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 12:38:19 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:17:42 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Kick::Kick(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+Kick::Kick(Server &server) : ACommand(server, false, 2)
 {
 /* 	std::cout << "Kick constructor" << std::endl; */
 }

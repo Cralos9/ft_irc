@@ -6,13 +6,13 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/11 13:06:00 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/11 13:14:41 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Join::Join(Server &server, bool usable_pre_reg) : ACommand(server, usable_pre_reg)
+Join::Join(Server &server) : ACommand(server, false, 1)
 {
 /* 	std::cout << "Join Server Constructor" << std::endl; */
 }
