@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/11 13:14:29 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/12 10:38:36 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,12 +322,13 @@ int Server::main_loop()
 int Server::handle_commands(User &user)
 {
 	std::vector<std::string> lines = split_lines(user.get_buffer());
+	std::string cmd;
 
 	for(std::vector<std::string>::iterator it = lines.begin(); it != lines.end(); it++)
 	{
 		std::vector<std::string> split = parse_split(*it);
+		cmd = split[0];
 		std::map<std::string, ACommand *>::iterator it_cmd = _commands.find(split[0]);
-		
 		if (it_cmd == _commands.end())
 		{
 			send_numeric(user, ERR_UNKOWNCOMMAND, "%s :Unknown Command", split[0].c_str());
@@ -335,6 +336,8 @@ int Server::handle_commands(User &user)
 		}
 		process_command(it_cmd->second, user, split);
 	}
+	if (cmd == "QUIT")
+		return(1);
 	return(0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 17:03:46 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/12 14:30:37 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,26 @@ int Mode::run()
 	}
 
 	/* Target User from the command */
-	target = ch->get_user(_args[2]);
-	if (target == NULL)
-	{
-		_server.send_numeric(*_user, ERR_NOSUCHNICK, "%s :No such nick",
-								target->get_nick().c_str());
-		return (1);
-	}
+	
 	if (pos != std::string::npos && buffer[pos + 1] == 'o')
 	{
+		target = ch->get_user(_args[2]);
+		if (target == NULL)
+		{
+			_server.send_numeric(*_user, ERR_NOSUCHNICK, "%s :No such nick",
+									_args[2].c_str());
+			return (1);
+		}
 		ch->change_user_it(*target, buffer[pos]);
 		_user->make_msg("MODE", _args);
 		_server.send_msg_to_channel(*ch, *_user, CHSELF);
+	}
+	else if (pos != std::string::npos && buffer[pos + 1] == 'l')
+	{
+		if (buffer[pos] == '-')
+			ch->set_user_limit(50);
+		else
+			ch->set_user_limit(std::atoi(_args[2].c_str()));
 	}
 	return (0);
 }

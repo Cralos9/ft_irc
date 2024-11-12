@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 12:14:06 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/12 14:18:14 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ class Channel
 		void set_admin(const std::string &admin);
 		void set_user(const std::string &user);
 		void set_topic(const std::string &topic);
+		void set_user_limit(int limit);
 
 		/* Getters */
 		const std::string &get_topic() const;
@@ -43,6 +44,7 @@ class Channel
 		const std::string get_user_size() const;
 		const std::map<User *, int> &get_users() const;
 
+		size_t	 get_user_limit();
 		User *get_user(const std::string &username);
 		User *get_op_user(const std::string &username);
 		void add_user(User &user);
@@ -50,7 +52,9 @@ class Channel
 		void change_user_it(User &user, char sig);
 		bool is_user_OP(User &user);
 		bool is_user_on_ch(User &user);
+
 private:
+		int _user_limit;
 		std::string _topic;
 		std::map<User*, int> _user_map;
 		std::string all_users;

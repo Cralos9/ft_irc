@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/11 13:14:41 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/12 14:28:15 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,16 @@ int Join::run()
 		Channel *ch = _server.check_channel(_args[0]);
 		if (ch == NULL)
 			ch = _server.create_channel(channel);
-		ch->add_user(*_user);
-		_server.send_msg_to_channel(*ch, *_user, CHSELF);
+		if (ch->get_users().size() < ch->get_user_limit())
+		{
+			ch->add_user(*_user);
+			_server.send_msg_to_channel(*ch, *_user, CHSELF);
+		}
+		else
+		{
+			_server.send_numeric(*_user, "471", "%s :Cannot join channel (+l)",
+								_args[0].c_str());
+		}
 	}
 	return (0);
 }

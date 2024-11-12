@@ -23,7 +23,7 @@ Channel::~Channel()
 /* 	std::cout << "Channel Destructor" << std::endl; */
 }
 
-Channel::Channel(const std::string &name) : _name(name)
+Channel::Channel(const std::string &name) : _user_limit(50) ,_name(name)
 {
 /* 	std::cout << "Channel Name constructor" << std::endl; */
 }
@@ -52,6 +52,11 @@ void Channel::set_topic(const std::string &topic)
 	this->_topic = topic;
 }
 
+void Channel::set_user_limit(int limit)
+{
+	_user_limit = limit;
+}
+
 /* Getters */
 const std::string &Channel::get_name() const
 {
@@ -78,6 +83,11 @@ const std::string &Channel::get_topic() const
 const std::map<User *, int> &Channel::get_users() const
 {
 	return (_user_map);
+}
+
+size_t	Channel::get_user_limit()
+{
+	return(_user_limit);
 }
 
 /* Utility Functions */
