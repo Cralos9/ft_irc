@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/13 14:28:45 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:33:40 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,13 @@ int Mode::run()
 			ch->set_user_limit(50);
 		else
 			ch->set_user_limit(std::atoi(_args[2].c_str()));
+	}
+	else if(pos != std::string::npos && buffer[pos + 1] == 'k')
+	{
+		if (buffer[pos] == '-')
+			ch->set_ch_password("");
+		else
+			ch->set_ch_password(_args[2]);
 	}
 	_user->make_msg("MODE", _args);
 	_server.send_msg_to_channel(*ch, *_user, CHSELF);

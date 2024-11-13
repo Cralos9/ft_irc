@@ -23,7 +23,7 @@ Channel::~Channel()
 /* 	std::cout << "Channel Destructor" << std::endl; */
 }
 
-Channel::Channel(const std::string &name) : _user_limit(50) ,_name(name)
+Channel::Channel(const std::string &name) : _password(""), _user_limit(50), _name(name)
 {
 /* 	std::cout << "Channel Name constructor" << std::endl; */
 }
@@ -57,7 +57,18 @@ void Channel::set_user_limit(int limit)
 	_user_limit = limit;
 }
 
+void Channel::set_ch_password(std::string pass)
+{
+	_password = pass;
+}
+
 /* Getters */
+
+std::string Channel::get_ch_password()
+{
+	return(_password);
+}
+
 const std::string &Channel::get_name() const
 {
 	return(this->_name);

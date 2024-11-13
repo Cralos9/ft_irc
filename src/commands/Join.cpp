@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/13 12:25:43 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:19:38 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ int Join::run()
 {
 	const std::string channel = _args[0];
 	std::vector<std::string> splited_ch;
-	
+	if (_args.size() == 1)
+		_args[1] = "";
 	if (channel[0] != '#')
 	{
 		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
@@ -74,14 +75,17 @@ int Join::run()
 			ch = _server.create_channel(channel);
 		if (ch->get_users().size() < ch->get_user_limit())
 		{
-			ch->add_user(*_user);
-			_user->make_msg("JOIN", _args);
-			_server.send_msg_to_channel(*ch, *_user, CHSELF);
-			if (!ch->get_topic().empty())
-				_server.send_numeric(*_user, RPL_TOPIC, "%s :%s", ch->get_name().c_str(),
-								ch->get_topic().c_str());
-			_server.send_numeric(*_user, RPL_NAMREPLY, "= %s :%s", ch->get_name().c_str(),
-								users_from_channel(ch->get_users()).c_str());
+			if (ch->get_ch_password() == _args[1])
+			{
+				ch->add_user(*_user);
+				_user->make_msg("JOIN", _args);
+				_server.send_msg_to_channel(*ch, *_user, CHSELF);
+				if (!ch->get_topic().empty())
+					_server.send_numeric(*_user, RPL_TOPIC, "%s :%s", ch->get_name().c_str(),
+									ch->get_topic().c_str());
+				_server.send_numeric(*_user, RPL_NAMREPLY, "= %s :%s", ch->get_name().c_str(),
+									users_from_channel(ch->get_users()).c_str());
+			}
 		}
 		else
 		{
