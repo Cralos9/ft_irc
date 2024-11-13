@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/13 12:26:16 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/13 14:28:45 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int Mode::run()
 	std::string buffer = _user->get_buffer();
 	size_t pos = buffer.find_first_of("+-");
 
-	if (_args.size() == 1) /* Valgrind Error. Corrigir */
-		return (1);
 	ch = _server.check_channel(_args[0]);
 	if (ch == NULL)
 	{
@@ -38,12 +36,18 @@ int Mode::run()
 								_args[0].c_str());
 		return (1);
 	}
-	
+	if (_args.size() == 1)
+	{
+		_server.send_numeric(*_user, RPL_CHANNELMODEIS, "%s %s", ch->get_name().c_str(),
+								"+itkol");
+		return (0);
+	}
 	/* User who executed the command */
 	if (ch->is_user_OP(*_user) == false)
 	{
 		_server.send_numeric(*_user, ERR_CHANOPRIVSNEEDED, "%s :You're not the channel operator",
 								_args[0].c_str());
+		return (1);
 	}
 
 	/* Target User from the command */
@@ -58,8 +62,6 @@ int Mode::run()
 			return (1);
 		}
 		ch->change_user_it(*target, buffer[pos]);
-		_user->make_msg("MODE", _args);
-		_server.send_msg_to_channel(*ch, *_user, CHSELF);
 	}
 	else if (pos != std::string::npos && buffer[pos + 1] == 'l')
 	{
@@ -68,5 +70,7 @@ int Mode::run()
 		else
 			ch->set_user_limit(std::atoi(_args[2].c_str()));
 	}
+	_user->make_msg("MODE", _args);
+	_server.send_msg_to_channel(*ch, *_user, CHSELF);
 	return (0);
 }
