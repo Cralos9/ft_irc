@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 10:33:09 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 16:34:23 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:20:35 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int Pass::run()
 	else
 	{
 		std::cout << GREEN << "Password Accepted" << RESET << std::endl;
-		_user->set_auth(false);
 	}
 	return (0);
 }

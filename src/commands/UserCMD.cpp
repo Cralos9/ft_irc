@@ -31,6 +31,7 @@ int UserCMD::run()
 		_server.send_msg_one_user(_user->get_fd(), *_user);
 	} */
 	_user->set_username(_args[0]);
+	_args[3].erase(_args[3].begin());
 	_user->set_realname(_args[3]);
 	return (0);
 }

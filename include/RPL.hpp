@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 18:19:35 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/12 13:54:41 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #define RPL_WHOISUSER			"311"
 #define RPL_WHOISSERVER 		"312"
 #define RPL_WHOISOPERATOR		"313"
+#define RPL_ENDOFWHO			"315"
 #define RPL_ENDOFWHOIS			"318"
 #define RPL_WHOISCHANNELS 		"319"
 #define RPL_LISTSTART			"321"
@@ -35,6 +36,8 @@
 #define RPL_TOPIC				"332"
 #define RPL_INVITING			"341"
 #define RPL_WHOREPLY			"352"
+#define RPL_NAMREPLY			"353"
+#define RPL_ENDOFNAMES			"366"
 #define RPL_MOTD				"372"
 #define RPL_MOTDSTART			"375"
 #define RPL_ENDOFMOTD			"376"

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/12 14:30:37 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:26:16 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Mode::Mode(Server &server) : ACommand(server, false, 2)
+Mode::Mode(Server &server) : ACommand(server, false, 1)
 {
 /* 	std::cout << "Mode constructor" << std::endl; */
 }

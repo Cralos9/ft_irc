@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/07 14:14:04 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:38:26 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,4 +132,16 @@ std::ostream &operator<<(std::ostream &out, const User &user)
 		<< "PASS: " << user.get_password() << std::endl
 		<< "RealName: " << user.get_realname() << RESET << std::endl;
 	return (out);
+}
+
+bool User::is_registered()
+{
+	if (_nick.empty() || _realname.empty() || _username.empty() || _password.empty())
+		return (false);
+	return (true);
+}
+
+void User::erase_nick()
+{
+	_nick.clear();
 }

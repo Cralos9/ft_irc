@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 17:55:21 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:15:13 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ public:
 	static bool should_end;
 
 	bool		check_password(User &user);
-	void		welcome_make_msg(User &user);
+	void		welcome_burst(User &user);
 
 	bool		check_nickname(std::string &nickname);
 	void		get_hostname();
@@ -89,7 +89,7 @@ public:
 	void		delete_channel(Channel &channel);
 	std::string	_hostname;
 
-	std::map<int, User>		&get_all_clients();
+	const std::map<int, User> &get_all_clients() const;
 
 private:
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/12 14:18:14 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:23:11 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 // #define LEAVING 1
 // #define STAY 0
 
-typedef std::map<int, User>::iterator it_user;
+typedef std::map<User *, int>::iterator it_ch_users;
 
 class Channel
 {
@@ -29,6 +29,7 @@ class Channel
 		Channel();
 		~Channel();
 		Channel(const std::string &name);
+
 		
 		/* Settters */
 		void set_name(const std::string &name);

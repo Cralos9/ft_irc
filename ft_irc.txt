@@ -48,6 +48,7 @@ TODO
 
 - MODE Change the channel’s mode (i, t, k, l)
 - Verificar o numero de argumentos de cada comando
+- Sem nickname em certos comandos (Quit)
 
 Implementado
 

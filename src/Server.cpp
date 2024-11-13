@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/12 10:38:36 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:23:15 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_port = htons(port);
 	this->_commands["JOIN"] = new Join(*this);			//JOIN <channel>
-	this->_commands["who"] = new Who(*this);			//WHO <mask>
+	this->_commands["WHO"] = new Who(*this);			//WHO <mask>
 	this->_commands["MODE"] = new Mode(*this);			//MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
 	this->_commands["NICK"] = new Nick(*this);			//NICK <new_name>
 	this->_commands["QUIT"] = new Quit(*this);			//QUIT :<msg>
@@ -63,7 +63,6 @@ void Server::get_hostname()
 		_hostname = "localhost";
 		return;
 	}
-
 	std::string hostname;
 	std::getline(hostnameFile, hostname);
 	_hostname = hostname;
@@ -150,7 +149,8 @@ void Server::send_numeric(const User &user, const std::string &numeric,
 
 	std::va_list params;
 	va_start(params, msg);
-	for (std::string::const_iterator it = msg.begin(); it != msg.end(); it++) {
+	for (std::string::const_iterator it = msg.begin(); it != msg.end(); it++)
+	{
 		if (*it == '%')
 		{
 			rpl.append(va_arg(params, const char *));
@@ -192,21 +192,19 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 
 void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
-	std::cout << "Message :";
+/* 	std::cout << "Message :"; */
 	print(msg_sender.get_buffer());
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
 }
 
 bool	Server::check_password(User &user)
 {
-/* 	std::cout << RED << "Client Password:" << user.get_password() << std::endl;
-	std::cout << "Server Password:" << _password << RESET << std::endl; */
 	if (_password == user.get_password())
 		return true;
 	return false;
 }
 
-void Server::welcome_make_msg(User &user)
+void Server::welcome_burst(User &user)
 {
 	std::string time = std::asctime(std::localtime(&_server_creation_time));
 
@@ -217,11 +215,11 @@ void Server::welcome_make_msg(User &user)
 					user.get_hostname().c_str());
 	send_numeric(user, RPL_CREATED, ":This server was created %s", time.c_str());
 	send_numeric(user, RPL_MYINFO, "localhost v1.0 o iklt");
-	send_numeric(user, RPL_ISUPPORT, "CHANMODES=b,k,l,imnpst");
+	send_numeric(user, RPL_ISUPPORT, "CHANMODES=i,t,k,l,o");
 	send_numeric(user, RPL_MOTDSTART, ":- %s make_msg of the day -", _hostname.c_str());
 	send_numeric(user, RPL_MOTD, ":- Jose Figueiras is innocent 🇵🇹");
 	send_numeric(user, RPL_ENDOFMOTD, ":End of /MOTD");
-	user.welcome_flag = true;
+	user.set_auth(false);
 }
 
 bool Server::check_nickname(std::string &nickname)
@@ -230,22 +228,6 @@ bool Server::check_nickname(std::string &nickname)
 		if (it->second.get_nick() == nickname)
 			return(1);
 	return(0);
-}
-
-void Server::send_error(User &user)
-{
-	std::string reply;
-	if (user.error_flag == 1)
-		send_numeric(user, ERR_PASSWDMISMATCH, ":Password Incorrect");
-	else if (user.error_flag == 2)
-		send_numeric(user, ERR_NICKNAMEINUSE, "%s :Nickname in use", user.get_nick().c_str());
-	// else if (user.error_flag == 3)
-	// {
-	// 	reply = client_rpl(user.get_hostname(), "*", ERR_ERRONEUSNICKNAME);
-	// 	reply = reply + user.get_nick() + " :Erroneus nickname\r\n";
-	//  	user.set_buffer(reply);
-	// }
-	user.error_flag = 0;
 }
 
 int Server::fds_loop()
@@ -277,17 +259,8 @@ int Server::fds_loop()
 				if (handle_commands(user))
 					return(0);
 				user.erase_buffer();
-				if (user.error_flag == 0 && !(user.get_username()).empty())
-					user.set_auth(false);
-				else
-				{
-					if (user.error_flag != 0)
-						send_error(user);
-					_fds[i].events = POLLIN;
-					return(1);
-				}
-				if (user.get_auth() == false && user.welcome_flag == false)
-					welcome_make_msg(user);
+				if (user.get_auth() == true && user.is_registered())
+					welcome_burst(user);
 				_fds[i].events = POLLIN;
 			}
 		}
@@ -365,6 +338,8 @@ const std::string Server::channels_user_joined(User &user)
 		if (it->second.is_user_on_ch(user) == 1)
 			user_joined_ch.append(it->first + " ");
 	}
+	if (user_joined_ch.empty())
+		return ("*");
 	return (user_joined_ch);
 }
 
@@ -425,7 +400,7 @@ const std::map<std::string, Channel> &Server::get_channels() const
 	return (_channel_list);
 }
 
-std::map<int, User>& Server::get_all_clients()
+const std::map<int, User>& Server::get_all_clients() const
 {
 	return _clients;
 }
