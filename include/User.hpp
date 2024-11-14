@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/13 18:27:03 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/14 16:06:43 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class User
 		void erase_pass();
 		void erase_nick();
 		bool is_registered();
-		void make_msg(const std::string &command, const std::vector<std::string> &params);
+		void make_msg(const std::string &command, const std::deque<std::string> &params);
 		bool welcome_flag;
 		int error_flag;
 

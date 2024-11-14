@@ -23,7 +23,7 @@ ACommand::~ACommand()
 /* 	std::cout << "ACommand Destructor" << std::endl; */
 }
 
-void ACommand::set_args(std::vector<std::string> args)
+void ACommand::set_args(std::deque<std::string> args)
 {
 	_args = args;
 }
@@ -56,22 +56,22 @@ int ACommand::check()
 The 1 token is the Command Name
 The rest is params for the Command */
 
-std::vector<std::string> split_lines(const std::string &buffer)
+std::deque<std::string> split_lines(const std::string &buffer)
 {
 	std::istringstream iss(buffer);
 	std::string token;
-	std::vector<std::string> args;
+	std::deque<std::string> args;
 
 	while (std::getline(iss, token))
 		args.push_back(token);
 	return (args);
 }
 
-std::vector<std::string> parse_split(const std::string &buffer)
+std::deque<std::string> parse_split(const std::string &buffer)
 {
 	std::istringstream iss(buffer.substr(0, buffer.find('\r')));
 	std::string token;
-	std::vector<std::string> args;
+	std::deque<std::string> args;
 
 	if (buffer.find(':') != std::string::npos)
 		iss.str(buffer.substr(0, buffer.find(':') - 1));
