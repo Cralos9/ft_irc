@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/13 15:19:38 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/14 14:16:46 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ int Join::run()
 {
 	const std::string channel = _args[0];
 	std::vector<std::string> splited_ch;
-	if (_args.size() == 1)
-		_args[1] = "";
 	if (channel[0] != '#')
 	{
 		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
@@ -75,7 +73,7 @@ int Join::run()
 			ch = _server.create_channel(channel);
 		if (ch->get_users().size() < ch->get_user_limit())
 		{
-			if (ch->get_ch_password() == _args[1])
+			if ((ch->get_ch_password()).empty() || ch->get_ch_password() == _args[1])
 			{
 				ch->add_user(*_user);
 				_user->make_msg("JOIN", _args);

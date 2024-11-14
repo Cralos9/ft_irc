@@ -18,6 +18,7 @@
 # include "Server.hpp"
 # include "RPL.hpp"
 
+
 class Server;
 
 typedef std::map<int, User>::iterator it_user;
@@ -30,13 +31,13 @@ public:
 	virtual ~ACommand();
 
 	int check();
-	void set_args(std::vector<std::string> args);
+	void set_args(std::deque<std::string> args);
 	void set_user(User *user);
 	virtual int run() = 0;
 
 protected:
 
-	std::vector<std::string> _args;
+	std::deque<std::string> _args;
 	User *_user;
 	Server &_server;
 	bool _usable_pre_reg;
@@ -70,6 +71,7 @@ public:
 	Mode(Server &server);
 	~Mode();
 
+	void use_modes(char signal, char mode, std::string param, Channel *ch);
 	int run();
 };
 
@@ -192,7 +194,7 @@ public:
 	int run();
 };
 
-std::vector<std::string> parse_split(const std::string &buffer);
-std::vector<std::string> split_lines(const std::string &buffer);
+std::deque<std::string> parse_split(const std::string &buffer);
+std::deque<std::string> split_lines(const std::string &buffer);
 
 #endif

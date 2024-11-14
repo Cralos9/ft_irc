@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/13 12:23:15 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:15:31 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,12 +294,12 @@ int Server::main_loop()
 
 int Server::handle_commands(User &user)
 {
-	std::vector<std::string> lines = split_lines(user.get_buffer());
+	std::deque<std::string> lines = split_lines(user.get_buffer());
 	std::string cmd;
 
-	for(std::vector<std::string>::iterator it = lines.begin(); it != lines.end(); it++)
+	for(std::deque<std::string>::iterator it = lines.begin(); it != lines.end(); it++)
 	{
-		std::vector<std::string> split = parse_split(*it);
+		std::deque<std::string> split = parse_split(*it);
 		cmd = split[0];
 		std::map<std::string, ACommand *>::iterator it_cmd = _commands.find(split[0]);
 		if (it_cmd == _commands.end())
@@ -314,7 +314,7 @@ int Server::handle_commands(User &user)
 	return(0);
 }
 
-int Server::process_command(ACommand *command, User &user, std::vector<std::string> &split)
+int Server::process_command(ACommand *command, User &user, std::deque<std::string> &split)
 {
 	command->set_user(&user);
 	command->set_args(split);

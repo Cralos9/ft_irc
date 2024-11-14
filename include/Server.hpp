@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/12 16:15:13 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:14:43 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ public:
 	const std::map<std::string, Channel> &get_channels() const;
 
 	int 		handle_commands(User &user);
-	int			process_command(ACommand *command, User &user, std::vector<std::string> &split);
+	int			process_command(ACommand *command, User &user, std::deque<std::string> &split);
 	User 		*get_user(const std::string &nick);
 	
 	void		disconnect_user(User &user);

@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/13 14:39:55 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/13 16:34:32 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ class Channel
 		const std::string &get_admin() const;
 		const std::string get_user_size() const;
 		const std::map<User *, int> &get_users() const;
-
 		std::string get_ch_password();
 		size_t	 get_user_limit();
+
 		User *get_user(const std::string &username);
 		User *get_op_user(const std::string &username);
 		void add_user(User &user);
