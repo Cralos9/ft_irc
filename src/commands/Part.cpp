@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:38:31 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/08 16:14:12 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/14 14:55:03 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int Part::run()
 								_args[0].c_str());
         return (1);
     }
+
     if (!channel->is_user_on_ch(*_user))
     {
         _server.send_numeric(*_user, ERR_NOTONCHANNEL, "%s :You're not on that channel",

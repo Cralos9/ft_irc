@@ -24,12 +24,11 @@ UserCMD::~UserCMD()
 
 int UserCMD::run()
 {
-/* 	if (_user->get_auth())
+	if (_user->get_auth())
 	{
-		_user->set_buffer(client_rpl(_server._hostname, _user->get_nick(), ERR_ALREADYREGISTERED)
-							+ ":You may not register\r\n");
-		_server.send_msg_one_user(_user->get_fd(), *_user);
-	} */
+		_server.send_numeric(*_user, ERR_ALREADYREGISTERED, "* :You may not reregister");
+		return (0);
+	}
 	_user->set_username(_args[0]);
 	_args[3].erase(_args[3].begin());
 	_user->set_realname(_args[3]);

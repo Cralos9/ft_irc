@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/11 19:38:26 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/13 18:27:43 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,10 @@ void User::set_auth(const bool &status)
 
 /* -------------------------------------- */
 
+void User::erase_pass()
+{
+	_password.clear();
+}
 void User::erase_buffer()
 {
 	this->_buffer.clear();

@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 15:18:15 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 16:35:57 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:38:13 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,21 @@ int WhoIs::run()
 	}
 	else
 	{
-		/* RPL_WHOISUSER (311) */
 		_server.send_numeric(*_user, RPL_WHOISUSER, "%s %s %s * :%s", target->get_nick().c_str(),
 								target->get_username().c_str(), target->get_hostname().c_str(),
 								target->get_realname().c_str());
 
-		/* RPL_WHOISCHANNELS (319) */
+		_server.send_numeric(*_user, RPL_WHOISACTUALLY, "%s %s :Is actually using host",
+								_user->get_nick().c_str(), _user->get_hostname().c_str());
+
+		_server.send_numeric(*_user, RPL_WHOISSERVER, "%s %s :Vai Trabalhar",
+								target->get_nick().c_str(), SERVER_NAME);
+
 		const std::string &user_joined_ch = _server.channels_user_joined(*target);
 		if (!user_joined_ch.empty())
 			_server.send_numeric(*_user, RPL_WHOISCHANNELS, "%s :%s", target->get_nick().c_str(),
 									user_joined_ch.c_str());
 
-		/* RPL_WHOISSERVER (312) */
-		_server.send_numeric(*_user, RPL_WHOISSERVER, "%s %s :Vai Trabalhar",
-								target->get_nick().c_str(), SERVER_NAME);
 	}
 	/* RPL_ENDOFWHOIS (318) */
 	_server.send_numeric(*_user, RPL_ENDOFWHOIS, "%s :End of /WHOIS list", target->get_nick().c_str());

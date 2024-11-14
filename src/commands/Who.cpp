@@ -42,17 +42,18 @@ int Who::run()
 {
 	Channel *channel = NULL;
 	User *target = NULL;
+	std::string user_joined_ch;
 	
 	if (_args.empty()) // If mask empty list everyone in server
 	{
 		const std::map<int, User> &list = _server.get_all_clients();
 		for (std::map<int, User>::const_iterator it = list.begin(); it != list.end(); ++it)
 		{
+			user_joined_ch = _server.channels_user_joined(*_user);
 			_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s H :0 %s",
-						_server.channels_user_joined(*_user).c_str(),
-						target->get_username().c_str(), target->get_hostname().c_str(),
-						_server._hostname.c_str(), target->get_nick().c_str(),
-						target->get_realname().c_str());
+						user_joined_ch.c_str(), target->get_username().c_str(),
+						target->get_hostname().c_str(), _server._hostname.c_str(),
+						target->get_nick().c_str(), target->get_realname().c_str());
 		}
 	}
 
@@ -73,11 +74,11 @@ int Who::run()
 	}
 	else if (target != NULL)
 	{
+		user_joined_ch = _server.channels_user_joined(*_user);
 		_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s H :0 %s",
-						_server.channels_user_joined(*target).c_str(),
-						target->get_username().c_str(), target->get_hostname().c_str(),
-						_server._hostname.c_str(), target->get_nick().c_str(),
-						target->get_realname().c_str());
+						user_joined_ch.c_str(), target->get_username().c_str(),
+						target->get_hostname().c_str(), _server._hostname.c_str(),
+						target->get_nick().c_str(), target->get_realname().c_str());
 	}
 	// General end of WHO list
 	_server.send_numeric(*_user, RPL_ENDOFWHO, "%s :End of /WHO list.", _args[0].c_str());

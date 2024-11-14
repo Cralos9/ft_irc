@@ -73,7 +73,14 @@ std::vector<std::string> parse_split(const std::string &buffer)
 	std::string token;
 	std::vector<std::string> args;
 
+	if (buffer.find(':') != std::string::npos)
+		iss.str(buffer.substr(0, buffer.find(':') - 1));
+
 	while (std::getline(iss, token, ' '))
 		args.push_back(token);
+
+	if (buffer.find(':') != std::string::npos)
+		args.push_back(std::strchr(buffer.c_str(), ':'));
+
 	return (args);
 }

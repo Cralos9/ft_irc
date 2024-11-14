@@ -47,12 +47,14 @@ To safely manage shared resources like client_nicks and channels, especially in 
 TODO
 
 - MODE Change the channel’s mode (i, t, k, l)
-- Verificar o numero de argumentos de cada comando
-- Sem nickname em certos comandos (Quit)
+- Sem nickname em certos comandos (Quit, Register)
 
 Implementado
 
 - Nomes do Channel
+- Verificar o numero de argumentos de cada comando
 - Nicknames com caracteres invalidos
 - receive_msg aceita mensagens partidas ("Pass", "123")
 - Eliminar Channels com 0 users
+- Kick funciona so para operators
+- Username aceita espacos

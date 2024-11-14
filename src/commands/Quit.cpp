@@ -6,13 +6,13 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:40 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/08 18:47:05 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:42:42 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 
-Quit::Quit(Server &server) : ACommand(server, false, 1)
+Quit::Quit(Server &server) : ACommand(server, true, 1)
 {
 /* 	std::cout << "Quit constructor" << std::endl; */
 }

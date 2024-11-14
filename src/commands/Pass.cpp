@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 10:33:09 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/11 19:20:35 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/13 18:27:48 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int Pass::run()
 	if (!(_server.check_password(*_user)))
 	{
 		std::cout << RED << "Password Error" << RESET << std::endl;
-		_user->error_flag = 1;
+		_user->erase_pass();
 		return (1);
 	}
 	else

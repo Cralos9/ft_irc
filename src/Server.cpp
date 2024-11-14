@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/13 12:23:15 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:13:02 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,8 +338,6 @@ const std::string Server::channels_user_joined(User &user)
 		if (it->second.is_user_on_ch(user) == 1)
 			user_joined_ch.append(it->first + " ");
 	}
-	if (user_joined_ch.empty())
-		return ("*");
 	return (user_joined_ch);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/13 14:28:45 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/14 15:49:18 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int Mode::run()
 								"+itkol");
 		return (0);
 	}
+
 	/* User who executed the command */
 	if (ch->is_user_OP(*_user) == false)
 	{
