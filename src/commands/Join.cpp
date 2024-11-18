@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/18 13:19:51 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/18 16:54:46y rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,22 @@ Join::~Join()
 /* 	std::cout << "Join Destructor" << std::endl; */
 }
 
-std::vector<std::string> split_channel(const std::string& channels) 
+std::vector<std::pair<std::string, std::string> > split(const std::string& channels, const std::string &keys) 
 {
-    std::vector<std::string> splited_ch;
-    size_t start = 0;
-    size_t end = channels.find(',');
+	std::istringstream channel_iss(channels);
+	std::istringstream keys_iss(keys);
+	std::string channel;
+	std::string key;
+	std::vector<std::pair<std::string, std::string> > vec;
 
-    while (end != std::string::npos) 
+	while (std::getline(channel_iss, channel, ','))
 	{
-        splited_ch.push_back(channels.substr(start, end - start));
-        start = end + 1;
-        end = channels.find(',', start);
-    }
-    splited_ch.push_back(channels.substr(start));
-
-/* 	for(std::vector<std::string>::iterator it = splited_ch.begin(); it != splited_ch.end(); it++)
-		std::cout << *it << std::endl; */
-    return splited_ch;
+		std::getline(keys_iss, key, ',');
+		std::cout << YELLOW << "Channel: " << channel << RESET << std::endl;
+		std::cout << YELLOW << "Key: " << key << RESET << std::endl;
+		vec.push_back(std::make_pair(channel, key));
+	}
+	return (vec);
 }
 
 const std::string users_from_channel(const std::map<User *, int> &channel_users)
@@ -54,57 +53,77 @@ const std::string users_from_channel(const std::map<User *, int> &channel_users)
 	return (users);
 }
 
+void Join::join_channel(Channel *ch, std::deque<std::string> &params)
+{
+	ch->add_user(*_user);
+	_user->make_msg("JOIN", params);
+	_server.send_msg_to_channel(*ch, *_user, CHSELF);
+	if (!ch->get_topic().empty())
+		_server.send_numeric(*_user, RPL_TOPIC, "%s :%s", ch->get_name().c_str(),
+						ch->get_topic().c_str());
+	_server.send_numeric(*_user, RPL_NAMREPLY, "= %s :%s", ch->get_name().c_str(),
+						users_from_channel(ch->get_users()).c_str());
+	
+}
+
+int Join::can_join(Channel *ch, const std::string &password)
+{
+	const std::vector<std::string> &invited_channels = _user->get_invited_channels();
+
+	if (ch->get_users().size() > ch->get_user_limit())
+	{
+		_server.send_numeric(*_user, ERR_CHANNELISFULL, "%s :Cannot join channel (+l)",
+							_args[0].c_str());
+		return (false);
+	}
+	if (!ch->get_password().empty() && ch->get_password() != password)
+	{
+		_server.send_numeric(*_user, ERR_BADCHANNELKEY, "%s :Cannot join channel (+k)",
+						_args[0].c_str());
+		return (false);
+	}
+	if (ch->get_invite_mode() &&
+		std::find(invited_channels.begin(), invited_channels.end(), ch->get_name()) == invited_channels.end())
+	{
+		_server.send_numeric(*_user, ERR_INVITEONLYCHAN, "%s :Cannot join channel (+i)",
+					_args[0].c_str());
+		return (false);
+	}
+	return (true);
+}
+
 int Join::run()
 {
-	const std::string channel = _args[0];
-	std::vector<std::string> splited_ch;
-	std::vector<std::string> invited_channels = _user->get_invited_channels();
-	if (channel[0] != '#')
+	if (_args[0][0] != '#')
 	{
 		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
 								_args[0].c_str());
 		return(1);
 	}
-	splited_ch = split_channel(_args[0]);
-	for(std::vector<std::string>::iterator it = splited_ch.begin(); it != splited_ch.end(); it++)
+
+	std::deque<std::string> params(2);
+	std::vector<std::pair<std::string, std::string> > channels;
+
+	if (_args.size() != 2)
+		channels = split(_args[0], "");
+	else
+		channels = split(_args[0], _args[1]);
+
+	for (std::vector<std::pair<std::string, std::string> >::iterator it = channels.begin();
+			it != channels.end(); it++)
 	{
-		_args[0] = *it;
-		Channel *ch = _server.check_channel(_args[0]);
+		params[0] = it->first;
+		params[1] = it->second;
+		Channel *ch = _server.check_channel(it->first);
 		if (ch == NULL)
-			ch = _server.create_channel(channel);
-		if (ch->get_users().size() < ch->get_user_limit())
 		{
-			if ((ch->get_ch_password()).empty() || ch->get_ch_password() == _args[1])
-			{
-				if ((ch->get_invite_mode() && 
-					(std::find(invited_channels.begin(), invited_channels.end(), ch->get_name())) != invited_channels.end())
-						|| !ch->get_invite_mode())
-				{
-					ch->add_user(*_user);
-					_user->make_msg("JOIN", _args);
-					_server.send_msg_to_channel(*ch, *_user, CHSELF);
-					if (!ch->get_topic().empty())
-						_server.send_numeric(*_user, RPL_TOPIC, "%s :%s", ch->get_name().c_str(),
-										ch->get_topic().c_str());
-					_server.send_numeric(*_user, RPL_NAMREPLY, "= %s :%s", ch->get_name().c_str(),
-										users_from_channel(ch->get_users()).c_str());
-				}
-				else
-				{
-					_server.send_numeric(*_user, "473", "%s :Cannot join channel (+i)",
-								_args[0].c_str());
-				}
-			}
-			else
-			{
-				_server.send_numeric(*_user, "475", "%s :Cannot join channel (+k)",
-								_args[0].c_str());
-			}
+			ch = _server.create_channel(it->first);
+			join_channel(ch, params);
 		}
 		else
 		{
-			_server.send_numeric(*_user, "471", "%s :Cannot join channel (+l)",
-								_args[0].c_str());
+			if (can_join(ch, it->second))
+				join_channel(ch, params);
 		}
 	}
 	return (0);

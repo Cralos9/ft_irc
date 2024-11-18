@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:18 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/14 15:13:26 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/18 17:26:37 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,14 @@ int Topic::run()
 			_server.send_numeric(*_user, ERR_NOTONCHANNEL, "%s :You're not on thatchannel");
 			return (0);
 		}
-		if (ch->is_user_OP(*_user))
-		{
-			ch->set_topic(topic);
-			_user->make_msg("TOPIC", _args);
-		}
-		else
+		if (!ch->is_user_OP(*_user))
 		{
 			_server.send_numeric(*_user, ERR_CHANOPRIVSNEEDED,
 									"%s :You're not the channel operator", _args[0].c_str());
-			return(1);
+			return (0);
 		}
+		ch->set_topic(topic);
+		_user->make_msg("TOPIC", _args);
 	}
 	else
 	{

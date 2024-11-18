@@ -51,6 +51,8 @@ public:
 	Join(Server &server);
 	~Join();
 
+	void join_channel(Channel *ch, std::deque<std::string> &params);
+	int can_join(Channel *ch, const std::string &password);
 	int run();
 };
 

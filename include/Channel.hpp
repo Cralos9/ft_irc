@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/18 12:14:55 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/18 15:23:20 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class Channel
 		const std::string get_user_size() const;
 		const std::map<User *, int> &get_users() const;
 		bool	get_invite_mode();
-		std::string get_ch_password();
+		const std::string &get_password() const;
 		size_t	 get_user_limit();
 
 		User *get_user(const std::string &username);

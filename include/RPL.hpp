@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/14 16:06:40 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/18 15:31:30 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,9 @@
 #define ERR_NEEDMOREPARAMS		"461"
 #define ERR_ALREADYREGISTERED	"462"
 #define ERR_PASSWDMISMATCH		"464"
+#define ERR_CHANNELISFULL		"471"
+#define ERR_INVITEONLYCHAN		"473"
+#define ERR_BADCHANNELKEY		"475"
 #define ERR_CHANOPRIVSNEEDED	"482"
 
 const std::string client_rpl(const std::string &hostname, const std::string &nickname

@@ -69,7 +69,7 @@ void Channel::set_invite_mode(bool invite_mode)
 
 /* Getters */
 
-std::string Channel::get_ch_password()
+const std::string &Channel::get_password() const
 {
 	return(_password);
 }
