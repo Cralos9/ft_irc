@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/11/08 16:00:32 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/18 13:15:11 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int Invite::run()
 			_user->make_msg("INVITE", _args);
 			_server.print(_user->get_buffer());
 			_server.send_msg_one_user(invited->get_fd(), *_user);
+			invited->get_invited_channels().push_back(ch->get_name());
 		}
 	}
 	return EXIT_SUCCESS;

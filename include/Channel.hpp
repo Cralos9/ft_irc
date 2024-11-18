@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/13 16:34:32 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/18 12:14:55 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class Channel
 		void set_topic(const std::string &topic);
 		void set_user_limit(int limit);
 		void set_ch_password(std::string pass);
+		void set_invite_mode(bool invite_mode);
 
 		/* Getters */
 		const std::string &get_topic() const;
@@ -45,6 +46,7 @@ class Channel
 		const std::string &get_admin() const;
 		const std::string get_user_size() const;
 		const std::map<User *, int> &get_users() const;
+		bool	get_invite_mode();
 		std::string get_ch_password();
 		size_t	 get_user_limit();
 
@@ -66,6 +68,7 @@ private:
 		std::string _name;
 		std::string _admin;
 		std::string _users;
+		bool 		_invite_mode;
 
 };
 

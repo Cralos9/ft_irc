@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/14 16:06:52 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/18 14:11:29 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,14 @@ void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 		else
 			ch->set_ch_password(param);
 	}
+	else if (mode == 'i')
+	{
+		if (signal == '-')
+			ch->set_invite_mode(0);
+		else
+			ch->set_invite_mode(1);
+		_server.send_msg_to_channel(*ch, *_user, CHSELF);
+	}
 }
 
 int Mode::run()
@@ -84,7 +92,7 @@ int Mode::run()
 	for(std::deque<std::string>::iterator it = _args.begin(); it != _args.end(); it++)
 		std::cout << *it << std::endl;
 	size_t pos = _args[1].find_first_of("+-");
-	/* Target User from the command */
+
 	if (pos != std::string::npos)
 	{
 		size_t j = 1;
@@ -101,6 +109,16 @@ int Mode::run()
 				_args[j + 1] = "";
 			}
 			use_modes(_args[1][pos], _args[1][i], _args[j + 1], ch);
+			if (_args[1][i] == 'i')
+			{
+				std::deque<std::string> invite;
+				invite.push_back(ch->get_name());
+				invite.push_back(std::string(1, _args[1][pos]) + "i");
+				_user->make_msg("MODE", invite);
+				_server.send_msg_to_channel(*ch, *_user, CHSELF);
+				_args[1].erase(i--, 1);
+				continue;
+			}
 			j++;
 		}
 	}

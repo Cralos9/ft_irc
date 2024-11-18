@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:19:28 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/14 14:16:46 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/18 13:19:51 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int Join::run()
 {
 	const std::string channel = _args[0];
 	std::vector<std::string> splited_ch;
+	std::vector<std::string> invited_channels = _user->get_invited_channels();
 	if (channel[0] != '#')
 	{
 		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
@@ -75,14 +76,29 @@ int Join::run()
 		{
 			if ((ch->get_ch_password()).empty() || ch->get_ch_password() == _args[1])
 			{
-				ch->add_user(*_user);
-				_user->make_msg("JOIN", _args);
-				_server.send_msg_to_channel(*ch, *_user, CHSELF);
-				if (!ch->get_topic().empty())
-					_server.send_numeric(*_user, RPL_TOPIC, "%s :%s", ch->get_name().c_str(),
-									ch->get_topic().c_str());
-				_server.send_numeric(*_user, RPL_NAMREPLY, "= %s :%s", ch->get_name().c_str(),
-									users_from_channel(ch->get_users()).c_str());
+				if ((ch->get_invite_mode() && 
+					(std::find(invited_channels.begin(), invited_channels.end(), ch->get_name())) != invited_channels.end())
+						|| !ch->get_invite_mode())
+				{
+					ch->add_user(*_user);
+					_user->make_msg("JOIN", _args);
+					_server.send_msg_to_channel(*ch, *_user, CHSELF);
+					if (!ch->get_topic().empty())
+						_server.send_numeric(*_user, RPL_TOPIC, "%s :%s", ch->get_name().c_str(),
+										ch->get_topic().c_str());
+					_server.send_numeric(*_user, RPL_NAMREPLY, "= %s :%s", ch->get_name().c_str(),
+										users_from_channel(ch->get_users()).c_str());
+				}
+				else
+				{
+					_server.send_numeric(*_user, "473", "%s :Cannot join channel (+i)",
+								_args[0].c_str());
+				}
+			}
+			else
+			{
+				_server.send_numeric(*_user, "475", "%s :Cannot join channel (+k)",
+								_args[0].c_str());
 			}
 		}
 		else

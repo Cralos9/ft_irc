@@ -23,7 +23,7 @@ Channel::~Channel()
 /* 	std::cout << "Channel Destructor" << std::endl; */
 }
 
-Channel::Channel(const std::string &name) : _password(""), _user_limit(50), _name(name)
+Channel::Channel(const std::string &name) : _password(""), _user_limit(50), _name(name), _invite_mode(0)
 {
 /* 	std::cout << "Channel Name constructor" << std::endl; */
 }
@@ -62,6 +62,11 @@ void Channel::set_ch_password(std::string pass)
 	_password = pass;
 }
 
+void Channel::set_invite_mode(bool invite_mode)
+{
+	_invite_mode = invite_mode;
+}
+
 /* Getters */
 
 std::string Channel::get_ch_password()
@@ -94,6 +99,11 @@ const std::string &Channel::get_topic() const
 const std::map<User *, int> &Channel::get_users() const
 {
 	return (_user_map);
+}
+
+bool Channel::get_invite_mode()
+{
+	return(_invite_mode);
 }
 
 size_t	Channel::get_user_limit()

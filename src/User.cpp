@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/14 16:06:49 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/18 13:28:46 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,12 @@ void User::make_msg(const std::string &command, const std::deque<std::string> &p
 		_buffer.append(*it + ' ');
 	}
 	_buffer.append("\r\n");
+}
+
+
+std::vector<std::string> &User::get_invited_channels()
+{
+	return(_invited_channels);
 }
 
 std::ostream &operator<<(std::ostream &out, const User &user)

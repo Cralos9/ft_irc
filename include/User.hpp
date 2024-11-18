@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/14 16:06:43 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/18 12:29:29 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class User
 		const std::string &get_hostname() const;
 		const std::string &get_password() const;
 		const std::string &get_realname() const;
+		std::vector<std::string> &get_invited_channels();
 		bool get_auth() const;
 
 		void erase_buffer();
@@ -51,6 +52,7 @@ class User
 		int error_flag;
 
 	private:
+
 		int _fd;
 		std::string _username;
 		std::string _realname;
@@ -58,6 +60,7 @@ class User
 		std::string _hostname;
 		std::string _buffer;
 		std::string _password;
+		std::vector<std::string> _invited_channels;
 		bool _auth;
 };
 
