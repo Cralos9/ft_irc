@@ -24,7 +24,7 @@ UserCMD::~UserCMD()
 
 int UserCMD::run()
 {
-	if (_user->get_auth())
+	if (!_user->get_auth())
 	{
 		_server.send_numeric(*_user, ERR_ALREADYREGISTERED, "* :You may not reregister");
 		return (0);
