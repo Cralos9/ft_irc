@@ -41,27 +41,17 @@ int Topic::run()
 			_server.send_numeric(*_user, ERR_NOTONCHANNEL, "%s :You're not on that channel");
 			return (0);
 		}
-		if (ch->get_statusChannelOpPrivs() == true)
-		{
-			if (ch->is_user_OP(*_user))
-			{
-				ch->set_topic(topic);
-				_user->make_msg("TOPIC", _args);
-			}
-			else
-			{
-				_server.send_numeric(*_user, ERR_CHANOPRIVSNEEDED,
-										"%s :You're not the channel operator", _args[0].c_str());
-				return(1);
-			}
-		}
-		else if (ch->get_statusChannelOpPrivs() == false)
+		if (ch->get_statusTopicRestrictions() == false || ch->is_user_OP(*_user))
 		{
 			ch->set_topic(topic);
 			_user->make_msg("TOPIC", _args);
 		}
-		ch->set_topic(topic);
-		_user->make_msg("TOPIC", _args);
+		if (ch->get_statusTopicRestrictions() == true && !ch->is_user_OP(*_user))
+		{
+			_server.send_numeric(*_user, ERR_CHANOPRIVSNEEDED,
+										"%s :You're not the channel operator", _args[0].c_str());
+			return(EXIT_FAILURE);
+		}
 	}
 	else
 	{

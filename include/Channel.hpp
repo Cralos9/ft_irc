@@ -63,7 +63,7 @@ class Channel
 		User *get_op_user(const std::string &username);
 		void add_user(User &user);
 		void delete_user(User &del_user);
-		void change_user_it(User &user, char sig);
+		void change_userPrivs(User &user, char sig);
 		bool is_user_OP(User &user);
 		bool is_user_on_ch(User &user);
 		bool get_activeModes(std::string &msg);

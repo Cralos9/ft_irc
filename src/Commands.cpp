@@ -37,7 +37,7 @@ int ACommand::check()
 {
 	if (_user->get_auth() == true && !_usable_pre_reg)
 	{
-		_server.send_numeric(*_user, ERR_NOTREGISTERED, "* :You have not registered");
+		_server.send_numeric(*_user, ERR_NOTREGISTERED, ":You have not registered");
 		return (1);
 	}
 	if (_args.size() < _min_params)

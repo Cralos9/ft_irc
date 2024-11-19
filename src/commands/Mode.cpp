@@ -27,7 +27,7 @@ Mode::~Mode()
 void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 {
 	User *target = NULL;
-	if (mode == 'o') //#TODO Nao esta finalizado. Qd se retira o op use continua alterar topic
+	if (mode == 'o')
 	{
 		target = ch->get_user(param);
 		if (target == NULL)
@@ -36,7 +36,7 @@ void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 									param.c_str());
 			return ;
 		}
-		ch->change_user_it(*target, signal);
+		ch->change_userPrivs(*target, signal);
 	}
 	else if (mode == 'l')
 	{
@@ -67,7 +67,7 @@ void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 			ch->set_statusChannelKey(true);
 		}
 	}
-	else if (mode == 'i') //#TODO Nao esta finalizado (falta _statusInviteOnly)
+	else if (mode == 'i')
 	{
 		if (signal == '-')
 			ch->set_statusInviteOnly(false);
@@ -78,9 +78,9 @@ void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 	else if (mode == 't')
 	{
 		if (signal == '-')
-			ch->set_statusChannelOpPrivs(false);
+			ch->set_statusTopicRestrictions(false);
 		else if (signal == '+')
-			ch->set_statusChannelOpPrivs(true);
+			ch->set_statusTopicRestrictions(true);
 		_server.send_msg_to_channel(*ch, *_user, CHSELF);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/12 17:35:43 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:58:40 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ int Nick::run()
 	{
 		if (_user->get_auth())
 		{
-			_user->set_nick(nick);
 			_server.send_numeric(*_user, ERR_ERRONEUSNICKNAME, "%s :Erroneus nickname", nick.c_str());
-			_user->erase_nick();
 		}
 		else
 			_server.send_numeric(*_user, ERR_ERRONEUSNICKNAME, "%s :Erroneus nickname", nick.c_str());
@@ -40,11 +38,7 @@ int Nick::run()
 	else if (_server.check_nickname(nick))
 	{
 		if (_user->get_auth())
-		{
-			_user->set_nick(nick);
 			_server.send_numeric(*_user, ERR_NICKNAMEINUSE, "%s :Nickname already in use", nick.c_str());
-			_user->erase_nick();
-		}
 		else
 			_server.send_numeric(*_user, ERR_NICKNAMEINUSE, "%s :Nickname already in use", nick.c_str());
 		return(1);
