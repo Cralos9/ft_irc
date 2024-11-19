@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/20 12:09:20 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:18:30 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ Server::~Server()
 }
 
 /* -------------------------------------------- */
+
+const std::string &Server::get_password() const
+{
+	return (_password);
+}
 
 void Server::get_hostname()
 {
@@ -196,16 +201,8 @@ void Server::send_msg_to_channel(const Channel &ch, const User &msg_sender, cons
 
 void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 {
-/* 	std::cout << "Message :"; */
 	print(msg_sender.get_buffer());
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
-}
-
-bool	Server::check_password(User &user)
-{
-	if (_password == user.get_password())
-		return true;
-	return false;
 }
 
 void Server::welcome_burst(User &user)
@@ -270,16 +267,16 @@ int Server::fds_loop()
 			User &user = _clients.at(this->_fds[i].fd);
 			if (_fds[i].revents & POLLIN)
 			{
-				if (this->receive_msg(user))
+				if (receive_msg(user))
 					continue;
 				_fds[i].events |= POLLOUT;
 			}
 			else if (_fds[i].revents & POLLOUT)
 			{
 				if (handle_commands(user))
-					return(0);
+					return (0);
 				user.erase_buffer();
-				if (user.get_auth() == true && user.is_registered())
+				if (user.get_auth() && user.is_registered())
 					welcome_burst(user);
 				_fds[i].events = POLLIN;
 			}

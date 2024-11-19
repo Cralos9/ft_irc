@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/20 12:09:23 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:18:45 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,13 +111,9 @@ void User::set_auth(const bool &status)
 
 /* -------------------------------------- */
 
-void User::erase_pass()
-{
-	_password.clear();
-}
 void User::erase_buffer()
 {
-	this->_buffer.clear();
+	_buffer.clear();
 }
 
 void User::make_msg(const std::string &command, const std::deque<std::string> &params)
@@ -156,9 +152,4 @@ void User::elim_from_invited(std::string ch)
 	std::vector<std::string>::iterator it = std::find(_invited_channels.begin(), _invited_channels.end(), ch);
 	if (it != _invited_channels.end())
 		_invited_channels.erase(it);
-}
-
-void User::erase_nick()
-{
-	_nick.clear();
 }

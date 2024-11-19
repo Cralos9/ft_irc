@@ -240,8 +240,6 @@ bool Channel::get_activeModes(std::string &msg)
 		msg.append("t");
 	if (get_statusChannelKey())
 		msg.append("k");
-	if (get_statusChannelOpPrivs())
-		msg.append("o");
 	if (get_statusUserLimit())
 		msg.append("l");
 	if (msg.empty())

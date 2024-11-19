@@ -35,6 +35,8 @@ void ACommand::set_user(User *user)
 
 int ACommand::check()
 {
+	_args.erase(_args.begin());
+
 	if (_user->get_auth() == true && !_usable_pre_reg)
 	{
 		_server.send_numeric(*_user, ERR_NOTREGISTERED, ":You have not registered");
@@ -46,7 +48,6 @@ int ACommand::check()
 								_args[0].c_str());
 		return (1);
 	}
-	_args.erase(_args.begin());
 	return (0);
 }
 

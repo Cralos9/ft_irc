@@ -61,7 +61,7 @@ void Join::join_channel(Channel *ch, std::deque<std::string> &params)
 						ch->get_topic().c_str());
 	_server.send_numeric(*_user, RPL_NAMREPLY, "= %s :%s", ch->get_name().c_str(),
 						users_from_channel(ch->get_users()).c_str());
-	
+	_server.send_numeric(*_user, RPL_ENDOFNAMES, "%s :End of /NAMES list", ch->get_name().c_str());
 }
 
 int Join::can_join(Channel *ch, const std::string &password)
@@ -71,20 +71,20 @@ int Join::can_join(Channel *ch, const std::string &password)
 	if (ch->get_users().size() >= ch->get_user_limit())
 	{
 		_server.send_numeric(*_user, ERR_CHANNELISFULL, "%s :Cannot join channel (+l)",
-							_args[0].c_str());
+							ch->get_name().c_str());
 		return (false);
 	}
 	if (!ch->get_password().empty() && ch->get_password() != password)
 	{
 		_server.send_numeric(*_user, ERR_BADCHANNELKEY, "%s :Cannot join channel (+k)",
-						_args[0].c_str());
+							ch->get_name().c_str());
 		return (false);
 	}
 	if (ch->get_statusInviteOnly() &&
 		std::find(invited_channels.begin(), invited_channels.end(), ch->get_name()) == invited_channels.end())
 	{
 		_server.send_numeric(*_user, ERR_INVITEONLYCHAN, "%s :Cannot join channel (+i)",
-					_args[0].c_str());
+							ch->get_name().c_str());
 		return (false);
 	}
 	_user->elim_from_invited(ch->get_name());

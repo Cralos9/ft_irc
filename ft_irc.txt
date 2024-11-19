@@ -46,7 +46,7 @@ To safely manage shared resources like client_nicks and channels, especially in 
 
 TODO
 
-	-Testar Ctrl+C no nc
+-Testar Ctrl+C no nc
 
 Implementado
 
@@ -57,3 +57,6 @@ Implementado
 - Eliminar Channels com 0 users
 - Kick funciona so para operators
 - Username aceita espacos
+- MODE Change the channel’s mode (i, t, k, l)
+- Sem nickname em certos comandos (Quit, Register)
+- TOPIC nao actualiza para outros users do channel
