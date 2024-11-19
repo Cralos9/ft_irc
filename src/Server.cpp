@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/18 14:12:31 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:46:15 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,12 @@ int Server::receive_msg(User &user)
 void Server::send_numeric(const User &user, const std::string &numeric,
 							const std::string msg, ...)
 {
-	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
+	std::string rpl;
+
+	if (!user.get_nick().empty())
+		rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
+	else
+		rpl = ":" + _hostname + " " + numeric + " * ";
 
 	std::va_list params;
 	va_start(params, msg);
