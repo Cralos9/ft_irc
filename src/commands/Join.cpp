@@ -22,7 +22,7 @@ Join::~Join()
 /* 	std::cout << "Join Destructor" << std::endl; */
 }
 
-std::vector<std::pair<std::string, std::string> > split(const std::string& channels, const std::string &keys) 
+std::vector<std::pair<std::string, std::string> > split_channel(const std::string &channels, const std::string &keys) 
 {
 	std::istringstream channel_iss(channels);
 	std::istringstream keys_iss(keys);
@@ -33,8 +33,6 @@ std::vector<std::pair<std::string, std::string> > split(const std::string& chann
 	while (std::getline(channel_iss, channel, ','))
 	{
 		std::getline(keys_iss, key, ',');
-		std::cout << YELLOW << "Channel: " << channel << RESET << std::endl;
-		std::cout << YELLOW << "Key: " << key << RESET << std::endl;
 		vec.push_back(std::make_pair(channel, key));
 	}
 	return (vec);
@@ -105,9 +103,9 @@ int Join::run()
 	std::vector<std::pair<std::string, std::string> > channels;
 
 	if (_args.size() != 2)
-		channels = split(_args[0], "");
+		channels = split_channel(_args[0], "");
 	else
-		channels = split(_args[0], _args[1]);
+		channels = split_channel(_args[0], _args[1]);
 
 	for (std::vector<std::pair<std::string, std::string> >::iterator it = channels.begin();
 			it != channels.end(); it++)
