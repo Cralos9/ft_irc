@@ -76,9 +76,9 @@ int Join::run()
 		{
 			if ((ch->get_ch_password()).empty() || ch->get_ch_password() == _args[1])
 			{
-				if ((ch->get_invite_mode() && 
+				if ((ch->get_statusInviteOnly() && 
 					(std::find(invited_channels.begin(), invited_channels.end(), ch->get_name())) != invited_channels.end())
-						|| !ch->get_invite_mode())
+						|| !ch->get_statusInviteOnly())
 				{
 					ch->add_user(*_user);
 					_user->make_msg("JOIN", _args);

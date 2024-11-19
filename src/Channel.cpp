@@ -23,8 +23,18 @@ Channel::~Channel()
 /* 	std::cout << "Channel Destructor" << std::endl; */
 }
 
-Channel::Channel(const std::string &name) : _password(""), _user_limit(50), _name(name), _invite_mode(0)
+Channel::Channel(const std::string &name)
 {
+	_password = "";
+	_user_limit = 50;
+	_name = name;
+
+	_statusInviteOnly = false; 			//i
+	_statusTopicRestrictions = true;	//t
+	_statusChannelKey = false;			//k
+	_statusChannelOpPrivs = true;		//o
+	_statusUserLimit = false;			//l
+	
 /* 	std::cout << "Channel Name constructor" << std::endl; */
 }
 
@@ -62,9 +72,29 @@ void Channel::set_ch_password(std::string pass)
 	_password = pass;
 }
 
-void Channel::set_invite_mode(bool invite_mode)
+void Channel::set_statusInviteOnly(const bool &status)
 {
-	_invite_mode = invite_mode;
+	_statusInviteOnly = status;
+}
+
+void Channel::set_statusTopicRestrictions(const bool &status)
+{
+	_statusTopicRestrictions = status;
+}
+
+void Channel::set_statusChannelKey(const bool &status)
+{
+	_statusChannelKey = status;
+}
+
+void Channel::set_statusChannelOpPrivs(const bool &status)
+{
+	_statusChannelOpPrivs = status;
+}
+
+void Channel::set_statusUserLimit(const bool &status)
+{
+	_statusUserLimit = status;
 }
 
 /* Getters */
@@ -101,15 +131,36 @@ const std::map<User *, int> &Channel::get_users() const
 	return (_user_map);
 }
 
-bool Channel::get_invite_mode()
-{
-	return(_invite_mode);
-}
-
 size_t	Channel::get_user_limit()
 {
 	return(_user_limit);
 }
+
+bool					Channel::get_statusInviteOnly () const
+{
+	return _statusInviteOnly;
+}
+
+bool					Channel::get_statusTopicRestrictions () const
+{
+	return _statusTopicRestrictions;
+}
+
+bool					Channel::get_statusChannelKey () const
+{
+	return _statusChannelKey;
+}
+
+bool					Channel::get_statusChannelOpPrivs () const
+{
+	return _statusChannelOpPrivs;
+}
+
+bool					Channel::get_statusUserLimit () const
+{
+	return _statusUserLimit;
+}
+
 
 /* Utility Functions */
 bool Channel::is_user_OP(User &user)
@@ -155,9 +206,15 @@ void Channel::change_user_it(User &user, char sig)
 	if (it == _user_map.end())
 		return ;
 	if (sig == '+')
+	{
 		it->second = OP;
+		set_statusChannelOpPrivs(true);
+	}
 	else if (sig == '-')
+	{
 		it->second = NOP;
+		set_statusChannelOpPrivs(false);
+	}
 }
 
 void Channel::delete_user(User &del_user)
@@ -171,4 +228,21 @@ void Channel::add_user(User &user)
 		this->_user_map[&user] = OP;
 	else
 		this->_user_map[&user] = NOP;
+}
+
+bool Channel::get_activeModes(std::string &msg)
+{
+	if (get_statusInviteOnly())
+		msg.append("i");
+	if (get_statusTopicRestrictions())
+		msg.append("t");
+	if (get_statusChannelKey())
+		msg.append("k");
+	if (get_statusChannelOpPrivs())
+		msg.append("o");
+	if (get_statusUserLimit())
+		msg.append("l");
+	if (msg.empty())
+		return (false);
+	return (true);
 }

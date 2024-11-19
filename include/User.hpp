@@ -60,8 +60,8 @@ class User
 		std::string _hostname;
 		std::string _buffer;
 		std::string _password;
-		std::vector<std::string> _invited_channels;
-		bool _auth;
+		bool 		_auth;
+		std::vector<std::string>	_invited_channels;
 };
 
 std::ostream &operator<<(std::ostream &out, const User &user);
