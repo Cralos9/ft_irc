@@ -80,7 +80,7 @@ int Join::can_join(Channel *ch, const std::string &password)
 						_args[0].c_str());
 		return (false);
 	}
-	if (ch->get_invite_mode() &&
+	if (ch->get_statusInviteOnly() &&
 		std::find(invited_channels.begin(), invited_channels.end(), ch->get_name()) == invited_channels.end())
 	{
 		_server.send_numeric(*_user, ERR_INVITEONLYCHAN, "%s :Cannot join channel (+i)",

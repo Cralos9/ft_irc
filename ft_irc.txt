@@ -48,6 +48,8 @@ TODO
 
 - MODE Change the channel’s mode (i, t, k, l)
 - Sem nickname em certos comandos (Quit, Register)
+- TOPIC nao actualiza para outros users do channel
+- MODE finalizar o, i
 
 Implementado
 

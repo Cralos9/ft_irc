@@ -22,10 +22,12 @@ Mode::~Mode()
 /* 	std::cout << "Mode destructor" << std::endl; */
 }
 
+
+
 void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 {
 	User *target = NULL;
-	if (mode == 'o')
+	if (mode == 'o') //#TODO Nao esta finalizado. Qd se retira o op use continua alterar topic
 	{
 		target = ch->get_user(param);
 		if (target == NULL)
@@ -40,25 +42,45 @@ void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 	{
 		int limit = std::atoi(param.c_str());
 		if (signal == '-')
+		{
 			ch->set_user_limit(50);
+			ch->set_statusUserLimit(false);
+		}
 		else if (limit != 0)
+		{
 			ch->set_user_limit(limit);
+			ch->set_statusUserLimit(true);
+		}
 		else
 			return ;
 	}
 	else if(mode == 'k')
 	{
 		if (signal == '-')
+		{
 			ch->set_ch_password("");
-		else
+			ch->set_statusChannelKey(false);
+		}
+		else if (signal == '+')
+		{
 			ch->set_ch_password(param);
+			ch->set_statusChannelKey(true);
+		}
 	}
-	else if (mode == 'i')
+	else if (mode == 'i') //#TODO Nao esta finalizado (falta _statusInviteOnly)
 	{
 		if (signal == '-')
-			ch->set_invite_mode(0);
-		else
-			ch->set_invite_mode(1);
+			ch->set_statusInviteOnly(false);
+		else if (signal == '+')
+			ch->set_statusInviteOnly(true);
+		_server.send_msg_to_channel(*ch, *_user, CHSELF);
+	}
+	else if (mode == 't')
+	{
+		if (signal == '-')
+			ch->set_statusChannelOpPrivs(false);
+		else if (signal == '+')
+			ch->set_statusChannelOpPrivs(true);
 		_server.send_msg_to_channel(*ch, *_user, CHSELF);
 	}
 }
@@ -76,8 +98,11 @@ int Mode::run()
 	}
 	if (_args.size() == 1)
 	{
-		_server.send_numeric(*_user, RPL_CHANNELMODEIS, "%s %s", ch->get_name().c_str(),
-								"+itkol");
+		std::string msg;
+
+		if (ch->get_activeModes(msg))
+			_server.send_numeric(*_user, RPL_CHANNELMODEIS, "%s %s", ch->get_name().c_str(),
+									("+" + msg).c_str());
 		return (0);
 	}
 

@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/18 15:23:20 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:15:55 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,11 @@ class Channel
 		void set_topic(const std::string &topic);
 		void set_user_limit(int limit);
 		void set_ch_password(std::string pass);
-		void set_invite_mode(bool invite_mode);
+		void set_statusInviteOnly(const bool &status);
+		void set_statusTopicRestrictions(const bool &status);
+		void set_statusChannelKey(const bool &status);
+		void set_statusChannelOpPrivs(const bool &status);
+		void set_statusUserLimit(const bool &status);
 
 		/* Getters */
 		const std::string &get_topic() const;
@@ -49,6 +53,11 @@ class Channel
 		bool	get_invite_mode();
 		const std::string &get_password() const;
 		size_t	 get_user_limit();
+		bool					get_statusInviteOnly () const;
+		bool					get_statusTopicRestrictions () const;
+		bool					get_statusChannelKey () const;
+		bool					get_statusChannelOpPrivs () const;
+		bool					get_statusUserLimit () const;
 
 		User *get_user(const std::string &username);
 		User *get_op_user(const std::string &username);
@@ -57,6 +66,7 @@ class Channel
 		void change_user_it(User &user, char sig);
 		bool is_user_OP(User &user);
 		bool is_user_on_ch(User &user);
+		bool get_activeModes(std::string &msg);
 
 private:
 
@@ -68,7 +78,12 @@ private:
 		std::string _name;
 		std::string _admin;
 		std::string _users;
-		bool 		_invite_mode;
+	
+		bool _statusInviteOnly;
+		bool _statusTopicRestrictions;
+		bool _statusChannelKey;
+		bool _statusChannelOpPrivs;
+		bool _statusUserLimit;
 
 };
 
