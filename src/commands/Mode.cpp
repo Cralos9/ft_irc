@@ -73,7 +73,6 @@ void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 			ch->set_statusInviteOnly(false);
 		else if (signal == '+')
 			ch->set_statusInviteOnly(true);
-		_server.send_msg_to_channel(*ch, *_user, CHSELF);
 	}
 	else if (mode == 't')
 	{
@@ -81,7 +80,6 @@ void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 			ch->set_statusTopicRestrictions(false);
 		else if (signal == '+')
 			ch->set_statusTopicRestrictions(true);
-		_server.send_msg_to_channel(*ch, *_user, CHSELF);
 	}
 }
 
