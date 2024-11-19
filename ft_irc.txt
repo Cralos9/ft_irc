@@ -46,9 +46,7 @@ To safely manage shared resources like client_nicks and channels, especially in 
 
 TODO
 
-- MODE Change the channel’s mode (i, t, k, l)
-- Sem nickname em certos comandos (Quit, Register)
-- TOPIC nao actualiza para outros users do channel
+	-Testar Ctrl+C no nc
 
 Implementado
 
