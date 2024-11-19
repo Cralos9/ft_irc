@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/11/18 13:15:11 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:15:29 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int Invite::run()
 		return to client c1r3s6.42porto.com 401 jmarinho manel :No such nick/Channel
 	if channel doesnt exits in channel list
 		return to client c1r3s6.42porto.com 403 jmarinho geral :No such channel */
-		
 	if (_server.get_user(_args[0]) == NULL) // Check if user exists
 	{
 		_server.send_numeric(*_user, ERR_NOSUCHNICK, "%s :No such nick", _args[0].c_str());

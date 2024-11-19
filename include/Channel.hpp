@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/19 13:15:55 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:18:15 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,19 @@ class Channel
 		void set_statusUserLimit(const bool &status);
 
 		/* Getters */
-		const std::string &get_topic() const;
-		const std::string &get_name() const;
-		const std::string &get_admin() const;
-		const std::string get_user_size() const;
+		const std::string 			&get_topic() const;
+		const std::string 			&get_name() const;
+		const std::string 			&get_admin() const;
+		const std::string 			get_user_size() const;
 		const std::map<User *, int> &get_users() const;
-		bool	get_invite_mode();
-		const std::string &get_password() const;
-		size_t	 get_user_limit();
-		bool					get_statusInviteOnly () const;
-		bool					get_statusTopicRestrictions () const;
-		bool					get_statusChannelKey () const;
-		bool					get_statusChannelOpPrivs () const;
-		bool					get_statusUserLimit () const;
+		bool						get_invite_mode();
+		const std::string 			&get_password() const;
+		size_t	 					get_user_limit();
+		bool						get_statusInviteOnly () const;
+		bool						get_statusTopicRestrictions () const;
+		bool						get_statusChannelKey () const;
+		bool						get_statusChannelOpPrivs () const;
+		bool						get_statusUserLimit () const;
 
 		User *get_user(const std::string &username);
 		User *get_op_user(const std::string &username);
