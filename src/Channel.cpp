@@ -161,7 +161,6 @@ bool					Channel::get_statusUserLimit () const
 	return _statusUserLimit;
 }
 
-
 /* Utility Functions */
 bool Channel::is_user_OP(User &user)
 {
@@ -183,6 +182,7 @@ bool Channel::is_user_on_ch(User &user)
 User *Channel::get_op_user(const std::string &username)
 {
 	std::map<User *, int>::iterator it;
+
 	for (it = _user_map.begin(); it != _user_map.end(); it++) {
 		if (it->second == OP && it->first->get_nick().compare(username) == 0)
 			return (it->first);
@@ -193,6 +193,7 @@ User *Channel::get_op_user(const std::string &username)
 User *Channel::get_user(const std::string &username)
 {
 	std::map<User *, int>::iterator it;
+
 	for (it = _user_map.begin(); it != _user_map.end(); it++) {
 		if (it->first->get_nick().compare(username) == 0)
 			return (it->first);
@@ -200,9 +201,10 @@ User *Channel::get_user(const std::string &username)
 	return (NULL);
 }
 
-void Channel::change_user_it(User &user, char sig)
+void Channel::change_userPrivs(User &user, char sig)
 {
 	std::map<User *, int>::iterator it = _user_map.find(&user);
+
 	if (it == _user_map.end())
 		return ;
 	if (sig == '+')
