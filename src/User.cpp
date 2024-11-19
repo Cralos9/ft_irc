@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/18 13:28:46 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:34:31 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,13 @@ bool User::is_registered()
 	if (_nick.empty() || _realname.empty() || _username.empty() || _password.empty())
 		return (false);
 	return (true);
+}
+
+void User::elim_from_invited(std::string ch)
+{
+	std::vector<std::string>::iterator it = std::find(_invited_channels.begin(), _invited_channels.end(), ch);
+	if (it != _invited_channels.end())
+		_invited_channels.erase(it);
 }
 
 void User::erase_nick()
