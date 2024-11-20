@@ -68,7 +68,7 @@ int Join::can_join(Channel *ch, const std::string &password)
 {
 	const std::vector<std::string> &invited_channels = _user->get_invited_channels();
 
-	if (ch->get_users().size() > ch->get_user_limit())
+	if (ch->get_users().size() >= ch->get_user_limit())
 	{
 		_server.send_numeric(*_user, ERR_CHANNELISFULL, "%s :Cannot join channel (+l)",
 							_args[0].c_str());
