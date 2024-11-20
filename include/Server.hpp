@@ -101,6 +101,7 @@ private:
 	std::map<int, User>					_clients;
 	std::map<std::string, ACommand *>	_commands;
 	time_t 								_server_creation_time;
+	std::string 						_3pmsg;
 };
 
 it_fd			find_fd(std::vector<pollfd> &vec, const int fd);

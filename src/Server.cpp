@@ -221,7 +221,23 @@ void Server::welcome_burst(User &user)
 	send_numeric(user, RPL_CREATED, ":This server was created %s", time.c_str());
 	send_numeric(user, RPL_MYINFO, "localhost v1.0 o iklt");
 	send_numeric(user, RPL_ISUPPORT, "CHANMODES=i,t,k,l,o");
-	send_numeric(user, RPL_MOTDSTART, ":- %s make_msg of the day -", _hostname.c_str());
+	send_numeric(user, RPL_MOTDSTART, ":- %s Message of the day -", _hostname.c_str());
+
+	std::ifstream file("3P.txt");
+	std::string line;
+
+	if (!file.is_open())
+	{
+		std::cout << "Unable to open file" << std::endl;
+		return ;
+	}
+	else
+	{
+		while (std::getline(file, line))
+			send_numeric(user, RPL_MOTD, ":- %s", line.c_str());
+		file.close();
+	}
+
 	send_numeric(user, RPL_MOTD, ":- Jose Figueiras is innocent 🇵🇹");
 	send_numeric(user, RPL_ENDOFMOTD, ":End of /MOTD");
 	user.set_auth(false);
