@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/19 15:45:13 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/20 11:06:29 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,9 +122,9 @@ void User::erase_buffer()
 
 void User::make_msg(const std::string &command, const std::deque<std::string> &params)
 {
-	_buffer = ":" + _nick + "!" + _username + "@" + _hostname + " " + command + " ";
+	_buffer = ":" + _nick + "!" + _username + "@" + _hostname + " " + command;
 	for (std::deque<std::string>::const_iterator it = params.begin(); it != params.end(); it++) {
-		_buffer.append(*it + ' ');
+		_buffer.append(' ' + *it);
 	}
 	_buffer.append("\r\n");
 }
