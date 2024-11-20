@@ -18,9 +18,10 @@ RED = \033[0;31m
 GREEN = \033[0;32m
 PURPLE = \033[1;35m
 RESET = \033[0m
-NAME = ircserv
 
 # --------------------------------- VARIABLES ----------------------------------
+
+NAME = ircserv
 
 INCLUDE_PATH = include
 
