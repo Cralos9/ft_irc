@@ -43,8 +43,16 @@ std::deque<std::string> split_lines(const std::string &buffer)
 	std::string token;
 	std::deque<std::string> args;
 
+	int i = 0;
 	while (std::getline(iss, token))
-		args.push_back(token);
+	{
+		if (!token.empty()) {
+			std::cout << "TOKEN " << i << ": " << token << std::endl;
+			args.push_back(token);
+			i++;
+		}
+	}
+
 	return (args);
 }
 

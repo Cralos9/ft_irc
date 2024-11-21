@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/11/21 13:19:25 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/21 17:20:19by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,40 +37,50 @@ Invite::~Invite()
 
 int Invite::run()
 {
-	/* if no Channel or no Nick in buffer
-		return to client c1r3s6.42porto.com 401 jmarinho manel :No such nick/Channel
-	if channel doesnt exits in channel list
-		return to client c1r3s6.42porto.com 403 jmarinho geral :No such channel */
-	if (_server.get_user(_args[0]) == NULL) // Check if user exists
-	{
-		_server.send_numeric(*_user, ERR_NOSUCHNICK, "%s :No such nick", _args[0].c_str());
-		return EXIT_FAILURE;
-	}
-	else if (_server.check_channel(_args[1]) == NULL) //Check if channel exists
+	Channel *ch = NULL;
+	User *invited = NULL;
+
+	ch = _server.check_channel(_args[1]);
+	if (ch == NULL)
 	{
 		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
 								_args[1].c_str());
 		return EXIT_FAILURE;
 	}
+
+	invited = _server.get_user(_args[0]);
+	if (invited == NULL)
+	{
+		_server.send_numeric(*_user, ERR_NOSUCHNICK, "%s :No such nick", _args[0].c_str());
+		return EXIT_FAILURE;
+	}
+
+	if (!ch->is_user_on_ch(*_user)) //Check if user is on that channel
+	{
+		_server.send_numeric(*_user, ERR_NOTONCHANNEL, "%s :You're not on that channel",
+								ch->get_name().c_str());
+		return (1);
+	}
+
+	if (ch->is_user_on_ch(*invited)) //Check if invited_user is already on channel
+	{
+		_server.send_numeric(*_user, ERR_USERONCHANNEL, "%s :User already on channel",
+								_args[0].c_str());
+		return (1);
+	}
+	else if (!ch->is_user_OP(*_user)) //Validate if user is OP
+	{
+		_server.send_numeric(*_user, ERR_CHANOPRIVSNEEDED, "%s :You're not channel operator",
+								ch->get_name().c_str());
+		return (1);
+	}
 	else
 	{
-		Channel *ch = _server.check_channel(_args[1]);
-		User *invited = _server.get_user(_args[0]);
-		
-		if (ch->is_user_on_ch(*invited)) //Check if user is already on channel
-		{
-			_server.send_numeric(*_user, ERR_USERONCHANNEL, "%s :User already on channel",
-									_args[0].c_str());
-			return EXIT_FAILURE;
-		}
-		else if (ch->is_user_OP(*_user)) //Validate if user is OP
-		{
-			_server.send_numeric(*_user, RPL_INVITING, "%s %s", _args[0].c_str(),
-									_args[1].c_str());
-			_user->make_msg("INVITE", _args);
-			_server.send_msg_one_user(invited->get_fd(), *_user);
-			invited->get_invited_channels().push_back(ch->get_name());
-		}
+		_server.send_numeric(*_user, RPL_INVITING, "%s %s", _args[0].c_str(),
+								_args[1].c_str());
+		_user->make_msg("INVITE", _args);
+		_server.send_msg_one_user(invited->get_fd(), *_user);
+		invited->get_invited_channels().push_back(ch->get_name());
 	}
-	return EXIT_SUCCESS;
+	return (0);
 }

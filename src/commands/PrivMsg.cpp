@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:37:43 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/08 17:04:24 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/21 17:44:49 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,10 @@ int PrivMsg::run()
 
 	std::string target;
 	std::istringstream iss(_args[0]);
-	std::deque<std::string> params = _args;
+	std::deque<std::string> params(2);
 
-	if (_args[1].find(':') != std::string::npos)
-		_args[1].erase(0, 1);
-
+	if (_args[1].find(':') == std::string::npos)
+		_args[1] = ":" + _args[1];
 
 	while (std::getline(iss, target, ','))
 	{
@@ -46,23 +45,29 @@ int PrivMsg::run()
 			{
 				_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
 									target.c_str());
-				return (EXIT_FAILURE);
+				return (1);
+			}
+			else if (!ch->is_user_on_ch(*_user)) //Check if user is on that Channel
+			{
+				_server.send_numeric(*_user, ERR_CANNOTSENDTOCHAN, "%s :Cannot send to channel",
+										ch->get_name().c_str());
+				return (1);
 			}
 			_user->make_msg("PRIVMSG", params);
 			_server.send_msg_to_channel(*ch, *_user, CHOTHER);
 		}
 		else
 		{
-			receiver = this->_server.get_user(target);
+			receiver = _server.get_user(target);
 			if (receiver == NULL)
 			{
 				_server.send_numeric(*_user, ERR_NOSUCHNICK, "%s :No such nick",
 										target.c_str());
-				return (EXIT_FAILURE);
+				return (1);
 			}
 			_user->make_msg("PRIVMSG", params);
 			_server.send_msg_one_user(receiver->get_fd(), *_user);
 		}
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
