@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:38:31 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/14 14:55:03 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:40:52 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,26 +22,44 @@ Part::~Part()
 /* 	std::cout << "Part Destructor" << std::endl; */
 }
 
+const std::vector<std::string> split(const std::string &targets)
+{
+    std::vector<std::string> vec;
+    std::istringstream iss(targets);
+    std::string channel;
+
+    while (std::getline(iss, channel, ','))
+        vec.push_back(channel);
+    return (vec);
+}
+
 int Part::run()
 {
-    Channel *channel = _server.check_channel(this->_args[0]);
-    if (channel == NULL)
-    {
-		_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
-								_args[0].c_str());
-        return (1);
-    }
+	const std::vector<std::string> &targets = split(_args[0]);
+	std::deque<std::string> params(1);
 
-    if (!channel->is_user_on_ch(*_user))
-    {
-        _server.send_numeric(*_user, ERR_NOTONCHANNEL, "%s :You're not on that channel",
-                                _args[0].c_str());
-        return (1);
-    }
-    _user->make_msg("PART", _args);
-    _server.send_msg_to_channel(*channel, *_user, CHSELF);
-    channel->delete_user(*_user);
-    if (channel->get_users().size() == 0)
-        _server.delete_channel(*channel);
-    return(1);
+	for (std::vector<std::string>::const_iterator it = targets.begin(); it != targets.end(); it++)
+	{
+		params[0] = *it;
+		Channel *channel = _server.check_channel(*it);
+		if (channel == NULL)
+		{
+			_server.send_numeric(*_user, ERR_NOSUCHCHANNEL, "%s :No such channel",
+									*it->c_str());
+			return (1);
+		}
+
+		if (!channel->is_user_on_ch(*_user))
+		{
+			_server.send_numeric(*_user, ERR_NOTONCHANNEL, "%s :You're not on that channel",
+									*it->c_str());
+			return (1);
+		}
+		_user->make_msg("PART", params);
+		_server.send_msg_to_channel(*channel, *_user, CHSELF);
+		channel->delete_user(*_user);
+		if (channel->get_users().size() == 0)
+			_server.delete_channel(*channel);
+	}
+	return(1);
 }

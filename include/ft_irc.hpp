@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/14 13:13:28 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/21 13:18:43 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@
 
 void print_error(std::string error_msg);
 
+void	print(const std::string &str);
 
 #endif

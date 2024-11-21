@@ -30,18 +30,18 @@ public:
 	ACommand(Server &server, bool usable_pre_reg, const size_t min_params);
 	virtual ~ACommand();
 
-	int check();
 	void set_args(std::deque<std::string> args);
 	void set_user(User *user);
 	virtual int run() = 0;
+
+	bool _usable_pre_reg;
+	const size_t _min_params;
 
 protected:
 
 	std::deque<std::string> _args;
 	User *_user;
 	Server &_server;
-	bool _usable_pre_reg;
-	const size_t _min_params;
 };
 
 class Join : public ACommand

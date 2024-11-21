@@ -13,7 +13,7 @@
 #include "Commands.hpp"
 
 ACommand::ACommand(Server &server, bool usable_pre_reg, const size_t min_params)
-	: _user(NULL), _server(server), _usable_pre_reg(usable_pre_reg), _min_params(min_params)
+	: _usable_pre_reg(usable_pre_reg), _min_params(min_params), _user(NULL), _server(server)
 {
 /* 	std::cout << "ACommands Constructor" << std::endl; */
 }
@@ -31,24 +31,6 @@ void ACommand::set_args(std::deque<std::string> args)
 void ACommand::set_user(User *user) 
 {
 	_user = user;
-}
-
-int ACommand::check()
-{
-	_args.erase(_args.begin());
-
-	if (_user->get_auth() == true && !_usable_pre_reg)
-	{
-		_server.send_numeric(*_user, ERR_NOTREGISTERED, ":You have not registered");
-		return (1);
-	}
-	if (_args.size() < _min_params)
-	{
-		_server.send_numeric(*_user, ERR_NEEDMOREPARAMS, "%s :Not enough parameters",
-								_args[0].c_str());
-		return (1);
-	}
-	return (0);
 }
 
 /* Split the buffer into tokens

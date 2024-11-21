@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/21 12:18:30 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:45:5 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,8 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 	this->_commands["INVITE"] = new Invite(*this);		//INVITE <nick> <channel>
 	this->_commands["WHOIS"] = new WhoIs(*this);
 	this->_commands["PASS"] = new Pass(*this);
-/* 	this->_commands["PONG"] = new Ping(*this); */
 	this->_commands["PING"] = new Pong(*this);
 	this->_commands["USER"] = new UserCMD(*this);
-	//pong? PONG <>
 
 	_server_creation_time = std::time(0);
 	get_hostname();
@@ -142,7 +140,7 @@ int Server::receive_msg(User &user)
 	user.set_buffer(buffer);
 	if (user.get_buffer().find("\r\n") == std::string::npos)
 		return (1);
-	print_recv(user.get_buffer());
+	print_recv(user);
 	return(0);
 }
 
@@ -309,35 +307,57 @@ int Server::main_loop()
 	return (0);
 }
 
+ACommand *Server::get_command(const std::string &command_name)
+{
+	std::map<std::string, ACommand *>::iterator it = _commands.find(command_name);
+	
+	if (it != _commands.end())
+		return (it->second);
+	return (NULL);
+}
+
 int Server::handle_commands(User &user)
 {
 	std::deque<std::string> lines = split_lines(user.get_buffer());
-	std::string cmd;
+	std::string command_name;
 
 	for(std::deque<std::string>::iterator it = lines.begin(); it != lines.end(); it++)
 	{
 		std::deque<std::string> split = parse_split(*it);
-		cmd = split[0];
-		std::map<std::string, ACommand *>::iterator it_cmd = _commands.find(split[0]);
-		if (it_cmd == _commands.end())
-		{
-			send_numeric(user, ERR_UNKOWNCOMMAND, "%s :Unknown Command", split[0].c_str());
+		command_name = split[0];
+		split.erase(split.begin()); /* Get rid of the command_name */
+		if (call_command(command_name, user, split))
 			continue;
-		}
-		process_command(it_cmd->second, user, split);
 	}
-	if (cmd == "QUIT")
+	if (command_name == "QUIT")
 		return(1);
 	return(0);
 }
 
-int Server::process_command(ACommand *command, User &user, std::deque<std::string> &split)
+int Server::call_command(const std::string &command_name, User &user, std::deque<std::string> &params)
 {
-	command->set_user(&user);
-	command->set_args(split);
-	if (command->check() == 1)
+	ACommand * command = get_command(command_name);
+
+	if (command == NULL)
+	{
+		send_numeric(user, ERR_UNKOWNCOMMAND, "%s :Unknown Command", command_name.c_str());
 		return (1);
-	return (command->run());
+	}
+	
+	if (user.get_auth() && !command->_usable_pre_reg)
+	{
+		send_numeric(user, ERR_NOTREGISTERED, ":You have not registered");
+		return (1);
+	}
+	if (params.size() < command->_min_params)
+	{
+		send_numeric(user, ERR_NEEDMOREPARAMS, "%s :Not enough parameters", command_name.c_str());
+		return (1);
+	}
+	command->set_user(&user);
+	command->set_args(params);
+	command->run();
+	return (0);
 }
 
 void Server::delete_channel(Channel &channel)

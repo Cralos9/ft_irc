@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:29:10 by jmarinho          #+#    #+#             */
-/*   Updated: 2024/11/19 15:15:29 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/21 13:19:25 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ int Invite::run()
 			_server.send_numeric(*_user, RPL_INVITING, "%s %s", _args[0].c_str(),
 									_args[1].c_str());
 			_user->make_msg("INVITE", _args);
-			_server.print(_user->get_buffer());
 			_server.send_msg_one_user(invited->get_fd(), *_user);
 			invited->get_invited_channels().push_back(ch->get_name());
 		}

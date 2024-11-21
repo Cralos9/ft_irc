@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/21 12:18:39 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:11:04 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,13 @@ public:
 	const std::map<std::string, Channel> &get_channels() const;
 
 	int 		handle_commands(User &user);
-	int			process_command(ACommand *command, User &user, std::deque<std::string> &split);
+	int			call_command(const std::string &command_name, User &user, std::deque<std::string> &params);
+	ACommand	*get_command(const std::string &command_name);
 	User 		*get_user(const std::string &nick);
 	
 	void		disconnect_user(User &user);
 	void 		close_all_fds();
 
-	void 		print(const std::string &str);
-	void 		print_recv(const std::string &str);
 
 	static void	signal_handler(int signum);
 	static bool should_end;
@@ -105,5 +104,6 @@ private:
 };
 
 it_fd			find_fd(std::vector<pollfd> &vec, const int fd);
+void 	print_recv(const User &user);
 
 #endif
