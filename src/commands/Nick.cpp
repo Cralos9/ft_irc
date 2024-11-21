@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/19 13:58:40 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/20 11:57:38 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int Nick::run()
 	}
 	_user->make_msg("NICK", _args);
 	if (_user->get_auth() == false)
-		_server.send_msg_one_user(_user->get_fd(), *_user);
+		_server.send_msg_all_users(*_user);
 	_user->set_nick(nick);
 	return (1);
 }

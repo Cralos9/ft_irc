@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:23:16 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/19 13:46:15 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/20 12:09:20 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ int Server::connect_client()
 		print_error("Accept Error");
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
-	this->_clients[client.fd].error_flag = 0;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
 	this->active_fd++;
 	this->_fds.push_back(client);

@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/19 13:33:05 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/20 12:09:31 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ class User
 		bool is_registered();
 		void make_msg(const std::string &command, const std::deque<std::string> &params);
 		void elim_from_invited(std::string ch);
-		bool welcome_flag;
-		int error_flag;
 
 	private:
 

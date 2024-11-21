@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/14 13:14:43 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/20 12:10:38 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ public:
 	Server(const int port, const std::string &password);
 	~Server();
 
-	void 		join_Channel(it_user user);
 	int			create_server();
 
 	int 		main_loop();

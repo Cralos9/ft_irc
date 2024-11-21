@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/19 15:59:46 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:10:08 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 	std::deque<std::string> message;
 	message.push_back(ch->get_name());
 	message.push_back(std::string(1, signal) + std::string(1, mode));
-	if (!param.empty() && mode != 'i')
+	if (!param.empty() && (mode != 'i' && mode != 't'))
 		message.push_back(param);
 
 	User *target = NULL;
@@ -139,7 +139,7 @@ int Mode::run()
 				_args[j + 1] = "";
 			}
 			use_modes(_args[1][pos], _args[1][i], _args[j + 1], ch);
-			if (_args[1][i] == 'i')
+			if (_args[1][i] == 'i' || _args[1][i] == 't')
 				continue;
 			j++;
 		}
