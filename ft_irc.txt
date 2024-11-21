@@ -46,6 +46,9 @@ To safely manage shared resources like client_nicks and channels, especially in 
 
 TODO
 
+- JOIN varias vezes com o mesmo user (Nao Preocupante)
+- Quit envia error msg se saires durante o registo (Nao Preocupante)
+- Send returna -1. Temos de desconectar o user (Preocupante)
 -Testar Ctrl+C no nc
 
 Implementado

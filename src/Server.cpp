@@ -370,7 +370,6 @@ void Server::delete_channel(Channel &channel)
 	_channel_list.erase(channel.get_name());
 }
 
-/* Channel Functions */
 const std::string Server::channels_user_joined(User &user)
 {
 	std::string user_joined_ch;
@@ -396,7 +395,6 @@ Channel *Server::create_channel(const std::string &ch_name)
 	this->_channel_list[ch_name] = Channel(ch_name);
 	return (&this->_channel_list[ch_name]);
 }
-/* End Channel Functions */
 
 User *Server::get_user(const std::string &nick)
 {
