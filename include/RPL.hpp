@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/18 15:31:30 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:28:32 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,4 @@
 #define ERR_BADCHANNELKEY		"475"
 #define ERR_CHANOPRIVSNEEDED	"482"
 
-const std::string client_rpl(const std::string &hostname, const std::string &nickname
-								, const std::string &rpl_numeric);
-const std::string numeric_motd(const std::string &hostname, const std::string &user_nick);
-const std::string make_numeric(const std::string &hostname, const std::string &nickname
-						, const std::string &numeric, std::vector<std::string> &args, const std::string &msg);
 #endif

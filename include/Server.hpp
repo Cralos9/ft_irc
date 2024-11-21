@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/21 15:11:04 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:01:13 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ public:
 	static void	signal_handler(int signum);
 	static bool should_end;
 
-	bool		check_password(User &user);
 	void		welcome_burst(User &user);
 
 	bool		check_nickname(std::string &nickname);
