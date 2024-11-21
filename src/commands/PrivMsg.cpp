@@ -65,6 +65,7 @@ int PrivMsg::run()
 			_server.send_msg_one_user(receiver->get_fd(), *_user);
 			receiver = NULL;
 		}
+		_user->erase_buffer();
 		target.clear();
 	}
 	return (EXIT_SUCCESS);
