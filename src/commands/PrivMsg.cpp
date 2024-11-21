@@ -29,12 +29,16 @@ int PrivMsg::run()
 
 	std::string target;
 	std::istringstream iss(_args[0]);
+	std::deque<std::string> params = _args;
 
 	if (_args[1].find(':') != std::string::npos)
 		_args[1].erase(0, 1);
 
+
 	while (std::getline(iss, target, ','))
 	{
+		params[0] = target;
+		params[1] = _args[1];
 		if (target.find('#') != std::string::npos)
 		{
 			ch = _server.check_channel(target);
@@ -44,11 +48,8 @@ int PrivMsg::run()
 									target.c_str());
 				return (EXIT_FAILURE);
 			}
-			std::cout << "target in channel " << target << " msg " << _args[1] << std::endl;
-
-			_user->set_buffer(":" + _user->get_nick() + "!" + _user->get_username() + "@" + _user->get_hostname() + " " + "PRIVMSG " + target + " :" + _args[1] + "\r\n");
+			_user->make_msg("PRIVMSG", params);
 			_server.send_msg_to_channel(*ch, *_user, CHOTHER);
-			ch = NULL;
 		}
 		else
 		{
@@ -59,14 +60,9 @@ int PrivMsg::run()
 										target.c_str());
 				return (EXIT_FAILURE);
 			}
-			std::cout << "target in user " << target << " msg " << _args[1] << std::endl;
-
-			_user->set_buffer(":" + _user->get_nick() + "!" + _user->get_username() + "@" + _user->get_hostname() + " " + "PRIVMSG " + target + " :" + _args[1] + "\r\n");
+			_user->make_msg("PRIVMSG", params);
 			_server.send_msg_one_user(receiver->get_fd(), *_user);
-			receiver = NULL;
 		}
-		_user->erase_buffer();
-		target.clear();
 	}
 	return (EXIT_SUCCESS);
 }
