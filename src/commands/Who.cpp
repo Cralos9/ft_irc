@@ -52,7 +52,7 @@ int Who::run()
 			user_joined_ch = _server.channels_user_joined(*_user);
 			_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s H :0 %s",
 						user_joined_ch.c_str(), target->get_username().c_str(),
-						target->get_hostname().c_str(), _server._hostname.c_str(),
+						target->get_hostname().c_str(), _server.get_host().c_str(),
 						target->get_nick().c_str(), target->get_realname().c_str());
 		}
 	}
@@ -68,7 +68,7 @@ int Who::run()
 			/* Channel, Username, host, server, nick, hp, realname */
 			_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s H :0 %s", 
 						_args[0].c_str(), us.get_username().c_str(),
-						us.get_hostname().c_str(), _server._hostname.c_str(),
+						us.get_hostname().c_str(), _server.get_host().c_str(),
 						us.get_nick().c_str(), us.get_realname().c_str());
 		}
 	}
@@ -77,7 +77,7 @@ int Who::run()
 		user_joined_ch = _server.channels_user_joined(*_user);
 		_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s H :0 %s",
 						user_joined_ch.c_str(), target->get_username().c_str(),
-						target->get_hostname().c_str(), _server._hostname.c_str(),
+						target->get_hostname().c_str(), _server.get_host().c_str(),
 						target->get_nick().c_str(), target->get_realname().c_str());
 	}
 	// General end of WHO list

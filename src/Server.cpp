@@ -71,6 +71,11 @@ void Server::get_hostname()
 	_hostname = hostname;
 }
 
+std::string Server::get_host()
+{
+	return(this->_hostname);
+}
+
 int Server::create_server()
 {
 	int on = 1;

@@ -6,7 +6,7 @@
 /*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:17:17 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/21 12:10:08 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/25 10:47:33 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ void Mode::use_modes(char signal, char mode, std::string param, Channel *ch)
 		else if (signal == '+')
 			ch->set_statusTopicRestrictions(true);
 	}
-	// std::cout << "Teste " <<  param << " " << signal << mode << std::endl; 
+	else
+		return ;
 	_user->make_msg("MODE", message);
 	_server.send_msg_to_channel(*ch, *_user, CHSELF);
 }
@@ -144,7 +145,5 @@ int Mode::run()
 			j++;
 		}
 	}
-	// _user->make_msg("MODE", _args);
-	// _server.send_msg_to_channel(*ch, *_user, CHSELF);
 	return (0);
 }
