@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/25 10:58:58 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/25 11:54:10 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include "User.hpp"
 # include "Channel.hpp"
 # include "Commands.hpp"
-# include <cerrno>
 # include <errno.h>
 # include <ctime>
 # include <fstream>
@@ -33,10 +32,8 @@
 #define NO_EVENTS		0
 #define CHOTHER			141
 #define CHSELF			140
-
-typedef std::vector<pollfd>::iterator it_fd;
-typedef std::map<int, User>::iterator it_user;
-typedef std::map<std::string, Channel>::iterator it_ch;
+#define AVAIL_MODES		"i,t,k,l,o"
+#define MOTD_FILE		"3P.txt"
 
 class ACommand;
 
@@ -99,10 +96,9 @@ private:
 	std::map<std::string, ACommand *>	_commands;
 	time_t 								_server_creation_time;
 	std::string							_hostname;
-	std::string 						_3pmsg;
 };
 
-it_fd			find_fd(std::vector<pollfd> &vec, const int fd);
+std::vector<pollfd>::iterator	find_fd(std::vector<pollfd> &vec, const int fd);
 void 	print_recv(const User &user);
 
 #endif

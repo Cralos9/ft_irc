@@ -6,14 +6,12 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/21 16:59:45 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/25 10:30:14 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RPL_HPP
 # define RPL_HPP
-
-#include "ft_irc.hpp"
 
 /* RPL_ make_msgs */
 #define RPL_WELCOME				"001"

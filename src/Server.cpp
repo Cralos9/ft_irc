@@ -45,16 +45,13 @@ Server::~Server()
 {
 	for (std::map<std::string, ACommand *>::iterator it = this->_commands.begin(); it != this->_commands.end(); ++it)
 		delete it->second;
-	this->close_all_fds();
+	for (std::vector<pollfd>::iterator it = this->_fds.begin(); it != this->_fds.end(); it++)
+		close(it->fd);
+	this->_fds.clear();
 	/* std::cout << "Server Destructor" << std::endl;	*/
 }
 
 /* -------------------------------------------- */
-
-const std::string &Server::get_password() const
-{
-	return (_password);
-}
 
 void Server::get_hostname()
 {
@@ -105,11 +102,61 @@ int Server::create_server()
 	return (EXIT_SUCCESS);
 }
 
-void Server::close_all_fds()
+int Server::main_loop()
 {
-	for (it_fd it = this->_fds.begin(); it != this->_fds.end(); it++)
-		close(it->fd);
-	this->_fds.erase(this->_fds.begin(), this->_fds.end());
+	int ret = 0;
+
+	while (!should_end)
+	{
+		ret = poll(this->_fds.data(), this->active_fd, -1);
+		if (ret == -1)
+		{
+			if (errno == EINTR)
+				continue;
+			std::perror("Poll Error");
+			break;
+		}
+		this->fds_loop();
+	}
+	return (0);
+}
+
+int Server::fds_loop()
+{
+	int tmp = this->active_fd;
+
+	for (int i = 0; i < tmp; i++)
+	{
+		if (_fds[i].revents == NO_EVENTS)
+			continue;
+		if (!(_fds[i].revents & POLLIN) && !(_fds[i].revents & POLLOUT))
+		{
+			std::cerr << "Error in Revents" << std::endl;
+			continue;
+		}
+		if (_fds[i].fd == _fds[0].fd)
+			connect_client();
+		else
+		{
+			User &user = _clients.at(this->_fds[i].fd);
+			if (_fds[i].revents & POLLIN)
+			{
+				if (receive_msg(user))
+					continue;
+				_fds[i].events |= POLLOUT;
+			}
+			else if (_fds[i].revents & POLLOUT)
+			{
+				if (handle_commands(user))
+					return (0);
+				user.erase_buffer();
+				if (user.get_auth() && user.is_registered())
+					welcome_burst(user);
+				_fds[i].events = POLLIN;
+			}
+		}
+	}
+	return (0);
 }
 
 int Server::connect_client()
@@ -120,7 +167,10 @@ int Server::connect_client()
 
 	client.fd = accept(this->_fds[0].fd, (struct sockaddr *)&client_info, &len);
 	if (client.fd == -1)
-		print_error("Accept Error");
+	{
+		std::perror("Accept Function Error");
+		return (1);
+	}
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
 	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr), "*");
@@ -129,6 +179,37 @@ int Server::connect_client()
 
 	std::cout << "New Client: " << active_fd << " connected" << std::endl;
 	return EXIT_SUCCESS;
+}
+
+void Server::welcome_burst(User &user)
+{
+	std::string time = std::asctime(std::localtime(&_server_creation_time));
+
+	time[time.find('\n')] = '\0';
+	send_numeric(user, RPL_WELCOME, ":Welcome to the " SERVER_NAME " IRC Network, %s!",
+					user.get_nick().c_str());
+	send_numeric(user, RPL_YOURHOST, ":Your host is %s running version v1.0",
+					user.get_hostname().c_str());
+	send_numeric(user, RPL_CREATED, ":This server was created %s", time.c_str());
+	send_numeric(user, RPL_MYINFO, "localhost v1.0 o iklt");
+	send_numeric(user, RPL_ISUPPORT, "CHANMODES=" AVAIL_MODES);
+	send_numeric(user, RPL_MOTDSTART, ":- %s Message of the day -", _hostname.c_str());
+
+	std::ifstream file(MOTD_FILE);
+	std::string line;
+
+	if (!file.is_open())
+		std::cerr << "Unable to open file" << std::endl;
+	else
+	{
+		while (std::getline(file, line))
+			send_numeric(user, RPL_MOTD, ":- %s", line.c_str());
+		file.close();
+	}
+
+	send_numeric(user, RPL_MOTD, ":- Jose Figueiras is innocent 🇵🇹");
+	send_numeric(user, RPL_ENDOFMOTD, ":End of /MOTD");
+	user.set_auth(false);
 }
 
 int Server::receive_msg(User &user)
@@ -143,12 +224,13 @@ int Server::receive_msg(User &user)
 		return (1);
 	}
 	user.set_buffer(buffer);
-	if (user.get_buffer().find("\r\n") == std::string::npos)
+	if (user.get_buffer().find("\n") == std::string::npos)
 		return (1);
 	print_recv(user);
 	return(0);
 }
 
+/* ----------------- Send Functions --------------------*/
 void Server::send_numeric(const User &user, const std::string &numeric,
 							const std::string msg, ...)
 {
@@ -202,108 +284,10 @@ void Server::send_msg_one_user(const int receiver_fd, User &msg_sender)
 	print(msg_sender.get_buffer());
 	send(receiver_fd, msg_sender.get_buffer().c_str(), msg_sender.get_buffer().length(), 0);
 }
+/* -------------------------------------------------- */
 
-void Server::welcome_burst(User &user)
-{
-	std::string time = std::asctime(std::localtime(&_server_creation_time));
 
-	time[time.find('\n')] = '\0';
-	send_numeric(user, RPL_WELCOME, ":Welcome to the " SERVER_NAME " IRC Network, %s!",
-					user.get_nick().c_str());
-	send_numeric(user, RPL_YOURHOST, ":Your host is %s running version v1.0",
-					user.get_hostname().c_str());
-	send_numeric(user, RPL_CREATED, ":This server was created %s", time.c_str());
-	send_numeric(user, RPL_MYINFO, "localhost v1.0 o iklt");
-	send_numeric(user, RPL_ISUPPORT, "CHANMODES=i,t,k,l,o");
-	send_numeric(user, RPL_MOTDSTART, ":- %s Message of the day -", _hostname.c_str());
-
-	std::ifstream file("3P.txt");
-	std::string line;
-
-	if (!file.is_open())
-	{
-		std::cout << "Unable to open file" << std::endl;
-		return ;
-	}
-	else
-	{
-		while (std::getline(file, line))
-			send_numeric(user, RPL_MOTD, ":- %s", line.c_str());
-		file.close();
-	}
-
-	send_numeric(user, RPL_MOTD, ":- Jose Figueiras is innocent 🇵🇹");
-	send_numeric(user, RPL_ENDOFMOTD, ":End of /MOTD");
-	user.set_auth(false);
-}
-
-bool Server::check_nickname(std::string &nickname)
-{
-	for (it_user it = _clients.begin(); it != _clients.end(); it++)
-		if (it->second.get_nick() == nickname)
-			return(1);
-	return(0);
-}
-
-int Server::fds_loop()
-{
-	int tmp = this->active_fd;
-
-	for (int i = 0; i < tmp; i++)
-	{
-		if (_fds[i].revents == NO_EVENTS)
-			continue;
-		if (!(_fds[i].revents & POLLIN) && !(_fds[i].revents & POLLOUT))
-			print_error("Error revents");
-		if (_fds[i].fd == _fds[0].fd)
-			connect_client();
-		else
-		{
-			User &user = _clients.at(this->_fds[i].fd);
-			if (_fds[i].revents & POLLIN)
-			{
-				if (receive_msg(user))
-					continue;
-				_fds[i].events |= POLLOUT;
-			}
-			else if (_fds[i].revents & POLLOUT)
-			{
-				if (handle_commands(user))
-					return (0);
-				user.erase_buffer();
-				if (user.get_auth() && user.is_registered())
-					welcome_burst(user);
-				_fds[i].events = POLLIN;
-			}
-		}
-	}
-	return (0);
-}
-
-int Server::main_loop()
-{
-	int ret;
-
-	while (!should_end)
-	{
-		ret = poll(this->_fds.data(), this->active_fd, -1);
-		if (ret == -1)
-		{
-			if (errno == EINTR)
-				continue;
-			std::perror("Poll Error");
-			break;
-		}
-		if (ret == 0)
-		{
-			std::cout << "Pool timeout" << std::endl;
-			return (EXIT_FAILURE);
-		}
-		this->fds_loop();
-	}
-	return (0);
-}
-
+/* ------------------------- Command Functions ------------------------------- */
 ACommand *Server::get_command(const std::string &command_name)
 {
 	std::map<std::string, ACommand *>::iterator it = _commands.find(command_name);
@@ -315,12 +299,12 @@ ACommand *Server::get_command(const std::string &command_name)
 
 int Server::handle_commands(User &user)
 {
-	std::deque<std::string> lines = split_lines(user.get_buffer());
+	std::deque<std::string> lines = split_block(user.get_buffer());
 	std::string command_name;
 
 	for(std::deque<std::string>::iterator it = lines.begin(); it != lines.end(); it++)
 	{
-		std::deque<std::string> split = parse_split(*it);
+		std::deque<std::string> split = split_line(*it);
 		if (split.empty())
 			continue;
 		command_name = split[0];
@@ -358,17 +342,15 @@ int Server::call_command(const std::string &command_name, User &user, std::deque
 	command->run();
 	return (0);
 }
+/* ------------------------------------------------------------------ */
 
-void Server::delete_channel(Channel &channel)
-{
-	_channel_list.erase(channel.get_name());
-}
 
+/* ------------------------------ Channel Functions -----------------------*/
 const std::string Server::channels_user_joined(User &user)
 {
 	std::string user_joined_ch;
 
-	for (it_ch it = _channel_list.begin(); it != _channel_list.end(); it++)
+	for (std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end(); it++)
 	{
 		if (it->second.is_user_on_ch(user) == 1)
 			user_joined_ch.append(it->first + " ");
@@ -378,7 +360,7 @@ const std::string Server::channels_user_joined(User &user)
 
 Channel *Server::check_channel(const std::string &ch_name)
 {
-	it_ch it = this->_channel_list.find(ch_name);
+	std::map<std::string, Channel>::iterator it = this->_channel_list.find(ch_name);
 	if (it == this->_channel_list.end())
 		return (NULL);
 	return (&it->second);
@@ -390,28 +372,19 @@ Channel *Server::create_channel(const std::string &ch_name)
 	return (&this->_channel_list[ch_name]);
 }
 
-User *Server::get_user(const std::string &nick)
+void Server::delete_channel(Channel &channel)
 {
-	it_user it;
-	
-	for (it = this->_clients.begin(); it != this->_clients.end(); it++)
-	{
-		if (it->second.get_nick().compare(nick) == 0)
-			return (&it->second);
-	}
-	return (NULL);
+	_channel_list.erase(channel.get_name());
 }
+/* -------------------------------------------------------------------------- */
 
 void Server::disconnect_user(User &user)
 {
 	const int fd = user.get_fd();
-	this->active_fd--;
-	this->_fds.erase(find_fd(this->_fds, fd));
-	close(fd);
 
 	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end();)
 	{
-		if(it->second.is_user_on_ch(user))
+		if (it->second.is_user_on_ch(user))
 		{
 			it->second.delete_user(user);
 			if (it->second.get_users().size() == 0)
@@ -424,7 +397,33 @@ void Server::disconnect_user(User &user)
 		}
 		it++;
 	}
+	this->_fds.erase(find_fd(this->_fds, fd));
 	this->_clients.erase(this->_clients.find(fd));
+	this->active_fd--;
+	close(fd);
+}
+
+User *Server::get_user(const std::string &nick)
+{
+	for (std::map<int, User>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
+	{
+		if (it->second.get_nick().compare(nick) == 0)
+			return (&it->second);
+	}
+	return (NULL);
+}
+
+bool Server::check_nickname(std::string &nickname)
+{
+	for (std::map<int, User>::iterator it = _clients.begin(); it != _clients.end(); it++)
+		if (it->second.get_nick() == nickname)
+			return(1);
+	return(0);
+}
+
+const std::string &Server::get_password() const
+{
+	return (_password);
 }
 
 const std::map<std::string, Channel> &Server::get_channels() const

@@ -196,7 +196,5 @@ public:
 	int run();
 };
 
-std::deque<std::string> parse_split(const std::string &buffer);
-std::deque<std::string> split_lines(const std::string &buffer);
 
 #endif

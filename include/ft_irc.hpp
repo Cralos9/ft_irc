@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 11:45:32 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/21 13:18:43 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/25 10:30:47 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <map>
 #include <algorithm>
 #include <cstdarg>
-# include <deque>
+#include <deque>
 
 #define GREEN "\033[0;32m"
 #define RED "\033[0;31m"
@@ -37,5 +37,8 @@
 void print_error(std::string error_msg);
 
 void	print(const std::string &str);
+
+std::deque<std::string> split_line(const std::string &buffer);
+std::deque<std::string> split_block(const std::string &buffer);
 
 #endif
