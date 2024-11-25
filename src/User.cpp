@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/22 13:34:14 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/25 13:58:04 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ bool User::get_auth() const
 	return(_auth);
 }
 
+bool User::get_disconnect_user() const
+{
+	return(this->_disconnect_user);
+}
+
 /* -------------------------------------------------- */
 
 /* User setters */
@@ -107,6 +112,11 @@ void User::set_auth(const bool &status)
 {
 	
 	_auth = status;
+}
+
+void User::set_disconnect_user(const bool &disconnect_user)
+{
+	_disconnect_user = disconnect_user;
 }
 
 /* -------------------------------------- */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/22 13:26:55 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/25 13:57:36 by cacarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class User
 		void set_password(const std::string &password);
 		void set_realname(const std::string &realname);
 		void set_auth(const bool &status);
+		void set_disconnect_user(const bool &disconnect_user);
 
 		/* Getters */
 		const int &get_fd() const;
@@ -40,6 +41,7 @@ class User
 		const std::string &get_hostname() const;
 		const std::string &get_password() const;
 		const std::string &get_realname() const;
+		bool get_disconnect_user() const;
 		std::vector<std::string> &get_invited_channels();
 		bool get_auth() const;
 
@@ -59,6 +61,7 @@ class User
 		std::string _password;
 		bool 		_auth;
 		std::vector<std::string>	_invited_channels;
+		bool 		_disconnect_user;
 };
 
 std::ostream &operator<<(std::ostream &out, const User &user);

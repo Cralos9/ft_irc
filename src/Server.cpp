@@ -143,7 +143,7 @@ int Server::fds_loop()
 			{
 				if (receive_msg(user))
 					continue;
-				_fds[i].events |= POLLOUT;
+				_fds[i].events = POLLOUT;
 			}
 			else if (_fds[i].revents & POLLOUT)
 			{
@@ -220,8 +220,8 @@ int Server::receive_msg(User &user)
 	
 	if (msg_bytes <= 0)
 	{
-		this->disconnect_user(user);
-		return (1);
+		user.set_buffer("QUIT :Remote Host closed the connection\r\n");
+		return (0);
 	}
 	user.set_buffer(buffer);
 	if (user.get_buffer().find("\n") == std::string::npos)
@@ -301,10 +301,11 @@ int Server::handle_commands(User &user)
 {
 	std::deque<std::string> lines = split_block(user.get_buffer());
 	std::string command_name;
+	std::deque<std::string> split;
 
 	for(std::deque<std::string>::iterator it = lines.begin(); it != lines.end(); it++)
 	{
-		std::deque<std::string> split = split_line(*it);
+		split = split_line(*it);
 		if (split.empty())
 			continue;
 		command_name = split[0];
@@ -378,10 +379,22 @@ void Server::delete_channel(Channel &channel)
 }
 /* -------------------------------------------------------------------------- */
 
+const std::string user_from_channel(const std::map<User *, int> &channel_users)
+{
+	std::string users;
+	for (std::map<User *, int>::const_iterator it = channel_users.begin(); it != channel_users.end(); it++)
+	{
+		if (it->second == OP)
+			users.append('@' + it->first->get_nick() + ' ');
+		else
+		 	users.append(it->first->get_nick() + " ");
+	}
+	return (users);
+}
+
 void Server::disconnect_user(User &user)
 {
 	const int fd = user.get_fd();
-
 	for(std::map<std::string, Channel>::iterator it = _channel_list.begin(); it != _channel_list.end();)
 	{
 		if (it->second.is_user_on_ch(user))
