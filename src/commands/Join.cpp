@@ -87,6 +87,8 @@ int Join::can_join(Channel *ch, const std::string &password)
 							ch->get_name().c_str());
 		return (false);
 	}
+	if (ch->is_user_on_ch(*_user))
+		return (false);
 	_user->elim_from_invited(ch->get_name());
 	return (true);
 }

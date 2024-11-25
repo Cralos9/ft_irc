@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:42:11 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/21 12:19:11 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/22 13:31:32 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int Nick::run()
 			_server.send_numeric(*_user, ERR_NICKNAMEINUSE, "%s :Nickname already in use", nick.c_str());
 		return (1);
 	}
-	if (_user->get_auth() == false)
+	if (!_user->get_auth())
 	{
 		_user->make_msg("NICK", _args);
 		_server.send_msg_all_users(*_user);

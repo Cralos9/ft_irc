@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/21 12:18:45 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/22 13:34:14 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ User::User() : _fd(0), _nick("Default"), _auth(true)
 	/* std::cout << "User default constructor" << std::endl; */
 }
 
-User::User(const int &fd, const std::string &hostname) : _fd(fd), _hostname(hostname), _auth(true)
+User::User(const int &fd, const std::string &hostname, const std::string &nick) : _fd(fd), _nick(nick), _hostname(hostname), _auth(true)
 {
 /* 	std::cout << "User Constructor" << std::endl; */
 }
@@ -142,7 +142,7 @@ std::ostream &operator<<(std::ostream &out, const User &user)
 
 bool User::is_registered()
 {
-	if (_nick.empty() || _realname.empty() || _username.empty() || _password.empty())
+	if (!_nick.compare("*") || _realname.empty() || _username.empty() || _password.empty())
 		return (false);
 	return (true);
 }

@@ -123,7 +123,7 @@ int Server::connect_client()
 		print_error("Accept Error");
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
-	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr));
+	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr), "*");
 	this->active_fd++;
 	this->_fds.push_back(client);
 
@@ -152,12 +152,7 @@ int Server::receive_msg(User &user)
 void Server::send_numeric(const User &user, const std::string &numeric,
 							const std::string msg, ...)
 {
-	std::string rpl;
-
-	if (!user.get_nick().empty())
-		rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
-	else
-		rpl = ":" + _hostname + " " + numeric + " * ";
+	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
 
 	std::va_list params;
 	va_start(params, msg);
@@ -259,10 +254,7 @@ int Server::fds_loop()
 		if (_fds[i].revents == NO_EVENTS)
 			continue;
 		if (!(_fds[i].revents & POLLIN) && !(_fds[i].revents & POLLOUT))
-		{
-			std::cout << _fds[i].revents << std::endl;
 			print_error("Error revents");
-		}
 		if (_fds[i].fd == _fds[0].fd)
 			connect_client();
 		else
@@ -329,8 +321,10 @@ int Server::handle_commands(User &user)
 	for(std::deque<std::string>::iterator it = lines.begin(); it != lines.end(); it++)
 	{
 		std::deque<std::string> split = parse_split(*it);
+		if (split.empty())
+			continue;
 		command_name = split[0];
-		split.erase(split.begin()); /* Get rid of the command_name */
+		split.erase(split.begin());
 		if (call_command(command_name, user, split))
 			continue;
 	}

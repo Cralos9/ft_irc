@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/21 12:18:42 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/22 13:26:55 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ class User
 {
 	public:
 		User();
-		User(const int &fd, const std::string &hostname);
+		User(const int &fd, const std::string &hostname, const std::string &nick);
 
 		~User();
 		
