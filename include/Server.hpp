@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/25 11:54:10 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:27:45 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ public:
 	const std::map<std::string, Channel> &get_channels() const;
 
 	int 		handle_commands(User &user);
-	int			call_command(const std::string &command_name, User &user, std::deque<std::string> &params);
+	int			call_command(std::string &command_name, User &user, std::deque<std::string> &params);
 	ACommand	*get_command(const std::string &command_name);
 	User 		*get_user(const std::string &nick);
 	

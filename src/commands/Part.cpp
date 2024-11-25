@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:38:31 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/21 18:26:42 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/25 11:56:12 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int Part::run()
 	const std::vector<std::string> &targets = split(_args[0]);
 	std::deque<std::string> params(2);
 
+	if (_args[1].find(':') == std::string::npos)
+		_args[1] = ":" + _args[1];
 	params[1] = _args[1];
 	for (std::vector<std::string>::const_iterator it = targets.begin(); it != targets.end(); it++)
 	{
