@@ -116,7 +116,7 @@ int Server::main_loop()
 			std::perror("Poll Error");
 			break;
 		}
-		this->fds_loop();
+		fds_loop();
 	}
 	return (0);
 }
@@ -318,8 +318,9 @@ int Server::handle_commands(User &user)
 	return(0);
 }
 
-int Server::call_command(const std::string &command_name, User &user, std::deque<std::string> &params)
+int Server::call_command(std::string &command_name, User &user, std::deque<std::string> &params)
 {
+	std::transform(command_name.begin(), command_name.end(), command_name.begin(), ::toupper);
 	ACommand * command = get_command(command_name);
 
 	if (command == NULL)
