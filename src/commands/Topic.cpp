@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:18 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/19 15:16:31 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/26 14:50:30 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ Topic::~Topic()
 int Topic::run()
 {
 	Channel *ch = _server.check_channel(_args[0]);
+	std::deque<std::string> params(2);
 
 	if (ch == NULL)
 	{
@@ -34,17 +35,12 @@ int Topic::run()
 	}
 	if ((_args.size() > 1))
 	{
-		/* Erase the ':' from Topic Name */
-		const std::string topic = _args[1].substr(1, _args[1].length() - 1);
+		params[0] = ch->get_name();
+		params[1] = ":" + _args[1];
 		if (!ch->is_user_on_ch(*_user))
 		{
 			_server.send_numeric(*_user, ERR_NOTONCHANNEL, "%s :You're not on that channel");
 			return (0);
-		}
-		if (ch->get_statusTopicRestrictions() == false || ch->is_user_OP(*_user))
-		{
-			ch->set_topic(topic);
-			_user->make_msg("TOPIC", _args);
 		}
 		if (ch->get_statusTopicRestrictions() == true && !ch->is_user_OP(*_user))
 		{
@@ -52,6 +48,8 @@ int Topic::run()
 										"%s :You're not the channel operator", _args[0].c_str());
 			return(EXIT_FAILURE);
 		}
+		ch->set_topic(_args[1]);
+		_user->make_msg("TOPIC", params);
 	}
 	else
 	{

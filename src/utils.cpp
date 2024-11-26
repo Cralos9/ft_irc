@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 11:41:19 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/25 11:01:45 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/26 13:54:19y rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ std::deque<std::string> split_line(const std::string &buffer)
 		args.push_back(token);
 
 	if (buffer.find(':') != std::string::npos)
-		args.push_back(std::strchr(buffer.c_str(), ':'));
+		args.push_back(std::strchr(buffer.c_str(), ':') + 1);
 
 	return (args);
 }

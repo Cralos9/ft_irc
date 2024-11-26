@@ -80,7 +80,7 @@ int Invite::run()
 								_args[1].c_str());
 		_user->make_msg("INVITE", _args);
 		_server.send_msg_one_user(invited->get_fd(), *_user);
-		invited->get_invited_channels().push_back(ch->get_name());
+		_user->add_invitation(ch->get_name());
 	}
 	return (0);
 }

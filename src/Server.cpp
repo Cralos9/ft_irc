@@ -308,7 +308,7 @@ int Server::handle_commands(User &user)
 		if (split.empty())
 			continue;
 		command_name = split[0];
-		split.erase(split.begin());
+		split.pop_front();
 		if (call_command(command_name, user, split))
 			continue;
 	}

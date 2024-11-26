@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:30:53 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/25 10:30:14 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:03:23 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 #define ERR_NOSUCHNICK			"401"
 #define ERR_NOSUCHCHANNEL		"403"
 #define ERR_CANNOTSENDTOCHAN	"404"
+#define ERR_NOTEXTTOSEND		"412"
 #define ERR_UNKOWNCOMMAND		"421"
 #define ERR_NOMOTD				"422"
 #define ERR_ERRONEUSNICKNAME	"432" 

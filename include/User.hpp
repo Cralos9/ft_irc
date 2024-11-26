@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:30:44 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/25 13:57:36 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:38:46 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,15 @@ class User
 		const std::string &get_password() const;
 		const std::string &get_realname() const;
 		bool get_disconnect_user() const;
-		std::vector<std::string> &get_invited_channels();
+		const std::vector<std::string> &get_invited_channels() const;
 		bool get_auth() const;
 
 		void erase_buffer();
 		bool is_registered();
 		void make_msg(const std::string &command, const std::deque<std::string> &params);
-		void elim_from_invited(std::string ch);
+		void elim_from_invited(const std::string &channel_name);
+		bool check_invitation(const std::string &channel_name) const;
+		void add_invitation(const std::string &channel_name);
 
 	private:
 

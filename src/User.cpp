@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/25 13:58:04 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:39:03 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void User::make_msg(const std::string &command, const std::deque<std::string> &p
 }
 
 
-std::vector<std::string> &User::get_invited_channels()
+const std::vector<std::string> &User::get_invited_channels() const
 {
 	return(_invited_channels);
 }
@@ -157,9 +157,22 @@ bool User::is_registered()
 	return (true);
 }
 
-void User::elim_from_invited(std::string ch)
+void User::elim_from_invited(const std::string &channel_name)
 {
-	std::vector<std::string>::iterator it = std::find(_invited_channels.begin(), _invited_channels.end(), ch);
+	std::vector<std::string>::iterator it = std::find(_invited_channels.begin(), _invited_channels.end(), channel_name);
 	if (it != _invited_channels.end())
 		_invited_channels.erase(it);
+}
+
+bool User::check_invitation(const std::string &channel_name) const
+{
+	if (std::find(_invited_channels.begin(), _invited_channels.end(), channel_name)
+			!= _invited_channels.end())
+		return (true);
+	return (false);
+}
+
+void User::add_invitation(const std::string &channel_name)
+{
+	_invited_channels.push_back(channel_name);
 }

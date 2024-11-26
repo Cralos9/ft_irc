@@ -30,8 +30,6 @@ int UserCMD::run()
 		return (0);
 	}
 	_user->set_username(_args[0]);
-	if (_args[3].find(":") != std::string::npos)
-		_args[3].erase(_args[3].begin());
 	_user->set_realname(_args[3]);
 	return (0);
 }
