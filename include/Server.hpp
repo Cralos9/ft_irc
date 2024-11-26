@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacarval <cacarval@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/25 15:04:36 by cacarval         ###   ########.fr       */
+/*   Updated: 2024/11/26 11:37:51 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ public:
 	bool		check_nickname(std::string &nickname);
 	void		get_hostname();
 	void		send_error(User &user);
-	std::string get_host();
+	const std::string &get_host() const;
 	void		delete_channel(Channel &channel);
 
 	const std::map<int, User> &get_all_clients() const;

@@ -21,8 +21,15 @@
 
 class Server;
 
-typedef std::map<int, User>::iterator it_user;
-
+/**
+* @brief Constructor for the ACommand class.
+* 
+* @param _server Reference to the Server instance associated with this command.
+* @param _usable_pre_reg A boolean flag indicating if the command can be used
+*        before the user has completed registration.
+* @param _min_params The minimum number of parameters required for the command
+*        to execute.
+*/
 class ACommand
 {
 public:
@@ -196,5 +203,14 @@ public:
 	int run();
 };
 
+class Motd : public ACommand
+{
+public:
+
+	Motd(Server &server);
+	~Motd();
+
+	int run();
+};
 
 #endif

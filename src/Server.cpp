@@ -19,23 +19,24 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 {
 	/*std::cout << "Server port Constructor" << std::endl;*/
 	std::memset(&this->_address, 0, sizeof(this->_address));
-	this->_address.sin_family = AF_INET;
-	this->_address.sin_port = htons(port);
-	this->_commands["JOIN"] = new Join(*this);			//JOIN <channel>
-	this->_commands["WHO"] = new Who(*this);			//WHO <mask>
-	this->_commands["MODE"] = new Mode(*this);			//MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
-	this->_commands["NICK"] = new Nick(*this);			//NICK <new_name>
-	this->_commands["QUIT"] = new Quit(*this);			//QUIT :<msg>
-	this->_commands["PRIVMSG"] = new PrivMsg(*this);	//PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
-	this->_commands["KICK"] = new Kick(*this);			//KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
-	this->_commands["TOPIC"] = new Topic(*this);		//TOPIC <channel> || TOPIC <channel> <new_topic>
-	this->_commands["PART"] = new Part(*this);
-	this->_commands["LIST"] = new List(*this);
-	this->_commands["INVITE"] = new Invite(*this);		//INVITE <nick> <channel>
-	this->_commands["WHOIS"] = new WhoIs(*this);
-	this->_commands["PASS"] = new Pass(*this);
-	this->_commands["PING"] = new Pong(*this);
-	this->_commands["USER"] = new UserCMD(*this);
+	_address.sin_family = AF_INET;
+	_address.sin_port = htons(port);
+	_commands["JOIN"] = new Join(*this);			//JOIN <channel>
+	_commands["WHO"] = new Who(*this);			//WHO <mask>
+	_commands["MODE"] = new Mode(*this);			//MODE <channel> +/- <mode>  || MODE <channel> +/- <mode> <nickname>
+	_commands["NICK"] = new Nick(*this);			//NICK <new_name>
+	_commands["QUIT"] = new Quit(*this);			//QUIT :<msg>
+	_commands["PRIVMSG"] = new PrivMsg(*this);	//PRIVMSG <name> <msg> || PRIVMSG <channel> <msg>
+	_commands["KICK"] = new Kick(*this);			//KICK <channel> <nickname> :<reason> || KICK <channel> <nickname>
+	_commands["TOPIC"] = new Topic(*this);		//TOPIC <channel> || TOPIC <channel> <new_topic>
+	_commands["PART"] = new Part(*this);
+	_commands["LIST"] = new List(*this);
+	_commands["INVITE"] = new Invite(*this);		//INVITE <nick> <channel>
+	_commands["WHOIS"] = new WhoIs(*this);
+	_commands["PASS"] = new Pass(*this);
+	_commands["PING"] = new Pong(*this);
+	_commands["USER"] = new UserCMD(*this);
+	_commands["MOTD"] = new Motd(*this);
 
 	_server_creation_time = std::time(0);
 	get_hostname();
@@ -68,7 +69,7 @@ void Server::get_hostname()
 	_hostname = hostname;
 }
 
-std::string Server::get_host()
+const std::string &Server::get_host() const
 {
 	return(this->_hostname);
 }
@@ -193,22 +194,20 @@ void Server::welcome_burst(User &user)
 	send_numeric(user, RPL_CREATED, ":This server was created %s", time.c_str());
 	send_numeric(user, RPL_MYINFO, "localhost v1.0 o iklt");
 	send_numeric(user, RPL_ISUPPORT, "CHANMODES=" AVAIL_MODES);
-	send_numeric(user, RPL_MOTDSTART, ":- %s Message of the day -", _hostname.c_str());
-
+	
 	std::ifstream file(MOTD_FILE);
 	std::string line;
 
 	if (!file.is_open())
-		std::cerr << "Unable to open file" << std::endl;
+		send_numeric(user, ERR_NOMOTD, ":MOTD File is missing");
 	else
 	{
+		send_numeric(user, RPL_MOTDSTART, ":- %s Message of the day -", _hostname.c_str());
 		while (std::getline(file, line))
 			send_numeric(user, RPL_MOTD, ":- %s", line.c_str());
+		send_numeric(user, RPL_ENDOFMOTD, ":End of /MOTD");
 		file.close();
 	}
-
-	send_numeric(user, RPL_MOTD, ":- Jose Figueiras is innocent 🇵🇹");
-	send_numeric(user, RPL_ENDOFMOTD, ":End of /MOTD");
 	user.set_auth(false);
 }
 
@@ -256,7 +255,7 @@ void Server::send_numeric(const User &user, const std::string &numeric,
 void Server::send_msg_all_users(User &msg_sender)
 {
 	print(msg_sender.get_buffer());
-	for (it_user user = this->_clients.begin(); user != this->_clients.end(); user++)
+	for (std::map<int, User>::iterator user = this->_clients.begin(); user != this->_clients.end(); user++)
 	{
 		send(user->first, msg_sender.get_buffer().c_str(),
 			msg_sender.get_buffer().length(), 0);
