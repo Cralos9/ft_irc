@@ -28,7 +28,7 @@
    The <mask> passed to WHO is matched against users' host, server, real
    name and nickname if the channel <mask> cannot be found.
  */
-Who::Who(Server &server) : ACommand(server, false, 0)
+Who::Who(Server &server) : ACommand(server, false, 1)
 {
 	/*	std::cout << "Who constructor" << std::endl; */
 }
@@ -40,25 +40,10 @@ Who::~Who()
 
 int Who::run()
 {
-	Channel *channel = NULL;
-	User *target = NULL;
+	Channel *channel = _server.check_channel(_args[0]);
+	User *target = _server.get_user(_args[0]);
 	std::string user_joined_ch;
 	
-	if (_args.empty()) // If mask empty list everyone in server
-	{
-		const std::map<int, User> &list = _server.get_all_clients();
-		for (std::map<int, User>::const_iterator it = list.begin(); it != list.end(); ++it)
-		{
-			user_joined_ch = _server.channels_user_joined(*_user);
-			_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s H :0 %s",
-						user_joined_ch.c_str(), target->get_username().c_str(),
-						target->get_hostname().c_str(), _server.get_host().c_str(),
-						target->get_nick().c_str(), target->get_realname().c_str());
-		}
-	}
-
-	channel = _server.check_channel(_args[0]);
-	target = _server.get_user(_args[0]);
 	if (channel != NULL)
 	{
 		const std::map<User *, int> &channel_users = channel->get_users();
@@ -66,7 +51,7 @@ int Who::run()
 		{
 			User &us = *it->first;
 			/* Channel, Username, host, server, nick, hp, realname */
-			_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s H :0 %s", 
+			_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s :%s", 
 						_args[0].c_str(), us.get_username().c_str(),
 						us.get_hostname().c_str(), _server.get_host().c_str(),
 						us.get_nick().c_str(), us.get_realname().c_str());
@@ -74,8 +59,10 @@ int Who::run()
 	}
 	else if (target != NULL)
 	{
-		user_joined_ch = _server.channels_user_joined(*_user);
-		_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s H :0 %s",
+		user_joined_ch = _server.channels_user_joined(*target);
+		if (user_joined_ch.empty())
+			user_joined_ch = "*";
+		_server.send_numeric(*_user, RPL_WHOREPLY, "%s %s %s %s %s :%s",
 						user_joined_ch.c_str(), target->get_username().c_str(),
 						target->get_hostname().c_str(), _server.get_host().c_str(),
 						target->get_nick().c_str(), target->get_realname().c_str());

@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/26 11:37:51 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:53:13 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ public:
 	const std::string &get_host() const;
 	void		delete_channel(Channel &channel);
 
-	const std::map<int, User> &get_all_clients() const;
+	std::map<int, User> &get_all_clients();
 	const std::string &get_password() const;
 
 private:

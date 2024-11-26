@@ -444,7 +444,7 @@ const std::map<std::string, Channel> &Server::get_channels() const
 	return (_channel_list);
 }
 
-const std::map<int, User>& Server::get_all_clients() const
+std::map<int, User>& Server::get_all_clients()
 {
 	return _clients;
 }
