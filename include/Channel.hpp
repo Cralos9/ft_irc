@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:21:07 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/25 12:09:24 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:38:14 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 
 #define OP 1
 #define NOP 0
-// #define LEAVING 1
-// #define STAY 0
 
 typedef std::map<User *, int>::iterator it_ch_users;
 
@@ -64,8 +62,8 @@ class Channel
 		void add_user(User &user);
 		void delete_user(User &del_user);
 		void change_userPrivs(User &user, char sig);
-		bool is_user_OP(User &user);
-		bool is_user_on_ch(User &user);
+		bool is_user_OP(User &user) const;
+		bool is_user_on_ch(User &user) const;
 		bool get_activeModes(std::string &msg);
 
 private:
@@ -86,6 +84,5 @@ private:
 		bool _statusUserLimit;
 
 };
-
 
 #endif

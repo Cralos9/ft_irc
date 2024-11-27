@@ -162,9 +162,9 @@ bool					Channel::get_statusUserLimit () const
 }
 
 /* Utility Functions */
-bool Channel::is_user_OP(User &user)
+bool Channel::is_user_OP(User &user) const
 {
-	std::map<User *, int>::iterator it = _user_map.find(&user);
+	std::map<User *, int>::const_iterator it = _user_map.find(&user);
 	if (it == _user_map.end())
 		return (false);
 	if (it->second == NOP)
@@ -172,7 +172,7 @@ bool Channel::is_user_OP(User &user)
 	return (true);
 }
 
-bool Channel::is_user_on_ch(User &user)
+bool Channel::is_user_on_ch(User &user) const
 {
 	if((this->_user_map.find(&user)) != this->_user_map.end())
 		return(1);

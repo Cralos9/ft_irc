@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:33:09 by cacarval          #+#    #+#             */
-/*   Updated: 2024/11/26 12:39:03 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:37:50 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ std::ostream &operator<<(std::ostream &out, const User &user)
 	return (out);
 }
 
-bool User::is_registered()
+bool User::is_registered() const
 {
 	if (!_nick.compare("*") || _realname.empty() || _username.empty() || _password.empty())
 		return (false);

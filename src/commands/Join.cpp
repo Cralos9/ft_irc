@@ -66,6 +66,8 @@ void Join::join_channel(Channel *ch, std::deque<std::string> &params)
 
 int Join::can_join(Channel *ch, const std::string &password)
 {
+	if (ch->is_user_on_ch(*_user))
+		return (false);
 	if (ch->get_users().size() >= ch->get_user_limit())
 	{
 		_server.send_numeric(*_user, ERR_CHANNELISFULL, "%s :Cannot join channel (+l)",
@@ -84,8 +86,6 @@ int Join::can_join(Channel *ch, const std::string &password)
 							ch->get_name().c_str());
 		return (false);
 	}
-	if (ch->is_user_on_ch(*_user))
-		return (false);
 	_user->elim_from_invited(ch->get_name());
 	return (true);
 }

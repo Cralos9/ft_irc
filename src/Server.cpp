@@ -44,11 +44,11 @@ Server::Server(const int port, const std::string &password) : active_fd(1), _pas
 
 Server::~Server()
 {
-	for (std::map<std::string, ACommand *>::iterator it = this->_commands.begin(); it != this->_commands.end(); ++it)
+	for (std::map<std::string, ACommand *>::iterator it = _commands.begin(); it != _commands.end(); ++it)
 		delete it->second;
-	for (std::vector<pollfd>::iterator it = this->_fds.begin(); it != this->_fds.end(); it++)
+	for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); it++)
 		close(it->fd);
-	this->_fds.clear();
+	_fds.clear();
 	/* std::cout << "Server Destructor" << std::endl;	*/
 }
 
@@ -96,7 +96,7 @@ int Server::create_server()
 		print_error("Listen Error");
 
 	sock.events = POLLIN;
-	this->_fds.push_back(sock);
+	_fds.push_back(sock);
 	std::cout << GREEN << "	////////////////////" << RESET << std::endl;
 	std::cout << GREEN << "	Server is Now Online" << RESET << std::endl;
 	std::cout << GREEN << "	////////////////////" << RESET << std::endl;
@@ -166,7 +166,7 @@ int Server::connect_client()
 	sockaddr_in	client_info;
 	socklen_t	len = sizeof(client_info);
 
-	client.fd = accept(this->_fds[0].fd, (struct sockaddr *)&client_info, &len);
+	client.fd = accept(_fds[0].fd, (struct sockaddr *)&client_info, &len);
 	if (client.fd == -1)
 	{
 		std::perror("Accept Function Error");
@@ -174,9 +174,9 @@ int Server::connect_client()
 	}
 	client.events = POLLIN;
 	client.revents = NO_EVENTS;
-	this->_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr), "*");
-	this->active_fd++;
-	this->_fds.push_back(client);
+	_clients[client.fd] = User(client.fd, inet_ntoa(client_info.sin_addr), "*");
+	active_fd++;
+	_fds.push_back(client);
 
 	std::cout << "New Client: " << active_fd << " connected" << std::endl;
 	return EXIT_SUCCESS;
@@ -233,7 +233,7 @@ int Server::receive_msg(User &user)
 void Server::send_numeric(const User &user, const std::string &numeric,
 							const std::string msg, ...)
 {
-	std::string rpl = ":" + _hostname + " " + numeric + " " + user.get_nick() + " ";
+	std::string rpl = ":" + user.get_hostname() + " " + numeric + " " + user.get_nick() + " ";
 
 	std::va_list params;
 	va_start(params, msg);
@@ -414,6 +414,7 @@ void Server::disconnect_user(User &user)
 	this->_clients.erase(this->_clients.find(fd));
 	this->active_fd--;
 	close(fd);
+	std::cout << "Client Disconnected" << std::endl;
 }
 
 User *Server::get_user(const std::string &nick)

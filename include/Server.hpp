@@ -6,7 +6,7 @@
 /*   By: rumachad <rumachad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 12:12:34 by rumachad          #+#    #+#             */
-/*   Updated: 2024/11/26 15:53:13 by rumachad         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:35:20 by rumachad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,46 +44,43 @@ public:
 	Server(const int port, const std::string &password);
 	~Server();
 
-	int			create_server();
+	int	create_server();
+	int	main_loop();
+	int	fds_loop();
 
-	int 		main_loop();
-	int 		fds_loop();
+	/* Handle User Functions */
+	int 	connect_client();
+	void	disconnect_user(User &user);
+	void	send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
+	void	send_msg_all_users(User &msg_sender);
+	void	send_msg_one_user(const int receiver_fd, User &msg_sender);
+	void	send_numeric(const User &user, const std::string &numeric, const std::string msg, ...);
+	int		receive_msg(User &user);
 
-	int 		connect_client();
-	void		send_msg_to_channel(const Channel &ch, const User &msg_sender, const int flag);
-	void		send_msg_all_users(User &msg_sender);
-	void 		send_msg_one_user(const int receiver_fd, User &msg_sender);
-	void 		send_numeric(const User &user, const std::string &numeric,
-								const std::string msg, ...);
-	int 		receive_msg(User &user);
+	/* Handle Channel Functions */
+	Channel									*create_channel(const std::string &ch_name);
+	Channel									*check_channel(const std::string &ch_name);
+	const std::string						channels_user_joined(User &user);
+	const std::map<std::string, Channel>	&get_channels() const;
+	void									delete_channel(Channel &channel);
 
-	Channel 	*create_channel(const std::string &ch_name);
-	Channel 	*check_channel(const std::string &ch_name);
-	const std::string channels_user_joined(User &user);
-	const std::map<std::string, Channel> &get_channels() const;
-
+	/* Handle Commands Functions */
 	int 		handle_commands(User &user);
 	int			call_command(std::string &command_name, User &user, std::deque<std::string> &params);
 	ACommand	*get_command(const std::string &command_name);
 	User 		*get_user(const std::string &nick);
-	
-	void		disconnect_user(User &user);
-	void 		close_all_fds();
 
+	void				welcome_burst(User &user);
+	bool				check_nickname(std::string &nickname);
+	void				get_hostname();
+	const std::string	&get_host() const;
+
+	std::map<int, User>	&get_all_clients();
+	const std::string	&get_password() const;
 
 	static void	signal_handler(int signum);
+
 	static bool should_end;
-
-	void		welcome_burst(User &user);
-
-	bool		check_nickname(std::string &nickname);
-	void		get_hostname();
-	void		send_error(User &user);
-	const std::string &get_host() const;
-	void		delete_channel(Channel &channel);
-
-	std::map<int, User> &get_all_clients();
-	const std::string &get_password() const;
 
 private:
 
