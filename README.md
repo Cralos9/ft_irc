@@ -1,1 +1,1 @@
-# ft_irc
+The ft_irc project at 42 School involves the creation of a basic IRC (Internet Relay Chat) server and client. The goal of this project is to implement a simple yet fully functional IRC server that allows users to connect, join channels, send messages, and manage user interactions in a chatroom setting. It requires extensive knowledge of network programming, multithreading, and socket management in C.
